@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import HomePage from "@/pages/HomePage";
 import CategoryPage from "@/pages/CategoryPage";
 import EditorPage from "@/pages/EditorPage";
+import AboutPage from "@/pages/AboutPage";
 
 const queryClient = new QueryClient();
 
@@ -16,6 +17,7 @@ function Router() {
     <Switch>
       <Route path="/category/:id" component={CategoryPage} />
       <Route path="/editor/:categoryId/:templateId" component={EditorPage} />
+      <Route path="/about" component={AboutPage} />
       <Route path="/" component={HomePage} />
       <Route component={NotFound} />
     </Switch>
