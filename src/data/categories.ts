@@ -129,6 +129,30 @@ export const categories: Category[] = [
           ...massWeddingDefaultData,
           colors: { primary: "#1e1b4b", secondary: "#1e1b4b", accent: "#d4af37", bg: "#ffffff" }
         }
+      },
+      {
+        id: "6",
+        name: "الزمرد والذهب",
+        defaultData: {
+          ...massWeddingDefaultData,
+          colors: { primary: "#c9a84c", secondary: "#e8dfc0", accent: "#d4af37", bg: "#0d2818" }
+        }
+      },
+      {
+        id: "7",
+        name: "الأزرق العصري",
+        defaultData: {
+          ...massWeddingDefaultData,
+          colors: { primary: "#4169e1", secondary: "#e8eef8", accent: "#90b4ff", bg: "#050e2b" }
+        }
+      },
+      {
+        id: "8",
+        name: "الوردي الأنيق",
+        defaultData: {
+          ...massWeddingDefaultData,
+          colors: { primary: "#8b1a3a", secondary: "#5a0e24", accent: "#c9a84c", bg: "#fdf0f5" }
+        }
       }
     ]
   },
@@ -144,7 +168,10 @@ export const categories: Category[] = [
       { id: "5", name: "داكن مع صورة", defaultData: { ...businessCardData, colors: { primary: "#6c22b8", secondary: "#3b0f7a", accent: "#e040fb", bg: "#0d0d0d" } } },
       { id: "6", name: "لوكس أبيض", defaultData: { ...businessCardData, colors: { primary: "#1a1a2e", secondary: "#16213e", accent: "#c9a84c", bg: "#ffffff" } } },
       { id: "7", name: "زجاجي متدرج", defaultData: { ...businessCardData, subtitle: "مطور برمجيات", colors: { primary: "#00b4d8", secondary: "#0077b6", accent: "#00f5d4", bg: "#1a0533" } } },
-      { id: "8", name: "قطري منقسم", defaultData: { ...businessCardData, subtitle: "مدير مبيعات", colors: { primary: "#1e3a8a", secondary: "#1e40af", accent: "#fbbf24", bg: "#f5f5f5" } } }
+      { id: "8", name: "قطري منقسم", defaultData: { ...businessCardData, subtitle: "مدير مبيعات", colors: { primary: "#1e3a8a", secondary: "#1e40af", accent: "#fbbf24", bg: "#f5f5f5" } } },
+      { id: "9", name: "متدرج مائل", defaultData: { ...businessCardData, colors: { primary: "#f97316", secondary: "#ea580c", accent: "#fde68a", bg: "#1e1b4b" } } },
+      { id: "10", name: "نقطي بسيط", defaultData: { ...businessCardData, colors: { primary: "#0f766e", secondary: "#4b5563", accent: "#34d399", bg: "#f0fdf4" } } },
+      { id: "11", name: "منقسم بدائري", defaultData: { ...businessCardData, colors: { primary: "#7c3aed", secondary: "#6d28d9", accent: "#c4b5fd", bg: "#faf5ff" } } }
     ]
   },
   {
@@ -155,7 +182,10 @@ export const categories: Category[] = [
       { id: "1", name: "تسليط الضوء", defaultData: { ...adsData, colors: { primary: "#3b82f6", secondary: "#1d4ed8", accent: "#ffffff", bg: "#eff6ff" } } },
       { id: "2", name: "إعلان", defaultData: { ...adsData, colors: { primary: "#10b981", secondary: "#047857", accent: "#ffffff", bg: "#ffffff" } } },
       { id: "3", name: "عرض السعر", defaultData: { ...adsData, colors: { primary: "#f43f5e", secondary: "#e11d48", accent: "#ffffff", bg: "#ffe4e6" } } },
-      { id: "4", name: "العلامة الفاخرة", defaultData: { ...adsData, colors: { primary: "#8b5cf6", secondary: "#c084fc", accent: "#ffffff", bg: "#f3e8ff" } } }
+      { id: "4", name: "العلامة الفاخرة", defaultData: { ...adsData, colors: { primary: "#8b5cf6", secondary: "#c084fc", accent: "#ffffff", bg: "#f3e8ff" } } },
+      { id: "5", name: "عرض محدود", defaultData: { ...adsData, colors: { primary: "#dc2626", secondary: "#b91c1c", accent: "#fcd34d", bg: "#0f172a" } } },
+      { id: "6", name: "قائمة الخدمات", defaultData: { ...adsData, title: "خدماتنا المميزة", description: "تصميم احترافي،جودة عالية،تسليم سريع", colors: { primary: "#0f766e", secondary: "#134e4a", accent: "#2dd4bf", bg: "#f0fdf4" } } },
+      { id: "7", name: "إعجاب العملاء", defaultData: { ...adsData, colors: { primary: "#1e40af", secondary: "#1e3a8a", accent: "#f59e0b", bg: "#f0f9ff" } } }
     ]
   },
   {
@@ -171,6 +201,9 @@ export const categories: Category[] = [
       { id: "6", name: "ليلة داكنة", defaultData: { ...weddingData, title: "عبدالله", subtitle: "& نورة", description: "دعوة زفاف ✦\nلحضور حفل الزفاف\n28 - 7 - 2025", colors: { primary: "#0c1a2e", secondary: "#1e3a5f", accent: "#c9a84c", bg: "#0c1a2e" } } },
       { id: "7", name: "ناعم مع صورة", defaultData: { ...weddingData, title: "خالد", subtitle: "& سارة", description: "حفل الزفاف والعشاء\nالجمعة\n15 - 8 - 2025", colors: { primary: "#7c3aed", secondary: "#5b21b6", accent: "#ddd6fe", bg: "#f8f4ef" } } },
       { id: "8", name: "عصري منقسم", defaultData: { ...weddingData, title: "عمر", subtitle: "& أميرة", description: "حفل الزفاف\n28 - 7 - 2025", colors: { primary: "#0f172a", secondary: "#1e3a8a", accent: "#c9a84c", bg: "#ffffff" } } },
+      { id: "12", name: "نباتي طبيعي", defaultData: { ...weddingData, colors: { primary: "#166534", secondary: "#14532d", accent: "#d97706", bg: "#fefce8" } } },
+      { id: "13", name: "ليلة النجوم", defaultData: { ...weddingData, colors: { primary: "#818cf8", secondary: "#6366f1", accent: "#fde68a", bg: "#0f0f1e" } } },
+      { id: "14", name: "الذهبي الحديث", defaultData: { ...weddingData, colors: { primary: "#1e293b", secondary: "#334155", accent: "#f59e0b", bg: "#f8fafc" } } },
       {
         id: "9", name: "عرس جماعي - الكلاسيكي الملكي",
         defaultData: {
@@ -217,7 +250,10 @@ export const categories: Category[] = [
       { id: "1", name: "عيادة احترافية", defaultData: { ...specializedData, colors: { primary: "#1a4b9c", secondary: "#1e3a8a", accent: "#fbbf24", bg: "#e8f4f8" } } },
       { id: "2", name: "مركز طبي مميز", defaultData: { ...specializedData, title: "Dream Clinic", subtitle: "ابتسامتك", description: "علاج الأسنان،تبييض الأسنان،ابتسامة هوليود،تيجان بورسلين،تيجان زيركونيوم", phone: "+90 535 081 96 31", email: "@dream_clinic", website: "Dream-Clinic", colors: { primary: "#1e40af", secondary: "#1d4ed8", accent: "#fcd34d", bg: "#eff6ff" } } },
       { id: "3", name: "مركز تعليمي", defaultData: { ...specializedData, title: "مركز الأمير التعليمي", subtitle: "نعلن عن بدء دوراتنا المركزة", description: "قاعات دراسية واسعة ومكيفة،دوام الطلاب منفصل عن الطالبات،أسعار مخففة وبالتقسيط", phone: "07826560604", colors: { primary: "#1e40af", secondary: "#3b82f6", accent: "#fbbf24", bg: "#dbeafe" } } },
-      { id: "4", name: "أكاديمية تعليمية", defaultData: { ...specializedData, title: "أكاديمية المستقبل", subtitle: "الدولية", description: "خصم الأخوة،خصم الثقات،خصم حفظة القرآن،خصم القوات المسلحة", phone: "0778761241", colors: { primary: "#0369a1", secondary: "#0284c7", accent: "#fde047", bg: "#e0f2fe" } } }
+      { id: "4", name: "أكاديمية تعليمية", defaultData: { ...specializedData, title: "أكاديمية المستقبل", subtitle: "الدولية", description: "خصم الأخوة،خصم الثقات،خصم حفظة القرآن،خصم القوات المسلحة", phone: "0778761241", colors: { primary: "#0369a1", secondary: "#0284c7", accent: "#fde047", bg: "#e0f2fe" } } },
+      { id: "5", name: "صالون تجميل", defaultData: { ...specializedData, title: "ستايل بيوتي", subtitle: "صالون تجميل متكامل", description: "قص وتصفيف،صبغ وهايلايت،عناية بالبشرة،مانيكير وباديكير", phone: "0501234567", colors: { primary: "#be185d", secondary: "#9d174d", accent: "#fda4af", bg: "#fff1f2" } } },
+      { id: "6", name: "تسويق عقاري", defaultData: { ...specializedData, title: "العقارية الذهبية", subtitle: "نبني أحلامك معنا", description: "بيع وشراء،إيجار سكني وتجاري،إدارة أملاك،استشارات عقارية", phone: "0556789012", colors: { primary: "#1e3a5f", secondary: "#0f2640", accent: "#f59e0b", bg: "#0a1628" } } },
+      { id: "7", name: "مركز تدريبي", defaultData: { ...specializedData, title: "منارة التدريب", subtitle: "طريقك نحو التميز", description: "دورات مكثفة،مناهج معتمدة،شهادات معترف بها،مدربون خبراء", phone: "0523456789", colors: { primary: "#7c3aed", secondary: "#6d28d9", accent: "#fbbf24", bg: "#faf5ff" } } }
     ]
   },
   {
@@ -403,6 +439,33 @@ export const categories: Category[] = [
           description: "المقيل والزفة والسمرة\n28 - 7 - 2025",
           phone: "", email: "أفراح آل الحاج", website: "قاعة الأفراح",
           colors: { primary: "#1a1a2e", secondary: "#16213e", accent: "#c9a84c", bg: "#ffffff" }
+        }
+      },
+      {
+        id: "21", name: "احتفالي ملون",
+        defaultData: {
+          title: "عبدالرحمن", subtitle: "تهانينا القلبية", image: "",
+          description: "بمناسبة هذا الإنجاز الرائع\nألف مبروك وعقبال المزيد\nبارك الله في مسيرتك",
+          phone: "", email: "تهنئة خاصة", website: "",
+          colors: { primary: "#7c3aed", secondary: "#5b21b6", accent: "#fbbf24", bg: "#1e1b4b" }
+        }
+      },
+      {
+        id: "22", name: "كلاسيكي فاخر",
+        defaultData: {
+          title: "محمود", subtitle: "ابن الأستاذ حمد القحطاني", image: "",
+          description: "بمناسبة زفافه الميمون\nألف ألف مبروك\nودام الله السرور والهناء",
+          phone: "", email: "تهنئة من الأسرة", website: "",
+          colors: { primary: "#92400e", secondary: "#78350f", accent: "#d97706", bg: "#fef3c7" }
+        }
+      },
+      {
+        id: "23", name: "صورة كاملة عصري",
+        defaultData: {
+          title: "أحمد فهد", subtitle: "يتشرف العائلة بالدعوة", image: "",
+          description: "حفل الزفاف\nيوم الجمعة\n15 - 7 - 2025",
+          phone: "", email: "أفراح آل فهد", website: "قاعة النخبة",
+          colors: { primary: "#0f172a", secondary: "#1e3a8a", accent: "#c9a84c", bg: "#f8fafc" }
         }
       }
     ]
