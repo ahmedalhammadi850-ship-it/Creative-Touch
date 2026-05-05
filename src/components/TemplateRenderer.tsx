@@ -40,6 +40,7 @@ const templates = {
   'business-card/17': lazy(() => import('../templates/business-card/Template17')),
   'business-card/18': lazy(() => import('../templates/business-card/Template18')),
   'business-card/19': lazy(() => import('../templates/business-card/Template19')),
+  'business-card/20': lazy(() => import('../templates/business-card/Template20')),
   'ads/1': lazy(() => import('../templates/ads/Template1')),
   'ads/2': lazy(() => import('../templates/ads/Template2')),
   'ads/3': lazy(() => import('../templates/ads/Template3')),

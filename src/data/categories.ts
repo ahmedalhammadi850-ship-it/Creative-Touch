@@ -221,6 +221,7 @@ export const categories: Category[] = [
       { id: "17", name: "الدائري العصري", defaultData: { ...businessCardData, colors: { primary: "#0d47a1", secondary: "#1565c0", accent: "#42a5f5", bg: "#f0f7ff" } } },
       { id: "18", name: "المنقسم الجانبي", defaultData: { ...businessCardData, colors: { primary: "#1b5e20", secondary: "#ffffff", accent: "#a5d6a7", bg: "#ffffff" } } },
       { id: "19", name: "التدرج الجريء الجديد", defaultData: { ...businessCardData, colors: { primary: "#4a148c", secondary: "#6a1b9a", accent: "#ffffff", bg: "#4a148c" } } },
+      { id: "20", name: "الداكن الزجاجي الفاخر", defaultData: { ...businessCardData, colors: { primary: "#c9a84c", secondary: "#c9a84c", accent: "#c9a84c", bg: "#0d0d0d" } } },
     ]
   },
   {
