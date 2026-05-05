@@ -232,6 +232,9 @@ export const categories: Category[] = [
       { id: "28", name: "كلاسيك وردي أنثوي", defaultData: { ...businessCardData, colors: { primary: "#be185d", secondary: "#be185d", accent: "#f9a8d4", bg: "#fdf2f8" } } },
       { id: "29", name: "كلاسيك رمادي راقي", defaultData: { ...businessCardData, colors: { primary: "#374151", secondary: "#374151", accent: "#9ca3af", bg: "#f9fafb" } } },
       { id: "30", name: "كلاسيك داكن نيوني", defaultData: { ...businessCardData, colors: { primary: "#4ade80", secondary: "#bbf7d0", accent: "#4ade80", bg: "#0a0a0a" } } },
+      { id: "31", name: "موجة زرقاء احترافية", defaultData: { ...businessCardData, colors: { primary: "#0ea5e9", secondary: "#1e3a5f", accent: "#f97316", bg: "#ffffff" } } },
+      { id: "32", name: "داكن أحمر عربي", defaultData: { ...businessCardData, colors: { primary: "#111111", secondary: "#1a1a1a", accent: "#ef4444", bg: "#111111" } } },
+      { id: "33", name: "داكن ذهبي احترافي", defaultData: { ...businessCardData, colors: { primary: "#1e2a3a", secondary: "#162030", accent: "#f59e0b", bg: "#0f1923" } } },
     ]
   },
   {
