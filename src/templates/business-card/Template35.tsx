@@ -3,7 +3,7 @@ import type { TemplateData } from '../../types/template';
 function LogoLayer({ data }: { data: TemplateData }) {
   if (!data.logo) return null;
   const size = data.logoSize ?? 40;
-  const pos = data.logoPosition ?? 'top-left';
+  const pos = data.logoPosition ?? 'top-right';
   const posClass: Record<string, string> = {
     'top-left': 'top-3 left-3',
     'top-right': 'top-3 right-3',
@@ -25,27 +25,49 @@ export default function Template35({ data }: { data: TemplateData }) {
   return (
     <div
       id="template-preview"
-      className="relative overflow-hidden w-[340px] h-[220px] flex flex-col shadow-lg"
-      style={{ backgroundColor: data.colors.bg }}
+      className="relative overflow-hidden w-[340px] h-[220px] flex flex-col shadow-xl"
+      style={{ backgroundColor: data.colors.secondary }}
     >
-      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 340 220" preserveAspectRatio="none">
-        <path d="M200,0 Q260,40 340,20 L340,0 Z" fill={data.colors.accent} />
-        <path d="M180,0 Q240,50 340,30 L340,0 L200,0 Z" fill={data.colors.primary} opacity="0.6"/>
-        <path d="M0,180 Q80,140 180,200 Q260,230 340,180 L340,220 L0,220 Z" fill={data.colors.accent} />
-        <path d="M0,195 Q100,155 200,210 Q280,235 340,195 L340,220 L0,220 Z" fill={data.colors.primary} opacity="0.5"/>
+      {/* Top wave accent */}
+      <svg className="absolute top-0 left-0 w-full" viewBox="0 0 340 55" preserveAspectRatio="none" style={{ height: 55 }}>
+        <path d="M0,0 L340,0 L340,35 Q260,60 180,30 Q100,5 0,45 Z" fill={data.colors.primary} />
+        <path d="M0,0 L340,0 L340,18 Q250,40 170,18 Q80,0 0,28 Z" fill={data.colors.accent} opacity="0.7" />
+      </svg>
+
+      {/* Bottom wave */}
+      <svg className="absolute bottom-0 left-0 w-full" viewBox="0 0 340 45" preserveAspectRatio="none" style={{ height: 45 }}>
+        <path d="M0,45 L340,45 L340,20 Q260,0 180,25 Q90,45 0,15 Z" fill={data.colors.primary} opacity="0.4" />
+        <path d="M0,45 L340,45 L340,30 Q240,8 160,32 Q80,50 0,28 Z" fill={data.colors.accent} opacity="0.3" />
       </svg>
 
       <LogoLayer data={data} />
 
-      <div className="relative z-10 flex-1 flex flex-row items-center px-6 gap-4">
+      {/* Main content — white text on dark bg */}
+      <div className="relative z-10 flex-1 flex flex-row items-center px-6 gap-5 mt-4">
         <div className="flex-1">
-          <h2 className="text-[18px] font-bold" style={{ color: data.colors.primary }}>{data.title}</h2>
-          <p className="text-[10px] mt-1" style={{ color: data.colors.accent }}>{data.subtitle}</p>
+          <h2 className="text-[19px] font-extrabold leading-tight text-white">{data.title}</h2>
+          <p className="text-[9px] mt-1 font-semibold tracking-wider" style={{ color: data.colors.accent }}>{data.subtitle}</p>
+          <div className="mt-2 w-10 h-0.5 rounded bg-white opacity-30" />
         </div>
-        <div className="flex flex-col gap-1 text-right">
-          {data.phone && <p dir="ltr" className="text-[8px]" style={{ color: 'rgba(255,255,255,0.75)' }}>{data.phone}</p>}
-          {data.email && <p dir="ltr" className="text-[8px]" style={{ color: 'rgba(255,255,255,0.75)' }}>{data.email}</p>}
-          {data.website && <p dir="ltr" className="text-[8px]" style={{ color: 'rgba(255,255,255,0.75)' }}>{data.website}</p>}
+        <div className="flex flex-col gap-2">
+          {data.phone && (
+            <div className="flex items-center gap-1.5">
+              <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: data.colors.accent }} />
+              <p dir="ltr" className="text-[8.5px] font-medium text-white">{data.phone}</p>
+            </div>
+          )}
+          {data.email && (
+            <div className="flex items-center gap-1.5">
+              <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: data.colors.accent }} />
+              <p dir="ltr" className="text-[8.5px] font-medium text-white">{data.email}</p>
+            </div>
+          )}
+          {data.website && (
+            <div className="flex items-center gap-1.5">
+              <div className="w-3.5 h-3.5 rounded flex-shrink-0" style={{ backgroundColor: data.colors.accent }} />
+              <p dir="ltr" className="text-[8.5px] font-medium text-white">{data.website}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

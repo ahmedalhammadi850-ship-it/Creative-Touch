@@ -25,43 +25,64 @@ export default function Template39({ data }: { data: TemplateData }) {
   return (
     <div
       id="template-preview"
-      className="relative overflow-hidden w-[340px] h-[220px] flex shadow-lg"
+      className="relative overflow-hidden w-[340px] h-[220px] flex shadow-xl"
       style={{ backgroundColor: '#ffffff' }}
     >
-      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 340 220" preserveAspectRatio="none">
-        <path d="M220,0 Q260,80 220,140 Q200,180 240,220 L340,220 L340,0 Z" fill={data.colors.primary} />
-        <path d="M240,0 Q275,70 240,130 Q220,170 255,220 L340,220 L340,0 Z" fill={data.colors.accent} opacity="0.6"/>
-      </svg>
-
-      <LogoLayer data={data} />
-
-      <div className="relative z-10 flex-1 flex flex-col justify-between p-5">
+      {/* White content area (left 210px) — all text here for maximum contrast */}
+      <div className="relative z-10 w-[210px] flex flex-col justify-between py-5 px-5">
         <div>
-          <h2 className="text-[17px] font-black" style={{ color: data.colors.primary }}>{data.title}</h2>
-          <p className="text-[9px] mt-0.5 tracking-wide uppercase" style={{ color: data.colors.accent }}>{data.subtitle}</p>
-          <div className="mt-2 w-10 h-0.5 rounded" style={{ backgroundColor: data.colors.primary }} />
+          <h2 className="text-[18px] font-extrabold leading-tight" style={{ color: '#111111' }}>{data.title}</h2>
+          <p className="text-[9px] font-semibold tracking-wider mt-1 uppercase" style={{ color: data.colors.primary }}>{data.subtitle}</p>
+          <div className="mt-2.5 w-10 h-[2.5px] rounded" style={{ backgroundColor: data.colors.primary }} />
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-2">
           {data.phone && (
             <div className="flex items-center gap-2">
-              <div className="w-3.5 h-3.5 rounded-full flex-shrink-0" style={{ backgroundColor: data.colors.primary }} />
-              <p dir="ltr" className="text-[8px]" style={{ color: '#555' }}>{data.phone}</p>
+              <div className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.primary }}>
+                <div className="w-1.5 h-1.5 bg-white rounded-full" />
+              </div>
+              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#1a1a1a' }}>{data.phone}</p>
             </div>
           )}
           {data.email && (
             <div className="flex items-center gap-2">
-              <div className="w-3.5 h-3.5 rounded-full flex-shrink-0" style={{ backgroundColor: data.colors.primary }} />
-              <p dir="ltr" className="text-[8px]" style={{ color: '#555' }}>{data.email}</p>
+              <div className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.primary }}>
+                <div className="w-1.5 h-1.5 bg-white rounded-full" />
+              </div>
+              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#1a1a1a' }}>{data.email}</p>
             </div>
           )}
           {data.website && (
             <div className="flex items-center gap-2">
-              <div className="w-3.5 h-3.5 rounded-full flex-shrink-0" style={{ backgroundColor: data.colors.primary }} />
-              <p dir="ltr" className="text-[8px]" style={{ color: '#555' }}>{data.website}</p>
+              <div className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.primary }}>
+                <div className="w-1.5 h-1.5 bg-white rounded-full" />
+              </div>
+              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#1a1a1a' }}>{data.website}</p>
             </div>
           )}
         </div>
       </div>
+
+      {/* Colored right panel — decorative only, no text here */}
+      <div className="flex-1 relative" style={{ backgroundColor: data.colors.primary }}>
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 130 220" preserveAspectRatio="none">
+          {/* Curved left edge of the colored panel */}
+          <path d="M30,0 Q0,55 20,110 Q38,165 10,220 L130,220 L130,0 Z" fill={data.colors.primary} />
+          <path d="M55,0 Q25,60 42,110 Q58,160 35,220 L130,220 L130,0 Z" fill={data.colors.accent} opacity="0.4" />
+          <path d="M80,0 Q55,55 68,110 Q80,158 62,220 L130,220 L130,0 Z" fill="#ffffff" opacity="0.06" />
+        </svg>
+        {/* Tagline on the colored panel — white text = clear */}
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <p
+            className="text-[7px] font-bold tracking-[0.3em] uppercase text-white opacity-70"
+            style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+          >
+            {data.description?.split(',')[0] || ''}
+          </p>
+        </div>
+      </div>
+
+      <LogoLayer data={data} />
     </div>
   );
 }

@@ -25,41 +25,59 @@ export default function Template34({ data }: { data: TemplateData }) {
   return (
     <div
       id="template-preview"
-      className="relative overflow-hidden w-[340px] h-[220px] flex shadow-lg"
+      className="relative overflow-hidden w-[340px] h-[220px] flex shadow-xl"
       style={{ backgroundColor: '#ffffff' }}
     >
-      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 340 220" preserveAspectRatio="none">
-        <path d="M0,0 L200,0 L150,220 L0,220 Z" fill={data.colors.secondary} />
-        <path d="M0,0 L180,0 Q140,60 120,110 Q100,160 130,220 L0,220 Z" fill={data.colors.primary} />
-        <path d="M240,220 L340,60 L340,220 Z" fill={data.colors.accent} opacity="0.85"/>
-        <path d="M290,220 L340,120 L340,220 Z" fill={data.colors.primary} opacity="0.5"/>
-      </svg>
+      {/* Colored diagonal left panel */}
+      <div className="relative w-[130px] flex-shrink-0 flex flex-col justify-between p-4" style={{ backgroundColor: data.colors.secondary }}>
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 130 220" preserveAspectRatio="none">
+          <path d="M0,0 L130,0 L130,220 L0,220 Z" fill={data.colors.secondary} />
+          <path d="M80,0 L130,0 L130,220 L55,220 Z" fill={data.colors.primary} opacity="0.35" />
+        </svg>
+        <div className="relative z-10">
+          <p className="text-[10px] font-bold tracking-widest uppercase text-white leading-tight">{data.description?.split(',')[0] || 'الشركة'}</p>
+          <div className="mt-1.5 w-8 h-0.5 rounded bg-white opacity-50" />
+        </div>
+        <div className="relative z-10">
+          <p className="text-[7px] text-white/60 leading-relaxed">{data.subtitle}</p>
+        </div>
+        {/* Bottom accent triangles */}
+        <svg className="absolute bottom-0 left-0 w-full" viewBox="0 0 130 40" preserveAspectRatio="none" style={{ height: 40 }}>
+          <path d="M0,40 L130,10 L130,40 Z" fill={data.colors.primary} opacity="0.5" />
+          <path d="M0,40 L130,22 L130,40 Z" fill={data.colors.accent} opacity="0.8" />
+        </svg>
+      </div>
+
+      {/* White right panel — all text on white = max contrast */}
+      <div className="flex-1 flex flex-col justify-between p-4 pl-5">
+        <div>
+          <h2 className="text-[17px] font-extrabold leading-tight" style={{ color: '#111111' }}>{data.title}</h2>
+          <p className="text-[9px] font-semibold mt-1 uppercase tracking-wider" style={{ color: data.colors.primary }}>{data.subtitle}</p>
+          <div className="mt-2 w-8 h-0.5 rounded" style={{ backgroundColor: data.colors.accent }} />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          {data.phone && (
+            <div className="flex items-center gap-2">
+              <div className="w-3.5 h-3.5 rounded-full flex-shrink-0" style={{ backgroundColor: data.colors.accent }} />
+              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#222' }}>{data.phone}</p>
+            </div>
+          )}
+          {data.email && (
+            <div className="flex items-center gap-2">
+              <div className="w-3.5 h-3.5 rounded-full flex-shrink-0" style={{ backgroundColor: data.colors.accent }} />
+              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#222' }}>{data.email}</p>
+            </div>
+          )}
+          {data.website && (
+            <div className="flex items-center gap-2">
+              <div className="w-3.5 h-3.5 rounded-full flex-shrink-0" style={{ backgroundColor: data.colors.accent }} />
+              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#222' }}>{data.website}</p>
+            </div>
+          )}
+        </div>
+      </div>
 
       <LogoLayer data={data} />
-
-      <div className="relative z-10 flex-1 flex flex-col justify-between p-5 pr-0">
-        <div>
-          <p className="text-[8px] tracking-widest uppercase mb-1" style={{ color: 'rgba(255,255,255,0.7)' }}>
-            {data.description?.split(',')[0] || ''}
-          </p>
-          <p className="text-[7px] tracking-widest" style={{ color: 'rgba(255,255,255,0.5)' }}>
-            {data.subtitle}
-          </p>
-        </div>
-        <div />
-      </div>
-
-      <div className="relative z-10 w-[180px] flex flex-col justify-between p-5 pl-3">
-        <div>
-          <h2 className="text-[15px] font-bold" style={{ color: data.colors.primary }}>{data.title}</h2>
-          <p className="text-[9px] mt-0.5" style={{ color: data.colors.secondary }}>{data.subtitle}</p>
-        </div>
-        <div className="flex flex-col gap-1">
-          {data.phone && <p dir="ltr" className="text-[8px]" style={{ color: '#444' }}>{data.phone}</p>}
-          {data.email && <p dir="ltr" className="text-[8px]" style={{ color: '#444' }}>{data.email}</p>}
-          {data.website && <p dir="ltr" className="text-[8px]" style={{ color: '#444' }}>{data.website}</p>}
-        </div>
-      </div>
     </div>
   );
 }

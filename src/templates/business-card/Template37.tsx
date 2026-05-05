@@ -25,32 +25,40 @@ export default function Template37({ data }: { data: TemplateData }) {
   return (
     <div
       id="template-preview"
-      className="relative overflow-hidden w-[340px] h-[220px] flex shadow-lg"
+      className="relative overflow-hidden w-[340px] h-[220px] flex shadow-xl"
       style={{ backgroundColor: '#ffffff' }}
     >
-      <svg className="absolute inset-0 w-full h-full" viewBox="0 0 340 220" preserveAspectRatio="none">
-        <path d="M0,0 L80,0 Q60,110 100,220 L0,220 Z" fill={data.colors.primary} />
-        <path d="M0,0 L60,0 Q45,100 80,220 L0,220 Z" fill={data.colors.accent} opacity="0.7"/>
-        <path d="M240,220 Q280,160 340,140 L340,220 Z" fill={data.colors.primary} opacity="0.3"/>
-        <path d="M260,220 Q300,170 340,155 L340,220 Z" fill={data.colors.accent} opacity="0.5"/>
-      </svg>
-
-      <LogoLayer data={data} />
-
-      <div className="relative z-10 w-[90px]" />
-
-      <div className="relative z-10 flex-1 flex flex-col justify-between py-4 pr-5 pl-2">
-        <div>
-          <h2 className="text-[16px] font-black uppercase" style={{ color: data.colors.primary }}>{data.title}</h2>
-          <p className="text-[9px] tracking-wider mt-0.5" style={{ color: data.colors.accent }}>{data.subtitle}</p>
+      {/* Colored left wave column */}
+      <div className="relative w-[100px] flex-shrink-0" style={{ backgroundColor: data.colors.primary }}>
+        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 220" preserveAspectRatio="none">
+          <path d="M0,0 L100,0 Q75,55 90,110 Q100,165 75,220 L0,220 Z" fill={data.colors.secondary} />
+          <path d="M0,0 L80,0 Q60,50 72,110 Q82,160 60,220 L0,220 Z" fill={data.colors.accent} opacity="0.45" />
+        </svg>
+        {/* Tagline text vertical on colored band — white on color = clear */}
+        <div className="relative z-10 h-full flex items-center justify-center">
+          <p
+            className="text-[7px] font-bold tracking-[0.25em] uppercase text-white"
+            style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg)' }}
+          >
+            {data.description?.split(',')[0] || data.subtitle}
+          </p>
         </div>
-        <div className="flex flex-col gap-1.5">
+      </div>
+
+      {/* White right panel — dark text for max contrast */}
+      <div className="relative z-10 flex-1 flex flex-col justify-between py-5 px-5">
+        <div>
+          <h2 className="text-[18px] font-extrabold leading-tight" style={{ color: '#111111' }}>{data.title}</h2>
+          <p className="text-[9px] font-semibold tracking-wider mt-1 uppercase" style={{ color: data.colors.primary }}>{data.subtitle}</p>
+          <div className="mt-2 w-10 h-[2.5px] rounded" style={{ backgroundColor: data.colors.accent }} />
+        </div>
+        <div className="flex flex-col gap-2">
           {data.phone && (
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.primary }}>
                 <div className="w-1.5 h-1.5 bg-white rounded-full" />
               </div>
-              <p dir="ltr" className="text-[8px]" style={{ color: '#555' }}>{data.phone}</p>
+              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#1a1a1a' }}>{data.phone}</p>
             </div>
           )}
           {data.email && (
@@ -58,7 +66,7 @@ export default function Template37({ data }: { data: TemplateData }) {
               <div className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.primary }}>
                 <div className="w-1.5 h-1.5 bg-white rounded-full" />
               </div>
-              <p dir="ltr" className="text-[8px]" style={{ color: '#555' }}>{data.email}</p>
+              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#1a1a1a' }}>{data.email}</p>
             </div>
           )}
           {data.website && (
@@ -66,14 +74,13 @@ export default function Template37({ data }: { data: TemplateData }) {
               <div className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.primary }}>
                 <div className="w-1.5 h-1.5 bg-white rounded-full" />
               </div>
-              <p dir="ltr" className="text-[8px]" style={{ color: '#555' }}>{data.website}</p>
+              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#1a1a1a' }}>{data.website}</p>
             </div>
           )}
-          <p className="text-[7px] tracking-widest mt-1 uppercase" style={{ color: data.colors.accent }}>
-            {data.description?.split(',')[0] || ''}
-          </p>
         </div>
       </div>
+
+      <LogoLayer data={data} />
     </div>
   );
 }
