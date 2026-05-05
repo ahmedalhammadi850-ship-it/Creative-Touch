@@ -5,6 +5,7 @@ export interface TemplateData {
   phone?: string;
   email?: string;
   website?: string;
+  fontSize?: number;
   colors: {
     primary: string;
     secondary: string;

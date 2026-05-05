@@ -3,9 +3,14 @@ import type { TemplateData } from '../../types/template';
 export default function Template8({ data }: { data: TemplateData }) {
   const couples = data.description ? data.description.split('\n').filter(Boolean) : [];
   const images = data.images || [];
-  const visible = Array.from({ length: 6 }, (_, i) => i).filter(i => !!images[i]);
-  const hasPhotos = visible.length > 0;
-  const slots = hasPhotos ? visible : Array.from({ length: 6 }, (_, i) => i);
+  const fs = data.fontSize ?? 1;
+
+  const filledCount = images.filter(Boolean).length;
+  const gridCols = filledCount === 0 ? 3 : filledCount === 1 ? 1 : filledCount === 2 ? 2 : 3;
+  const imgSize = filledCount === 1 ? 120 : filledCount === 2 ? 96 : 62;
+  const slots = filledCount > 0
+    ? Array.from({ length: 6 }, (_, i) => i).filter(i => !!images[i])
+    : Array.from({ length: 6 }, (_, i) => i);
 
   return (
     <div id="template-preview" style={{ width: '280px', minHeight: '490px', backgroundColor: data.colors.bg, direction: 'rtl', fontFamily: "'Georgia', serif", position: 'relative', overflow: 'hidden' }}>
@@ -23,7 +28,6 @@ export default function Template8({ data }: { data: TemplateData }) {
         </defs>
         <rect width="280" height="90" fill="url(#mw8-g1)" />
         <rect width="280" height="90" fill="url(#mw8-g2)" />
-        {/* Rose petals */}
         {[15,25,140,255,265].map((x, i) => (
           <ellipse key={i} cx={x} cy={i%2===0 ? 14 : 22} rx="8" ry="5" fill={i%2===0 ? data.colors.primary : data.colors.accent} opacity="0.2" transform={`rotate(${i*36} ${x} ${i%2===0 ? 14 : 22})`} />
         ))}
@@ -47,15 +51,15 @@ export default function Template8({ data }: { data: TemplateData }) {
 
       <div style={{ position: 'relative', zIndex: 1, padding: '18px 14px 14px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {/* Bismillah */}
-        <div style={{ color: data.colors.primary, fontSize: '8px', textAlign: 'center', marginBottom: '4px', opacity: 0.85 }}>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+        <div style={{ color: data.colors.primary, fontSize: `${8 * fs}px`, textAlign: 'center', marginBottom: '4px', opacity: 0.85 }}>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
 
         {/* Badge */}
-        <div style={{ padding: '2px 14px', border: `1px solid ${data.colors.primary}66`, color: data.colors.primary, fontSize: '6.5px', letterSpacing: '0.12em', marginBottom: '6px', background: `${data.colors.primary}0a` }}>
+        <div style={{ padding: '2px 14px', border: `1px solid ${data.colors.primary}66`, color: data.colors.primary, fontSize: `${6.5 * fs}px`, letterSpacing: '0.12em', marginBottom: '6px', background: `${data.colors.primary}0a` }}>
           ✿ دعوة عرس جماعي ✿
         </div>
 
         {/* Title */}
-        <div style={{ color: data.colors.secondary, fontSize: '13px', fontWeight: 'bold', textAlign: 'center', lineHeight: 1.35, marginBottom: '3px' }}>{data.title}</div>
+        <div style={{ color: data.colors.secondary, fontSize: `${13 * fs}px`, fontWeight: 'bold', textAlign: 'center', lineHeight: 1.35, marginBottom: '3px' }}>{data.title}</div>
 
         {/* Triple dot divider */}
         <div style={{ display: 'flex', gap: '5px', alignItems: 'center', marginBottom: '5px' }}>
@@ -63,14 +67,14 @@ export default function Template8({ data }: { data: TemplateData }) {
         </div>
 
         {/* Subtitle */}
-        <div style={{ color: data.colors.secondary, fontSize: '7px', textAlign: 'center', lineHeight: 1.7, opacity: 0.75, marginBottom: '10px' }}>{data.subtitle}</div>
+        <div style={{ color: data.colors.secondary, fontSize: `${7 * fs}px`, textAlign: 'center', lineHeight: 1.7, opacity: 0.75, marginBottom: '10px' }}>{data.subtitle}</div>
 
-        {/* Photo grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '9px', width: '100%' }}>
+        {/* Responsive photo grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${gridCols}, 1fr)`, gap: '9px', width: '100%' }}>
           {slots.map(i => (
             <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
               <div style={{
-                width: '62px', height: '62px', borderRadius: '50%',
+                width: `${imgSize}px`, height: `${imgSize}px`, borderRadius: '50%',
                 border: `2px ${images[i] ? 'solid' : 'dashed'} ${data.colors.primary}${images[i] ? '' : '44'}`,
                 overflow: 'hidden',
                 boxShadow: images[i] ? `0 2px 10px ${data.colors.primary}33, 0 0 0 3px ${data.colors.bg}, 0 0 0 4.5px ${data.colors.primary}44` : 'none',
@@ -83,7 +87,7 @@ export default function Template8({ data }: { data: TemplateData }) {
                 }
               </div>
               {couples[i] && (
-                <span style={{ color: data.colors.secondary, fontSize: '6.5px', textAlign: 'center', lineHeight: 1.4, maxWidth: '72px', fontWeight: '600', opacity: images[i] ? 1 : 0.4 }}>
+                <span style={{ color: data.colors.secondary, fontSize: `${6.5 * fs}px`, textAlign: 'center', lineHeight: 1.4, maxWidth: `${imgSize + 10}px`, fontWeight: '600', opacity: images[i] ? 1 : 0.4 }}>
                   {couples[i]}
                 </span>
               )}
@@ -99,8 +103,8 @@ export default function Template8({ data }: { data: TemplateData }) {
         </div>
         {(data.phone || data.website) && (
           <div style={{ textAlign: 'center', lineHeight: 1.9 }}>
-            {data.phone && <div style={{ color: data.colors.secondary, fontSize: '7px', opacity: 0.7 }}>{data.phone}</div>}
-            {data.website && <div style={{ color: data.colors.secondary, fontSize: '7px', opacity: 0.7 }}>{data.website}</div>}
+            {data.phone && <div style={{ color: data.colors.secondary, fontSize: `${7 * fs}px`, opacity: 0.7 }}>{data.phone}</div>}
+            {data.website && <div style={{ color: data.colors.secondary, fontSize: `${7 * fs}px`, opacity: 0.7 }}>{data.website}</div>}
           </div>
         )}
       </div>

@@ -77,6 +77,39 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
   return (
     <div className="space-y-6">
 
+      {/* Font size control for mass-wedding */}
+      {isMassWedding && (
+        <div className="space-y-3">
+          <h3 className="text-lg font-bold">حجم الخط</h3>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => onChange({ fontSize: Math.max(0.7, Math.round(((data.fontSize ?? 1) - 0.1) * 10) / 10) })}
+              className="w-9 h-9 rounded-lg border border-input bg-background hover:bg-accent hover:text-accent-foreground flex items-center justify-center text-lg font-bold transition-colors"
+            >
+              −
+            </button>
+            <div className="flex-1 text-center">
+              <span className="text-base font-semibold">{Math.round((data.fontSize ?? 1) * 100)}%</span>
+            </div>
+            <button
+              onClick={() => onChange({ fontSize: Math.min(2.0, Math.round(((data.fontSize ?? 1) + 0.1) * 10) / 10) })}
+              className="w-9 h-9 rounded-lg border border-input bg-background hover:bg-accent hover:text-accent-foreground flex items-center justify-center text-lg font-bold transition-colors"
+            >
+              +
+            </button>
+          </div>
+          <input
+            type="range"
+            min="70"
+            max="200"
+            step="10"
+            value={Math.round((data.fontSize ?? 1) * 100) || 100}
+            onChange={e => onChange({ fontSize: Number(e.target.value) / 100 })}
+            className="w-full accent-primary"
+          />
+        </div>
+      )}
+
       {/* Multi-image upload for mass-wedding */}
       {isMassWedding && (
         <div className="space-y-3">

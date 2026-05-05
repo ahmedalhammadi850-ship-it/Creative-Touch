@@ -3,6 +3,14 @@ import type { TemplateData } from '../../types/template';
 export default function Template1({ data }: { data: TemplateData }) {
   const couples = data.description ? data.description.split('\n').filter(Boolean) : [];
   const images = data.images || [];
+  const fs = data.fontSize ?? 1;
+
+  const filledCount = images.filter(Boolean).length;
+  const gridCols = filledCount === 0 ? 3 : filledCount === 1 ? 1 : filledCount === 2 ? 2 : 3;
+  const imgSize = filledCount === 1 ? 120 : filledCount === 2 ? 96 : 62;
+  const slots = filledCount > 0
+    ? Array.from({ length: 6 }, (_, i) => i).filter(i => !!images[i])
+    : Array.from({ length: 6 }, (_, i) => i);
 
   return (
     <div
@@ -59,7 +67,7 @@ export default function Template1({ data }: { data: TemplateData }) {
       <div style={{ position: 'relative', zIndex: 1, padding: '18px 16px 14px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
         {/* Bismillah */}
-        <div style={{ color: data.colors.primary, fontSize: '9px', textAlign: 'center', marginBottom: '3px', opacity: 0.9 }}>
+        <div style={{ color: data.colors.primary, fontSize: `${9 * fs}px`, textAlign: 'center', marginBottom: '3px', opacity: 0.9 }}>
           بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
         </div>
 
@@ -71,17 +79,17 @@ export default function Template1({ data }: { data: TemplateData }) {
         </div>
 
         {/* Event label */}
-        <div style={{ color: data.colors.primary, fontSize: '7px', letterSpacing: '0.1em', marginBottom: '4px', opacity: 0.8 }}>
+        <div style={{ color: data.colors.primary, fontSize: `${7 * fs}px`, letterSpacing: '0.1em', marginBottom: '4px', opacity: 0.8 }}>
           دعوة عرس جماعي
         </div>
 
         {/* Event title */}
-        <div style={{ color: data.colors.accent, fontSize: '12.5px', fontWeight: 'bold', textAlign: 'center', lineHeight: 1.35, marginBottom: '4px' }}>
+        <div style={{ color: data.colors.accent, fontSize: `${12.5 * fs}px`, fontWeight: 'bold', textAlign: 'center', lineHeight: 1.35, marginBottom: '4px' }}>
           {data.title}
         </div>
 
         {/* Subtitle */}
-        <div style={{ color: data.colors.secondary, fontSize: '7px', textAlign: 'center', lineHeight: 1.7, marginBottom: '8px', opacity: 0.85 }}>
+        <div style={{ color: data.colors.secondary, fontSize: `${7 * fs}px`, textAlign: 'center', lineHeight: 1.7, marginBottom: '8px', opacity: 0.85 }}>
           {data.subtitle}
         </div>
 
@@ -92,38 +100,31 @@ export default function Template1({ data }: { data: TemplateData }) {
           <div style={{ flex: 1, height: '0.5px', background: `linear-gradient(to right, ${data.colors.primary}88, transparent)` }} />
         </div>
 
-        {/* Photos grid — placeholders until photos added */}
-        {(() => {
-          const visible = Array.from({ length: 6 }, (_, i) => i).filter(i => !!images[i]);
-          const hasPhotos = visible.length > 0;
-          const slots = hasPhotos ? visible : Array.from({ length: 6 }, (_, i) => i);
-          return (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%' }}>
-              {slots.map(i => (
-                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
-                  <div style={{
-                    width: '62px', height: '62px', borderRadius: '50%',
-                    border: `2.5px ${images[i] ? 'solid' : 'dashed'} ${data.colors.primary}${images[i] ? '' : '55'}`,
-                    boxShadow: images[i] ? `0 0 0 1.5px ${data.colors.bg}, 0 0 0 3px ${data.colors.primary}44` : 'none',
-                    overflow: 'hidden', flexShrink: 0,
-                    background: images[i] ? 'transparent' : `${data.colors.primary}0a`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    {images[i]
-                      ? <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      : <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: `${data.colors.primary}20`, border: `1px solid ${data.colors.primary}33` }} />
-                    }
-                  </div>
-                  {couples[i] && (
-                    <span style={{ color: data.colors.secondary, fontSize: '6.5px', textAlign: 'center', lineHeight: 1.4, maxWidth: '72px', fontWeight: '600', opacity: images[i] ? 1 : 0.5 }}>
-                      {couples[i]}
-                    </span>
-                  )}
-                </div>
-              ))}
+        {/* Responsive photos grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${gridCols}, 1fr)`, gap: '10px', width: '100%' }}>
+          {slots.map(i => (
+            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
+              <div style={{
+                width: `${imgSize}px`, height: `${imgSize}px`, borderRadius: '50%',
+                border: `2.5px ${images[i] ? 'solid' : 'dashed'} ${data.colors.primary}${images[i] ? '' : '55'}`,
+                boxShadow: images[i] ? `0 0 0 1.5px ${data.colors.bg}, 0 0 0 3px ${data.colors.primary}44` : 'none',
+                overflow: 'hidden', flexShrink: 0,
+                background: images[i] ? 'transparent' : `${data.colors.primary}0a`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {images[i]
+                  ? <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  : <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: `${data.colors.primary}20`, border: `1px solid ${data.colors.primary}33` }} />
+                }
+              </div>
+              {couples[i] && (
+                <span style={{ color: data.colors.secondary, fontSize: `${6.5 * fs}px`, textAlign: 'center', lineHeight: 1.4, maxWidth: `${imgSize + 10}px`, fontWeight: '600', opacity: images[i] ? 1 : 0.5 }}>
+                  {couples[i]}
+                </span>
+              )}
             </div>
-          );
-        })()}
+          ))}
+        </div>
 
         {/* Bottom divider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px', width: '100%', margin: '10px 0 6px' }}>
@@ -135,8 +136,8 @@ export default function Template1({ data }: { data: TemplateData }) {
         {/* Footer */}
         {(data.phone || data.website) && (
           <div style={{ textAlign: 'center', lineHeight: 1.8 }}>
-            {data.phone && <div style={{ color: data.colors.secondary, fontSize: '7px', opacity: 0.75 }}>{data.phone}</div>}
-            {data.website && <div style={{ color: data.colors.secondary, fontSize: '7px', opacity: 0.75 }}>{data.website}</div>}
+            {data.phone && <div style={{ color: data.colors.secondary, fontSize: `${7 * fs}px`, opacity: 0.75 }}>{data.phone}</div>}
+            {data.website && <div style={{ color: data.colors.secondary, fontSize: `${7 * fs}px`, opacity: 0.75 }}>{data.website}</div>}
           </div>
         )}
       </div>

@@ -3,9 +3,15 @@ import type { TemplateData } from '../../types/template';
 export default function Template7({ data }: { data: TemplateData }) {
   const couples = data.description ? data.description.split('\n').filter(Boolean) : [];
   const images = data.images || [];
-  const visible = Array.from({ length: 6 }, (_, i) => i).filter(i => !!images[i]);
-  const hasPhotos = visible.length > 0;
-  const slots = hasPhotos ? visible : Array.from({ length: 6 }, (_, i) => i);
+  const fs = data.fontSize ?? 1;
+
+  const filledCount = images.filter(Boolean).length;
+  const gridCols = filledCount === 0 ? 3 : filledCount === 1 ? 1 : filledCount === 2 ? 2 : 3;
+  const imgW = filledCount === 1 ? 120 : filledCount === 2 ? 96 : 60;
+  const imgH = Math.round(imgW * 1.1);
+  const slots = filledCount > 0
+    ? Array.from({ length: 6 }, (_, i) => i).filter(i => !!images[i])
+    : Array.from({ length: 6 }, (_, i) => i);
 
   return (
     <div id="template-preview" style={{ width: '280px', minHeight: '490px', backgroundColor: data.colors.bg, direction: 'rtl', fontFamily: "'Helvetica Neue', Arial, sans-serif", position: 'relative', overflow: 'hidden' }}>
@@ -20,12 +26,12 @@ export default function Template7({ data }: { data: TemplateData }) {
       <div style={{ position: 'relative', zIndex: 1, padding: '18px 16px 14px' }}>
         {/* Header on colored strip */}
         <div style={{ textAlign: 'center', marginBottom: '14px' }}>
-          <div style={{ color: data.colors.accent, fontSize: '6.5px', letterSpacing: '0.2em', marginBottom: '5px', opacity: 0.9 }}>دعوة عرس جماعي</div>
-          <div style={{ color: '#ffffff', fontSize: '14px', fontWeight: '800', lineHeight: 1.3, marginBottom: '3px', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>{data.title}</div>
+          <div style={{ color: data.colors.accent, fontSize: `${6.5 * fs}px`, letterSpacing: '0.2em', marginBottom: '5px', opacity: 0.9 }}>دعوة عرس جماعي</div>
+          <div style={{ color: '#ffffff', fontSize: `${14 * fs}px`, fontWeight: '800', lineHeight: 1.3, marginBottom: '3px', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>{data.title}</div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', margin: '6px 0' }}>
             {[0,1,2].map(k => <div key={k} style={{ width: k===1 ? '20px' : '8px', height: '2px', backgroundColor: data.colors.accent, borderRadius: '1px' }} />)}
           </div>
-          <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '7px', lineHeight: 1.7 }}>{data.subtitle}</div>
+          <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: `${7 * fs}px`, lineHeight: 1.7 }}>{data.subtitle}</div>
         </div>
 
         {/* Section label */}
@@ -35,12 +41,13 @@ export default function Template7({ data }: { data: TemplateData }) {
           <div style={{ flex: 1, height: '1px', background: `linear-gradient(to right, ${data.colors.primary}88, transparent)` }} />
         </div>
 
-        {/* Photo grid — 2-column for portrait feel */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', width: '100%' }}>
+        {/* Responsive photo grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: `repeat(${gridCols}, 1fr)`, gap: '8px', width: '100%' }}>
           {slots.map(i => (
             <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
               <div style={{
-                width: '60px', height: '66px', borderRadius: '30px 30px 8px 8px',
+                width: `${imgW}px`, height: `${imgH}px`,
+                borderRadius: `${Math.round(imgW * 0.5)}px ${Math.round(imgW * 0.5)}px 8px 8px`,
                 border: `1.5px ${images[i] ? 'solid' : 'dashed'} ${data.colors.primary}${images[i] ? '' : '44'}`,
                 overflow: 'hidden',
                 boxShadow: images[i] ? `0 3px 10px ${data.colors.primary}33` : 'none',
@@ -53,7 +60,7 @@ export default function Template7({ data }: { data: TemplateData }) {
                 }
               </div>
               {couples[i] && (
-                <span style={{ color: data.colors.secondary, fontSize: '6px', textAlign: 'center', lineHeight: 1.4, maxWidth: '70px', fontWeight: '600', opacity: images[i] ? 1 : 0.45 }}>
+                <span style={{ color: data.colors.secondary, fontSize: `${6 * fs}px`, textAlign: 'center', lineHeight: 1.4, maxWidth: `${imgW + 10}px`, fontWeight: '600', opacity: images[i] ? 1 : 0.45 }}>
                   {couples[i]}
                 </span>
               )}
@@ -69,8 +76,8 @@ export default function Template7({ data }: { data: TemplateData }) {
         </div>
         {(data.phone || data.website) && (
           <div style={{ textAlign: 'center' }}>
-            {data.phone && <div style={{ color: data.colors.secondary, fontSize: '7px', opacity: 0.65 }}>{data.phone}</div>}
-            {data.website && <div style={{ color: data.colors.secondary, fontSize: '7px', opacity: 0.65 }}>{data.website}</div>}
+            {data.phone && <div style={{ color: data.colors.secondary, fontSize: `${7 * fs}px`, opacity: 0.65 }}>{data.phone}</div>}
+            {data.website && <div style={{ color: data.colors.secondary, fontSize: `${7 * fs}px`, opacity: 0.65 }}>{data.website}</div>}
           </div>
         )}
       </div>
