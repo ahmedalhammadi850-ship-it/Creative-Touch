@@ -362,90 +362,90 @@ export const categories: Category[] = [
       {
         id: "1", name: "تهنئة فاخرة",
         defaultData: {
-          title: "عبد العزيز", subtitle: "يتشرف الوالد", image: "",
+          title: "محمد", subtitle: "يتشرف الوالد عمار بالدعوة", image: "",
           description: "وذلك بمناسبة زفافه الميمون\nألف ألف مبروك\nودام الله السرور",
-          phone: "", email: "تهنئة خاصة", website: "",
+          phone: "تهانينا", email: "أفراح عمار", website: "إهداء",
           colors: { primary: "#0d4a6e", secondary: "#0a3a5a", accent: "#4dd0e1", bg: "#061a25" }
         }
       },
       {
         id: "2", name: "ليلة العمر",
         defaultData: {
-          title: "سامح", subtitle: "أحمد سعيد الحاج", image: "",
+          title: "محمد", subtitle: "عمار بن صالح", image: "",
           description: "المقيل والزفة\nالجمعة 29.08.2025\nالمخا - مدينة الكهرباء",
-          phone: "", email: "أفراح آل الحاج", website: "",
+          phone: "تهانينا", email: "أفراح عمار", website: "إهداء",
           colors: { primary: "#c8a85a", secondary: "#1a1a1a", accent: "#c8a85a", bg: "#0a0a0a" }
         }
       },
       {
         id: "3", name: "إطار الذكرى",
         defaultData: {
-          title: "محمد", subtitle: "ابن الفاضل حمود القيسي", image: "",
+          title: "محمد", subtitle: "ابن الفاضل عمار القيسي", image: "",
           description: "بمناسبة زفافه الميمون ودخوله القفص الذهبي\nدامت أيامكم عامرة بالمسرات",
-          phone: "", email: "تهنئة مقدمة من", website: "@QQYY_Y",
+          phone: "تهانينا", email: "تهنئة مقدمة من عمار", website: "إهداء",
           colors: { primary: "#8b2020", secondary: "#6b1818", accent: "#c0392b", bg: "#fdf5e6" }
         }
       },
       {
         id: "4", name: "الليلة الحلوة",
         defaultData: {
-          title: "باسم", subtitle: "الوالد والعائلة الكريمة", image: "",
+          title: "محمد", subtitle: "الوالد عمار والعائلة الكريمة", image: "",
           description: "المقيل والزفة والسمرة\nyom Al-Arbia'a\n28-7-2021",
-          phone: "", email: "أفراح آل باشا", website: "في قاعة آية - شارع مالك دوحة آية",
+          phone: "تهانينا", email: "أفراح عمار", website: "إهداء",
           colors: { primary: "#2d5a27", secondary: "#1a3a1a", accent: "#c8a85a", bg: "#111" }
         }
       },
       {
         id: "5", name: "الإطار الذهبي",
         defaultData: {
-          title: "أحمد", subtitle: "محمد بن علي", image: "",
+          title: "محمد", subtitle: "محمد بن عمار", image: "",
           description: "المقيل والزفة والسمرة\nيوم الجمعة\n1 محرم 1447",
-          phone: "", email: "تهنئة خاصة من العائلة", website: "قاعة الأفراح - المدينة",
+          phone: "تهانينا", email: "تهنئة خاصة من عمار", website: "إهداء",
           colors: { primary: "#1a3a5c", secondary: "#0f2640", accent: "#c9a84c", bg: "#f5f0e8" }
         }
       },
       {
         id: "6", name: "بطاقة سينمائية",
         defaultData: {
-          title: "سامح", subtitle: "أحمد سعيد", image: "",
+          title: "محمد", subtitle: "عمار بن سعيد", image: "",
           description: "المقيل والزفة\nالجمعة\n28 - 7 - 2025",
-          phone: "", email: "أفراح آل الحاج", website: "مدينة الكهرباء - المخا",
+          phone: "تهانينا", email: "أفراح عمار", website: "إهداء",
           colors: { primary: "#1a1a2e", secondary: "#16213e", accent: "#e2b96f", bg: "#0f3460" }
         }
       },
       {
         id: "7", name: "الدائرة الملكية",
         defaultData: {
-          title: "محمد", subtitle: "يتشرف الوالد بالدعوة الكريمة", image: "",
+          title: "محمد", subtitle: "يتشرف الوالد عمار بالدعوة الكريمة", image: "",
           description: "المقيل والزفة\n28 - 7 - 2025",
-          phone: "", email: "أفراح آل القيسي", website: "قاعة الملكية - الرياض",
+          phone: "تهانينا", email: "أفراح عمار", website: "إهداء",
           colors: { primary: "#1a1a2e", secondary: "#2d1b69", accent: "#d4af37", bg: "#0d0d1a" }
         }
       },
       {
         id: "8", name: "قطري مودرن",
         defaultData: {
-          title: "عمار", subtitle: "الوالد عبد الله علي", image: "",
+          title: "محمد", subtitle: "الوالد عمار علي", image: "",
           description: "المقيل والزفة\nyom Al-Ahad\n2 - 7 - 2023",
-          phone: "", email: "أفراح آل الفقيه", website: "شارع الملك فهد - جدة",
+          phone: "تهانينا", email: "أفراح عمار", website: "إهداء",
           colors: { primary: "#1e4d8c", secondary: "#163a6b", accent: "#f0c040", bg: "#f0f4fa" }
         }
       },
       {
         id: "9", name: "الف مبروك",
         defaultData: {
-          title: "محمد", subtitle: "حمود القيسي", image: "",
+          title: "محمد", subtitle: "عمار القيسي", image: "",
           description: "العائلة الكريمة\nيوم الجمعة\n10 - 7 - 2025",
-          phone: "", email: "أفراح آل القيسي", website: "قاعة الأفراح - صنعاء",
+          phone: "تهانينا", email: "أفراح عمار", website: "إهداء",
           colors: { primary: "#5a3a1a", secondary: "#3d2712", accent: "#c8922a", bg: "#f2ead8" }
         }
       },
       {
         id: "10", name: "ويدينج كلاسيك",
         defaultData: {
-          title: "باسم", subtitle: "الشيخ عبدالسلام أحمد حمود الخطابي", image: "",
+          title: "محمد", subtitle: "الشيخ عمار أحمد الخطابي", image: "",
           description: "المقيل والزفة والسمرة\nفي قاعة آية - شارع مالك دوحة آية\nيوم الأربعاء\n28-7-2021",
-          phone: "", email: "# الدكتور يحتفل", website: "قاعة آية",
+          phone: "تهانينا", email: "أفراح عمار", website: "إهداء",
           colors: { primary: "#0e2b1e", secondary: "#091a12", accent: "#c8a84b", bg: "#0e2b1e" }
         }
       },
@@ -616,7 +616,7 @@ export const categories: Category[] = [
         defaultData: {
           title: "أفراح الراعيني", subtitle: "عبدالرحمن الرعيني", image: "",
           description: "بمناسبة الزفاف قالف الف مبروك",
-          phone: "", email: "عمار ياسر المصطرف - صلاح حسن الحيمي", website: "",
+          phone: "تهانينا", email: "عمار ياسر المصطرف - صلاح حسن الحيمي", website: "إهداء",
           colors: { primary: "#c8a050", secondary: "#2a1a08", accent: "#f0d070", bg: "#3a2510" }
         }
       }

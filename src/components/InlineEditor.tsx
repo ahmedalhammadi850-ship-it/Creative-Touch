@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Upload, X, ImagePlus } from 'lucide-react';
+import { Upload, X, ImagePlus, Plus } from 'lucide-react';
 import type { TemplateData } from '../types/template';
 
 interface InlineEditorProps {
@@ -90,6 +90,25 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
   const showEmail = isBusinessCard || isSpecialized;
   const showWebsite = isBusinessCard || isSpecialized;
   const showImage = isWedding || isCongrats || isBusinessCard || isAds || isSpecialized;
+
+  const extraLines = isCongrats ? (data.images || []).filter(v => v !== undefined && !v.startsWith('data:image')) : [];
+
+  const updateExtraLine = (index: number, value: string) => {
+    const current = [...extraLines];
+    current[index] = value;
+    onChange({ images: current });
+  };
+
+  const addExtraLine = () => {
+    if (extraLines.length >= 5) return;
+    onChange({ images: [...extraLines, ''] });
+  };
+
+  const removeExtraLine = (index: number) => {
+    const current = [...extraLines];
+    current.splice(index, 1);
+    onChange({ images: current });
+  };
 
   return (
     <div className="space-y-6">
@@ -391,10 +410,10 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
           )}
         </div>
 
-        {/* Extra text input (for additional info) */}
+        {/* Extra text input (for additional info / sender name) */}
         {(isCongrats || isWedding) && !isMassWedding && (
           <div className="space-y-2">
-            <Label>نص إضافي (مثل: دعوة خاصة)</Label>
+            <Label>اسم المهنئ / النص الختامي</Label>
             <Input
               value={data.email || ''}
               onChange={e => onChange({ email: e.target.value })}
@@ -402,6 +421,32 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
               data-testid="input-extra-text"
             />
           </div>
+        )}
+
+        {/* Congrats specific fields: نص التهنئة + نص الإهداء */}
+        {isCongrats && (
+          <>
+            <div className="space-y-2">
+              <Label>نص التهنئة الرئيسي</Label>
+              <Input
+                value={data.phone || ''}
+                onChange={e => onChange({ phone: e.target.value })}
+                placeholder="تهانينا"
+                data-testid="input-congrats-text"
+              />
+              <p className="text-xs text-muted-foreground">مثل: تهانينا — ألف مبروك — مبارك</p>
+            </div>
+            <div className="space-y-2">
+              <Label>نص الإهداء</Label>
+              <Input
+                value={data.website || ''}
+                onChange={e => onChange({ website: e.target.value })}
+                placeholder="إهداء"
+                data-testid="input-hadya-text"
+              />
+              <p className="text-xs text-muted-foreground">مثل: إهداء — تقديم — بمناسبة</p>
+            </div>
+          </>
         )}
 
         {isMassWedding && (
@@ -427,7 +472,7 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
           </>
         )}
 
-        {showPhone && !isMassWedding && (
+        {showPhone && !isMassWedding && !isCongrats && (
           <div className="space-y-2">
             <Label>رقم الهاتف</Label>
             <Input
@@ -468,20 +513,48 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
             />
           </div>
         )}
-
-        {/* Website field for congrats as location */}
-        {isCongrats && (
-          <div className="space-y-2">
-            <Label>المكان</Label>
-            <Input
-              value={data.website || ''}
-              onChange={e => onChange({ website: e.target.value })}
-              placeholder="قاعة الأفراح - المدينة"
-              data-testid="input-location"
-            />
-          </div>
-        )}
       </div>
+
+      {/* Dynamic extra lines for congrats */}
+      {isCongrats && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-bold">سطور إضافية</h3>
+            {extraLines.length < 5 && (
+              <button
+                onClick={addExtraLine}
+                className="flex items-center gap-1 text-sm text-primary border border-primary/30 rounded-lg px-3 py-1 hover:bg-primary/5 transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                إضافة سطر
+              </button>
+            )}
+          </div>
+          {extraLines.length === 0 && (
+            <p className="text-xs text-muted-foreground text-center py-3 border border-dashed border-primary/20 rounded-lg">
+              اضغط "إضافة سطر" لإضافة نص مخصص في البطاقة
+            </p>
+          )}
+          <div className="space-y-2">
+            {extraLines.map((line, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <Input
+                  value={line}
+                  onChange={e => updateExtraLine(i, e.target.value)}
+                  placeholder={`سطر ${i + 1}...`}
+                  className="flex-1"
+                />
+                <button
+                  onClick={() => removeExtraLine(i)}
+                  className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Colors */}
       <div className="space-y-4">

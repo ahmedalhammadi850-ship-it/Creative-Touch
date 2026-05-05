@@ -3,7 +3,11 @@ import type { TemplateData } from '../../types/template';
 interface Props { data: TemplateData; }
 
 export default function CongratsTemplate29({ data }: Props) {
-  const { title, subtitle, description, email, colors, image } = data;
+  const { title, subtitle, description, email, phone, website, colors, image, images } = data;
+
+  const thaniaText = phone || 'تهانينا';
+  const ihdaaText = website || 'إهداء';
+  const extraLines = (images || []).filter(v => v !== undefined && !v.startsWith('data:image'));
 
   return (
     <div
@@ -70,8 +74,8 @@ export default function CongratsTemplate29({ data }: Props) {
         bottom: 0,
         left: 0,
         right: 0,
-        height: '48%',
-        background: `linear-gradient(to top, ${colors.secondary}f5 0%, ${colors.secondary}cc 40%, transparent 100%)`,
+        height: '55%',
+        background: `linear-gradient(to top, ${colors.secondary}f8 0%, ${colors.secondary}cc 40%, transparent 100%)`,
         pointerEvents: 'none',
       }} />
 
@@ -88,7 +92,6 @@ export default function CongratsTemplate29({ data }: Props) {
         gap: 4,
         zIndex: 2,
       }}>
-        {/* Top thin gold line */}
         <div style={{
           width: '75%',
           height: 1,
@@ -96,7 +99,7 @@ export default function CongratsTemplate29({ data }: Props) {
           marginBottom: 2,
         }} />
 
-        {/* Event title — large */}
+        {/* Event title */}
         <div style={{
           color: colors.accent,
           fontSize: 20,
@@ -142,7 +145,7 @@ export default function CongratsTemplate29({ data }: Props) {
         paddingBottom: 0,
       }}>
 
-        {/* Large calligraphic "تهانينا" */}
+        {/* Large calligraphic greeting — editable */}
         <div style={{
           color: colors.accent,
           fontSize: 34,
@@ -153,7 +156,7 @@ export default function CongratsTemplate29({ data }: Props) {
           marginBottom: 2,
           letterSpacing: '0.04em',
         }}>
-          تهانينا
+          {thaniaText}
         </div>
 
         {/* Occasion line */}
@@ -168,7 +171,21 @@ export default function CongratsTemplate29({ data }: Props) {
           {description || 'بمناسبة الزفاف قالف الف مبروك'}
         </div>
 
-        {/* إهداء ornament */}
+        {/* Extra lines */}
+        {extraLines.filter(Boolean).map((line, i) => (
+          <div key={i} style={{
+            color: '#ffffffcc',
+            fontSize: 9,
+            textAlign: 'center',
+            lineHeight: 1.5,
+            padding: '1px 14px 0',
+            textShadow: `0 1px 4px ${colors.secondary}`,
+          }}>
+            {line}
+          </div>
+        ))}
+
+        {/* إهداء ornament — editable */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -183,12 +200,12 @@ export default function CongratsTemplate29({ data }: Props) {
             letterSpacing: '0.12em',
             textShadow: `0 1px 4px ${colors.secondary}`,
           }}>
-            إهداء
+            {ihdaaText}
           </div>
           <div style={{ width: 28, height: 1, background: `linear-gradient(to left, transparent, ${colors.primary})` }} />
         </div>
 
-        {/* Footer bar — names of senders */}
+        {/* Footer bar — sender names */}
         <div style={{
           width: '100%',
           background: `${colors.primary}22`,
@@ -198,7 +215,6 @@ export default function CongratsTemplate29({ data }: Props) {
           alignItems: 'center',
           justifyContent: 'center',
           gap: 8,
-          backdropFilter: 'blur(4px)',
         }}>
           <div style={{
             color: colors.accent,
@@ -213,7 +229,7 @@ export default function CongratsTemplate29({ data }: Props) {
         </div>
       </div>
 
-      {/* Subtle side border lines */}
+      {/* Subtle inner border */}
       <div style={{
         position: 'absolute',
         inset: 6,
