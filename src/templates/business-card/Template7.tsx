@@ -9,7 +9,7 @@ export default function BusinessCardTemplate7({ data }: Props) {
       fontFamily: 'Cairo, sans-serif', direction: 'rtl',
       background: `linear-gradient(135deg, ${colors.bg || '#1a0533'} 0%, ${colors.secondary} 100%)`,
     }}>
-      {/* Gradient mesh blobs */}
+      {/* Gradient mesh blobs — filter:blur IS supported by html2canvas */}
       <div style={{ position: 'absolute', top: -30, right: -30, width: 140, height: 140, borderRadius: '50%', background: `${colors.primary}55`, filter: 'blur(30px)', zIndex: 0 }} />
       <div style={{ position: 'absolute', bottom: -20, left: -20, width: 110, height: 110, borderRadius: '50%', background: `${colors.accent}33`, filter: 'blur(25px)', zIndex: 0 }} />
 
@@ -19,13 +19,12 @@ export default function BusinessCardTemplate7({ data }: Props) {
         {[60,120,180,240,300].map((x,i) => <line key={`v${i}`} x1={x} y1="0" x2={x} y2="220" stroke={colors.accent} strokeWidth="0.5"/>)}
       </svg>
 
-      {/* Glass card */}
+      {/* Glass card — backdropFilter removed (not supported by html2canvas); using solid semi-transparent bg instead */}
       <div style={{
         position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
         width: 300, height: 170,
-        background: 'rgba(255,255,255,0.07)',
-        backdropFilter: 'blur(8px)',
-        border: '1px solid rgba(255,255,255,0.12)',
+        background: 'rgba(255,255,255,0.10)',
+        border: '1px solid rgba(255,255,255,0.18)',
         borderRadius: 12,
         display: 'flex', alignItems: 'center',
         padding: '0 20px', gap: 16,
@@ -40,7 +39,14 @@ export default function BusinessCardTemplate7({ data }: Props) {
           background: `${colors.primary}66`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          {image ? <img src={image} alt="صورة" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} /> : <div style={{ fontSize: 28 }}>👤</div>}
+          {image ? (
+            <img src={image} alt="صورة" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
+          ) : (
+            <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
+              <circle cx="19" cy="13" r="8" fill={colors.accent} fillOpacity="0.75" />
+              <ellipse cx="19" cy="34" rx="14" ry="8" fill={colors.accent} fillOpacity="0.75" />
+            </svg>
+          )}
         </div>
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -49,7 +55,7 @@ export default function BusinessCardTemplate7({ data }: Props) {
           <p style={{ color: colors.accent, fontSize: 10, margin: 0 }}>{subtitle || 'مطور برمجيات'}</p>
           <div style={{ height: 1, background: `linear-gradient(to left, transparent, ${colors.accent}66)`, margin: '3px 0' }} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {[phone || '📞 +966 50 000 0000', email || '✉️ email@domain.com', website || '🌐 website.com'].map((v,i) => (
+            {[phone || '+966 50 000 0000', email || 'email@domain.com', website || 'website.com'].map((v,i) => (
               <p key={i} style={{ color: 'rgba(255,255,255,0.6)', fontSize: 8.5, margin: 0 }}>{v}</p>
             ))}
           </div>

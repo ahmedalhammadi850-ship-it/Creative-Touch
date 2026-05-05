@@ -21,8 +21,11 @@ export default function BusinessCardTemplate5({ data }: Props) {
         {image ? (
           <img src={image} alt="صورة" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
         ) : (
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 44, opacity: 0.5 }}>👤</div>
+          <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+            <svg width="44" height="44" viewBox="0 0 44 44" fill="none" style={{ opacity: 0.5 }}>
+              <circle cx="22" cy="16" r="9" fill={colors.accent} fillOpacity="0.8" />
+              <ellipse cx="22" cy="38" rx="16" ry="9" fill={colors.accent} fillOpacity="0.8" />
+            </svg>
           </div>
         )}
         {/* Diagonal fade */}
@@ -46,11 +49,14 @@ export default function BusinessCardTemplate5({ data }: Props) {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {[
-            { icon: '📞', val: phone || '+966 50 000 0000' },
-            { icon: '✉️', val: email || 'info@company.com' },
-            { icon: '🌐', val: website || 'www.company.com' },
+            { label: 'T', val: phone || '+966 50 000 0000' },
+            { label: 'E', val: email || 'info@company.com' },
+            { label: 'W', val: website || 'www.company.com' },
           ].map((item, i) => (
-            <p key={i} style={{ color: '#cccccc', fontSize: 9, margin: 0 }}>{item.icon} {item.val}</p>
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <span style={{ color: colors.accent, fontSize: 7, fontWeight: 800, width: 10, flexShrink: 0 }}>{item.label}</span>
+              <p style={{ color: '#cccccc', fontSize: 9, margin: 0 }}>{item.val}</p>
+            </div>
           ))}
         </div>
       </div>

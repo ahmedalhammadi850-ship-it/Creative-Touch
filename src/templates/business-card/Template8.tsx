@@ -36,16 +36,16 @@ export default function BusinessCardTemplate8({ data }: Props) {
         <div style={{ width: 30, height: 2, background: colors.accent, borderRadius: 1 }} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 3, marginTop: 2 }}>
           {[
-            { v: phone || '+966 50 000 0000' },
-            { v: email || 'email@domain.com' },
-            { v: website || 'www.domain.com' },
-          ].map((item, i) => (
-            <p key={i} style={{ color: '#555', fontSize: 8.5, margin: 0 }}>{item.v}</p>
+            phone || '+966 50 000 0000',
+            email || 'email@domain.com',
+            website || 'www.domain.com',
+          ].map((v, i) => (
+            <p key={i} style={{ color: '#555', fontSize: 8.5, margin: 0 }}>{v}</p>
           ))}
         </div>
       </div>
 
-      {/* Right: photo + logo area */}
+      {/* Right: photo area */}
       <div style={{ flex: 1, zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{
           width: 82, height: 82, borderRadius: '50%',
@@ -55,7 +55,14 @@ export default function BusinessCardTemplate8({ data }: Props) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: `0 4px 20px rgba(0,0,0,0.2)`,
         }}>
-          {image ? <img src={image} alt="صورة" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} /> : <div style={{ fontSize: 32, opacity: 0.7 }}>👤</div>}
+          {image ? (
+            <img src={image} alt="صورة" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
+          ) : (
+            <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
+              <circle cx="23" cy="16" r="9" fill="rgba(255,255,255,0.5)" />
+              <ellipse cx="23" cy="39" rx="16" ry="9" fill="rgba(255,255,255,0.5)" />
+            </svg>
+          )}
         </div>
       </div>
     </div>
