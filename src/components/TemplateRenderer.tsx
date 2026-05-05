@@ -156,9 +156,49 @@ export function TemplateRenderer({ categoryId, templateId, data }: TemplateRende
     return <div className="p-8 text-center text-red-500">القالب غير موجود</div>;
   }
 
+  const isCongrats = categoryId === 'congrats';
+  const extraLines = isCongrats
+    ? (data.images || []).filter(v => v && typeof v === 'string' && !v.startsWith('data:image'))
+    : [];
+
   return (
-    <Suspense fallback={<div className="p-12 text-center text-muted-foreground animate-pulse">جاري تحميل القالب...</div>}>
-      <Component data={data} />
-    </Suspense>
+    <div style={{ position: 'relative', display: 'inline-block' }}>
+      <Suspense fallback={<div className="p-12 text-center text-muted-foreground animate-pulse">جاري تحميل القالب...</div>}>
+        <Component data={data} />
+      </Suspense>
+
+      {isCongrats && extraLines.filter(Boolean).length > 0 && (
+        <div style={{
+          position: 'absolute',
+          bottom: 52,
+          left: 10,
+          right: 10,
+          zIndex: 30,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 4,
+          pointerEvents: 'none',
+          direction: 'rtl',
+          fontFamily: "'Cairo', sans-serif",
+        }}>
+          {extraLines.filter(Boolean).map((line, i) => (
+            <div key={i} style={{
+              background: `${data.colors.primary}ee`,
+              color: data.colors.accent,
+              fontSize: 10,
+              fontWeight: 700,
+              padding: '4px 14px',
+              borderRadius: 8,
+              textAlign: 'center',
+              border: `1px solid ${data.colors.accent}55`,
+              boxShadow: `0 2px 8px rgba(0,0,0,0.4)`,
+            }}>
+              {line}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

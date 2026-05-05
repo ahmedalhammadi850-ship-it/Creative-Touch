@@ -48,13 +48,29 @@ export default function CongratsTemplate28({ data }: Props) {
         </div>
       </div>
 
-      {/* Wave divider */}
-      <svg width="360" height="16" viewBox="0 0 360 16" style={{ display: 'block', background: colors.bg, marginTop: '-1px' }}>
-        <path d="M0,0 Q45,16 90,8 Q135,0 180,8 Q225,16 270,8 Q315,0 360,8 L360,0 Z" fill={colors.secondary} />
+      {/* Wave divider — taller and more visible */}
+      <svg width="360" height="36" viewBox="0 0 360 36" style={{ display: 'block', background: colors.bg, marginTop: '-1px', flexShrink: 0 }}>
+        <path d="M0,0 Q45,28 90,14 Q135,0 180,14 Q225,28 270,14 Q315,0 360,14 L360,0 Z" fill={`${colors.primary}`} />
+        <path d="M0,0 Q45,22 90,11 Q135,0 180,11 Q225,22 270,11 Q315,0 360,11 L360,0 Z" fill={colors.secondary} />
       </svg>
 
+      {/* Accent line below photo circle */}
+      <div style={{
+        marginTop: '-4px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 6,
+        flexShrink: 0,
+        paddingBottom: 4,
+      }}>
+        <div style={{ width: 60, height: 2, background: `linear-gradient(to left, ${colors.accent}, transparent)`, borderRadius: 2 }} />
+        <div style={{ width: 7, height: 7, borderRadius: '50%', background: colors.accent, boxShadow: `0 0 6px ${colors.accent}88` }} />
+        <div style={{ width: 60, height: 2, background: `linear-gradient(to right, ${colors.accent}, transparent)`, borderRadius: 2 }} />
+      </div>
+
       {/* Content */}
-      <div style={{ flex: 1, padding: '36px 26px 18px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+      <div style={{ flex: 1, padding: '28px 26px 18px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
         <div style={{ color: colors.secondary, fontSize: '28px', fontWeight: 900, lineHeight: 1.2, marginBottom: '6px' }}>{title}</div>
         <div style={{ width: '46px', height: '2px', background: `linear-gradient(to left, transparent, ${colors.accent}, transparent)`, margin: '0 auto 12px', borderRadius: '1px' }} />
 
