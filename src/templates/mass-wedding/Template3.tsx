@@ -88,55 +88,42 @@ export default function Template3({ data }: { data: TemplateData }) {
           <div style={{ flex: 1, height: '1px', background: `linear-gradient(to right, ${data.colors.primary}aa, transparent)` }} />
         </div>
 
-        {/* Photos grid with glow rings — only visible */}
-        {visible.length > 0 && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%', marginBottom: '10px' }}>
-            {visible.map(i => (
-              <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
-                {/* Triple ring glow effect */}
-                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <div style={{
-                    position: 'absolute',
-                    width: '72px', height: '72px', borderRadius: '50%',
-                    border: `1px solid ${data.colors.primary}`,
-                    opacity: 0.2,
-                  }} />
-                  <div style={{
-                    position: 'absolute',
-                    width: '66px', height: '66px', borderRadius: '50%',
-                    border: `1px solid ${data.colors.primary}`,
-                    opacity: 0.35,
-                  }} />
-                  <div style={{
-                    width: '60px', height: '60px', borderRadius: '50%',
-                    border: `2px solid ${data.colors.primary}`,
-                    overflow: 'hidden',
-                    boxShadow: `0 0 10px ${data.colors.primary}44, inset 0 0 4px ${data.colors.primary}22`,
-                    flexShrink: 0,
-                  }}>
-                    <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        {/* Photos grid with glow rings — placeholders until photos added */}
+        {(() => {
+          const hasPhotos = visible.length > 0;
+          const slots = hasPhotos ? visible : Array.from({ length: 6 }, (_, i) => i);
+          return (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%', marginBottom: '10px' }}>
+              {slots.map(i => (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
+                  <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ position: 'absolute', width: '72px', height: '72px', borderRadius: '50%', border: `1px solid ${data.colors.primary}`, opacity: 0.2 }} />
+                    <div style={{ position: 'absolute', width: '66px', height: '66px', borderRadius: '50%', border: `1px solid ${data.colors.primary}`, opacity: 0.35 }} />
+                    <div style={{
+                      width: '60px', height: '60px', borderRadius: '50%',
+                      border: `2px ${images[i] ? 'solid' : 'dashed'} ${data.colors.primary}${images[i] ? '' : '55'}`,
+                      overflow: 'hidden',
+                      boxShadow: images[i] ? `0 0 10px ${data.colors.primary}44, inset 0 0 4px ${data.colors.primary}22` : 'none',
+                      background: images[i] ? 'transparent' : `${data.colors.primary}08`,
+                      flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      {images[i]
+                        ? <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        : <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: `${data.colors.primary}22` }} />
+                      }
+                    </div>
+                    {images[i] && <div style={{ position: 'absolute', top: '2px', right: '2px', width: '6px', height: '6px', borderRadius: '50%', background: data.colors.accent, boxShadow: `0 0 4px ${data.colors.accent}` }} />}
                   </div>
-                  {/* Gold dot accent */}
-                  <div style={{
-                    position: 'absolute', top: '2px', right: '2px',
-                    width: '6px', height: '6px', borderRadius: '50%',
-                    background: data.colors.accent,
-                    boxShadow: `0 0 4px ${data.colors.accent}`,
-                  }} />
+                  {couples[i] && (
+                    <span style={{ color: data.colors.secondary, fontSize: '6.5px', textAlign: 'center', lineHeight: 1.4, maxWidth: '72px', fontWeight: '600', letterSpacing: '0.02em', opacity: images[i] ? 1 : 0.45 }}>
+                      {couples[i]}
+                    </span>
+                  )}
                 </div>
-                {couples[i] && (
-                  <span style={{
-                    color: data.colors.secondary, fontSize: '6.5px',
-                    textAlign: 'center', lineHeight: 1.4, maxWidth: '72px',
-                    fontWeight: '600', letterSpacing: '0.02em',
-                  }}>
-                    {couples[i]}
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          );
+        })()}
 
         {/* Bottom geometric divider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px', width: '100%', marginBottom: '6px' }}>

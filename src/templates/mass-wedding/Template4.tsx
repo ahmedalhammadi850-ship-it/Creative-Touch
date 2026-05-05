@@ -99,43 +99,47 @@ export default function Template4({ data }: { data: TemplateData }) {
           <div style={{ flex: 1, height: '1px', background: `linear-gradient(to right, ${data.colors.primary}99, transparent)` }} />
         </div>
 
-        {/* Photos — portrait style in 3×2 grid, only visible */}
-        {visible.length > 0 && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', width: '100%', marginBottom: '10px' }}>
-            {visible.map(i => (
-              <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                {/* Portrait frame with decorative corners */}
-                <div style={{ position: 'relative' }}>
-                  {/* Corner accent lines */}
-                  {[
-                    { top: '-2px', right: '-2px', borderTop: `2px solid ${data.colors.accent}`, borderRight: `2px solid ${data.colors.accent}`, width: '8px', height: '8px' },
-                    { top: '-2px', left: '-2px', borderTop: `2px solid ${data.colors.accent}`, borderLeft: `2px solid ${data.colors.accent}`, width: '8px', height: '8px' },
-                    { bottom: '-2px', right: '-2px', borderBottom: `2px solid ${data.colors.accent}`, borderRight: `2px solid ${data.colors.accent}`, width: '8px', height: '8px' },
-                    { bottom: '-2px', left: '-2px', borderBottom: `2px solid ${data.colors.accent}`, borderLeft: `2px solid ${data.colors.accent}`, width: '8px', height: '8px' },
-                  ].map((s, ci) => (
-                    <div key={ci} style={{ position: 'absolute', ...s as React.CSSProperties, zIndex: 2 }} />
-                  ))}
-                  <div style={{
-                    width: '62px', height: '70px',
-                    border: `1px solid ${data.colors.primary}88`,
-                    overflow: 'hidden',
-                    boxShadow: `2px 2px 8px ${data.colors.primary}33`,
-                  }}>
-                    <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        {/* Photos — portrait style, placeholders until photos added */}
+        {(() => {
+          const hasPhotos = visible.length > 0;
+          const slots = hasPhotos ? visible : Array.from({ length: 6 }, (_, i) => i);
+          return (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', width: '100%', marginBottom: '10px' }}>
+              {slots.map(i => (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
+                  <div style={{ position: 'relative' }}>
+                    {[
+                      { top: '-2px', right: '-2px', borderTop: `2px solid ${data.colors.accent}${images[i] ? '' : '44'}`, borderRight: `2px solid ${data.colors.accent}${images[i] ? '' : '44'}`, width: '8px', height: '8px' },
+                      { top: '-2px', left: '-2px', borderTop: `2px solid ${data.colors.accent}${images[i] ? '' : '44'}`, borderLeft: `2px solid ${data.colors.accent}${images[i] ? '' : '44'}`, width: '8px', height: '8px' },
+                      { bottom: '-2px', right: '-2px', borderBottom: `2px solid ${data.colors.accent}${images[i] ? '' : '44'}`, borderRight: `2px solid ${data.colors.accent}${images[i] ? '' : '44'}`, width: '8px', height: '8px' },
+                      { bottom: '-2px', left: '-2px', borderBottom: `2px solid ${data.colors.accent}${images[i] ? '' : '44'}`, borderLeft: `2px solid ${data.colors.accent}${images[i] ? '' : '44'}`, width: '8px', height: '8px' },
+                    ].map((s, ci) => (
+                      <div key={ci} style={{ position: 'absolute', ...s as React.CSSProperties, zIndex: 2 }} />
+                    ))}
+                    <div style={{
+                      width: '62px', height: '70px',
+                      border: `1px ${images[i] ? 'solid' : 'dashed'} ${data.colors.primary}${images[i] ? '88' : '44'}`,
+                      overflow: 'hidden',
+                      background: images[i] ? 'transparent' : `${data.colors.primary}08`,
+                      boxShadow: images[i] ? `2px 2px 8px ${data.colors.primary}33` : 'none',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      {images[i]
+                        ? <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        : <div style={{ width: '20px', height: '26px', background: `${data.colors.primary}18`, border: `1px solid ${data.colors.primary}25` }} />
+                      }
+                    </div>
                   </div>
+                  {couples[i] && (
+                    <span style={{ color: data.colors.secondary, fontSize: '6.5px', textAlign: 'center', lineHeight: 1.4, maxWidth: '72px', fontWeight: '600', opacity: images[i] ? 1 : 0.45 }}>
+                      {couples[i]}
+                    </span>
+                  )}
                 </div>
-                {couples[i] && (
-                  <span style={{
-                    color: data.colors.secondary, fontSize: '6.5px',
-                    textAlign: 'center', lineHeight: 1.4, maxWidth: '72px', fontWeight: '600',
-                  }}>
-                    {couples[i]}
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          );
+        })()}
 
         {/* Bottom divider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px', width: '100%', marginBottom: '6px' }}>

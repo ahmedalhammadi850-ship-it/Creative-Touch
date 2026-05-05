@@ -92,24 +92,30 @@ export default function Template1({ data }: { data: TemplateData }) {
           <div style={{ flex: 1, height: '0.5px', background: `linear-gradient(to right, ${data.colors.primary}88, transparent)` }} />
         </div>
 
-        {/* Photos grid — only visible slots */}
+        {/* Photos grid — placeholders until photos added */}
         {(() => {
           const visible = Array.from({ length: 6 }, (_, i) => i).filter(i => !!images[i]);
-          if (visible.length === 0) return null;
+          const hasPhotos = visible.length > 0;
+          const slots = hasPhotos ? visible : Array.from({ length: 6 }, (_, i) => i);
           return (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%' }}>
-              {visible.map(i => (
+              {slots.map(i => (
                 <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
                   <div style={{
                     width: '62px', height: '62px', borderRadius: '50%',
-                    border: `2.5px solid ${data.colors.primary}`,
-                    boxShadow: `0 0 0 1.5px ${data.colors.bg}, 0 0 0 3px ${data.colors.primary}44`,
+                    border: `2.5px ${images[i] ? 'solid' : 'dashed'} ${data.colors.primary}${images[i] ? '' : '55'}`,
+                    boxShadow: images[i] ? `0 0 0 1.5px ${data.colors.bg}, 0 0 0 3px ${data.colors.primary}44` : 'none',
                     overflow: 'hidden', flexShrink: 0,
+                    background: images[i] ? 'transparent' : `${data.colors.primary}0a`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
-                    <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    {images[i]
+                      ? <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      : <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: `${data.colors.primary}20`, border: `1px solid ${data.colors.primary}33` }} />
+                    }
                   </div>
                   {couples[i] && (
-                    <span style={{ color: data.colors.secondary, fontSize: '6.5px', textAlign: 'center', lineHeight: 1.4, maxWidth: '72px', fontWeight: '600' }}>
+                    <span style={{ color: data.colors.secondary, fontSize: '6.5px', textAlign: 'center', lineHeight: 1.4, maxWidth: '72px', fontWeight: '600', opacity: images[i] ? 1 : 0.5 }}>
                       {couples[i]}
                     </span>
                   )}

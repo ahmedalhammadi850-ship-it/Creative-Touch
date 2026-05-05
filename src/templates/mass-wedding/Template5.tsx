@@ -96,35 +96,42 @@ export default function Template5({ data }: { data: TemplateData }) {
       {/* Body content */}
       <div style={{ position: 'relative', zIndex: 1, padding: '10px 14px 12px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
-        {/* Photos grid — shadow circle style, only visible */}
-        {visible.length > 0 && (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%', marginBottom: '10px' }}>
-            {visible.map(i => (
-              <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
-                <div style={{
-                  width: '62px', height: '62px', borderRadius: '50%',
-                  overflow: 'hidden',
-                  boxShadow: `0 4px 12px ${data.colors.primary}44, 0 0 0 2.5px ${data.colors.bg}, 0 0 0 4px ${data.colors.primary}`,
-                  flexShrink: 0,
-                }}>
-                  <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </div>
-                {couples[i] && (
-                  <div style={{ textAlign: 'center', maxWidth: '72px' }}>
-                    <div style={{ width: '20px', height: '1.5px', backgroundColor: data.colors.accent, margin: '0 auto 2px' }} />
-                    <span style={{
-                      color: data.colors.secondary === '#ffffff' ? '#333' : data.colors.secondary,
-                      fontSize: '6.5px', fontWeight: '700',
-                      lineHeight: 1.4,
-                    }}>
-                      {couples[i]}
-                    </span>
+        {/* Photos grid — placeholders until photos added */}
+        {(() => {
+          const hasPhotos = visible.length > 0;
+          const slots = hasPhotos ? visible : Array.from({ length: 6 }, (_, i) => i);
+          return (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%', marginBottom: '10px' }}>
+              {slots.map(i => (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
+                  <div style={{
+                    width: '62px', height: '62px', borderRadius: '50%',
+                    overflow: 'hidden',
+                    boxShadow: images[i]
+                      ? `0 4px 12px ${data.colors.primary}44, 0 0 0 2.5px ${data.colors.bg}, 0 0 0 4px ${data.colors.primary}`
+                      : `0 0 0 2.5px ${data.colors.bg}, 0 0 0 4px ${data.colors.primary}44`,
+                    flexShrink: 0,
+                    background: images[i] ? 'transparent' : `${data.colors.primary}08`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    {images[i]
+                      ? <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      : <div style={{ width: '22px', height: '22px', borderRadius: '50%', border: `1.5px dashed ${data.colors.primary}55` }} />
+                    }
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+                  {couples[i] && (
+                    <div style={{ textAlign: 'center', maxWidth: '72px' }}>
+                      <div style={{ width: '20px', height: '1.5px', backgroundColor: `${data.colors.accent}${images[i] ? '' : '44'}`, margin: '0 auto 2px' }} />
+                      <span style={{ color: data.colors.secondary === '#ffffff' ? '#333' : data.colors.secondary, fontSize: '6.5px', fontWeight: '700', lineHeight: 1.4, opacity: images[i] ? 1 : 0.4 }}>
+                        {couples[i]}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          );
+        })()}
 
         {/* Footer block */}
         {(data.phone || data.website) && (

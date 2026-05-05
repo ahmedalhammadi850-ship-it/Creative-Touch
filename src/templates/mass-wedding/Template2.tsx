@@ -130,34 +130,42 @@ export default function Template2({ data }: { data: TemplateData }) {
           <div style={{ flex: 1, height: '0.5px', backgroundColor: `${data.colors.primary}55` }} />
         </div>
 
-        {/* Photos grid — only visible slots */}
+        {/* Photos grid — placeholders until photos added */}
         {(() => {
           const visible = Array.from({ length: 6 }, (_, i) => i).filter(i => !!images[i]);
-          if (visible.length === 0) return null;
+          const hasPhotos = visible.length > 0;
+          const slots = hasPhotos ? visible : Array.from({ length: 6 }, (_, i) => i);
           return (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '9px', width: '100%' }}>
-              {visible.map(i => (
+              {slots.map(i => (
                 <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
                   <div style={{ position: 'relative' }}>
-                    <svg style={{ position: 'absolute', top: '-4px', right: '-4px', zIndex: 1 }} width="14" height="14" viewBox="0 0 14 14">
-                      <circle cx="7" cy="7" r="4" fill={data.colors.primary} opacity="0.3" />
-                      <circle cx="7" cy="7" r="2" fill={data.colors.accent} opacity="0.5" />
-                    </svg>
-                    <svg style={{ position: 'absolute', top: '-4px', left: '-4px', zIndex: 1 }} width="14" height="14" viewBox="0 0 14 14">
-                      <circle cx="7" cy="7" r="4" fill={data.colors.primary} opacity="0.3" />
-                      <circle cx="7" cy="7" r="2" fill={data.colors.accent} opacity="0.5" />
-                    </svg>
+                    {images[i] && <>
+                      <svg style={{ position: 'absolute', top: '-4px', right: '-4px', zIndex: 1 }} width="14" height="14" viewBox="0 0 14 14">
+                        <circle cx="7" cy="7" r="4" fill={data.colors.primary} opacity="0.3" />
+                        <circle cx="7" cy="7" r="2" fill={data.colors.accent} opacity="0.5" />
+                      </svg>
+                      <svg style={{ position: 'absolute', top: '-4px', left: '-4px', zIndex: 1 }} width="14" height="14" viewBox="0 0 14 14">
+                        <circle cx="7" cy="7" r="4" fill={data.colors.primary} opacity="0.3" />
+                        <circle cx="7" cy="7" r="2" fill={data.colors.accent} opacity="0.5" />
+                      </svg>
+                    </>}
                     <div style={{
                       width: '62px', height: '68px', borderRadius: '8px',
-                      border: `1.5px solid ${data.colors.primary}`,
+                      border: `1.5px ${images[i] ? 'solid' : 'dashed'} ${data.colors.primary}${images[i] ? '' : '44'}`,
                       overflow: 'hidden',
-                      boxShadow: `0 2px 8px ${data.colors.primary}22`,
+                      background: images[i] ? 'transparent' : `${data.colors.primary}08`,
+                      boxShadow: images[i] ? `0 2px 8px ${data.colors.primary}22` : 'none',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}>
-                      <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      {images[i]
+                        ? <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        : <div style={{ width: '24px', height: '24px', borderRadius: '4px', background: `${data.colors.primary}18`, border: `1px solid ${data.colors.primary}30` }} />
+                      }
                     </div>
                   </div>
                   {couples[i] && (
-                    <span style={{ color: data.colors.secondary, fontSize: '6.5px', textAlign: 'center', lineHeight: 1.4, maxWidth: '72px', fontWeight: '600' }}>
+                    <span style={{ color: data.colors.secondary, fontSize: '6.5px', textAlign: 'center', lineHeight: 1.4, maxWidth: '72px', fontWeight: '600', opacity: images[i] ? 1 : 0.45 }}>
                       {couples[i]}
                     </span>
                   )}
