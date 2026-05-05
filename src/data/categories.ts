@@ -222,6 +222,16 @@ export const categories: Category[] = [
       { id: "18", name: "المنقسم الجانبي", defaultData: { ...businessCardData, colors: { primary: "#1b5e20", secondary: "#ffffff", accent: "#a5d6a7", bg: "#ffffff" } } },
       { id: "19", name: "التدرج الجريء الجديد", defaultData: { ...businessCardData, colors: { primary: "#4a148c", secondary: "#6a1b9a", accent: "#ffffff", bg: "#4a148c" } } },
       { id: "20", name: "الداكن الزجاجي الفاخر", defaultData: { ...businessCardData, colors: { primary: "#c9a84c", secondary: "#c9a84c", accent: "#c9a84c", bg: "#0d0d0d" } } },
+      { id: "21", name: "كلاسيك أزرق ملكي", defaultData: { ...businessCardData, colors: { primary: "#1e3a8a", secondary: "#1e3a8a", accent: "#fbbf24", bg: "#f8fafc" } } },
+      { id: "22", name: "كلاسيك أخضر زمردي", defaultData: { ...businessCardData, colors: { primary: "#065f46", secondary: "#065f46", accent: "#34d399", bg: "#f0fdf4" } } },
+      { id: "23", name: "كلاسيك برغندي فاخر", defaultData: { ...businessCardData, colors: { primary: "#881337", secondary: "#881337", accent: "#fda4af", bg: "#fff1f2" } } },
+      { id: "24", name: "كلاسيك أسود ذهبي", defaultData: { ...businessCardData, colors: { primary: "#0f172a", secondary: "#1e293b", accent: "#c9a84c", bg: "#fafaf9" } } },
+      { id: "25", name: "كلاسيك بنفسجي عصري", defaultData: { ...businessCardData, colors: { primary: "#5b21b6", secondary: "#5b21b6", accent: "#ddd6fe", bg: "#faf5ff" } } },
+      { id: "26", name: "كلاسيك برتقالي حيوي", defaultData: { ...businessCardData, colors: { primary: "#c2410c", secondary: "#c2410c", accent: "#fed7aa", bg: "#fff7ed" } } },
+      { id: "27", name: "كلاسيك سماوي نيون", defaultData: { ...businessCardData, colors: { primary: "#0e7490", secondary: "#0e7490", accent: "#22d3ee", bg: "#ecfeff" } } },
+      { id: "28", name: "كلاسيك وردي أنثوي", defaultData: { ...businessCardData, colors: { primary: "#be185d", secondary: "#be185d", accent: "#f9a8d4", bg: "#fdf2f8" } } },
+      { id: "29", name: "كلاسيك رمادي راقي", defaultData: { ...businessCardData, colors: { primary: "#374151", secondary: "#374151", accent: "#9ca3af", bg: "#f9fafb" } } },
+      { id: "30", name: "كلاسيك داكن نيوني", defaultData: { ...businessCardData, colors: { primary: "#4ade80", secondary: "#bbf7d0", accent: "#4ade80", bg: "#0a0a0a" } } },
     ]
   },
   {
