@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
-const rawPort = process.env.PORT || "5173";
+const rawPort = process.env.PORT || "5000";
 const port = Number(rawPort);
 const basePath = process.env.BASE_PATH || "/";
 
