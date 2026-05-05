@@ -69,7 +69,45 @@ const specializedData: TemplateData = {
   }
 };
 
+const massWeddingDefaultData: TemplateData = {
+  title: "مهرجان الفرح الجماعي الأول",
+  subtitle: "يوم الجمعة ١٥ ذو الحجة ١٤٤٦\nقاعة الأفراح الكبرى - الرياض",
+  description: "محمد & نورة\nعبدالله & سارة\nأحمد & فاطمة\nعلي & مريم\nخالد & هدى\nسامي & رنا",
+  phone: "يوم الجمعة ١٥ ذو الحجة ١٤٤٦",
+  website: "قاعة الأفراح الكبرى - الرياض",
+  images: [],
+  colors: {
+    primary: "#b8962e",
+    secondary: "#1a0a00",
+    accent: "#d4af37",
+    bg: "#faf6ef"
+  }
+};
+
 export const categories: Category[] = [
+  {
+    id: "mass-wedding",
+    name: "عرس جماعي",
+    description: "دعوات عرس جماعي فاخرة مع صور العرسان",
+    templates: [
+      {
+        id: "1",
+        name: "الملكي مع الصور",
+        defaultData: {
+          ...massWeddingDefaultData,
+          colors: { primary: "#b8962e", secondary: "#1a0a00", accent: "#d4af37", bg: "#faf6ef" }
+        }
+      },
+      {
+        id: "2",
+        name: "الفاخر الملون",
+        defaultData: {
+          ...massWeddingDefaultData,
+          colors: { primary: "#9d174d", secondary: "#1e1b4b", accent: "#f9a8d4", bg: "#fff8f9" }
+        }
+      }
+    ]
+  },
   {
     id: "business-card",
     name: "بطاقات الأعمال",

@@ -9,6 +9,8 @@ interface TemplateRendererProps {
 
 // Lazy load templates based on category and id
 const templates = {
+  'mass-wedding/1': lazy(() => import('../templates/mass-wedding/Template1')),
+  'mass-wedding/2': lazy(() => import('../templates/mass-wedding/Template2')),
   'business-card/1': lazy(() => import('../templates/business-card/Template1')),
   'business-card/2': lazy(() => import('../templates/business-card/Template2')),
   'business-card/3': lazy(() => import('../templates/business-card/Template3')),

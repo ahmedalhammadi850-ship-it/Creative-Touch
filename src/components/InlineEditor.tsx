@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -18,7 +18,11 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
   const isWedding = categoryId === 'wedding';
   const isCongrats = categoryId === 'congrats';
   const isSpecialized = categoryId === 'specialized';
+  const isMassWedding = categoryId === 'mass-wedding';
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const multiImageInputRef = useRef<HTMLInputElement>(null);
+  const [currentSlotIndex, setCurrentSlotIndex] = useState<number>(0);
 
   const handleColorChange = (key: keyof TemplateData['colors'], value: string) => {
     onChange({ colors: { ...data.colors, [key]: value } });
@@ -39,6 +43,32 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
+  const handleMultiImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const current = data.images ? [...data.images] : Array(6).fill('');
+      while (current.length < 6) current.push('');
+      current[currentSlotIndex] = ev.target?.result as string;
+      onChange({ images: current });
+    };
+    reader.readAsDataURL(file);
+    if (multiImageInputRef.current) multiImageInputRef.current.value = '';
+  };
+
+  const removeSlotImage = (index: number) => {
+    const current = data.images ? [...data.images] : Array(6).fill('');
+    while (current.length < 6) current.push('');
+    current[index] = '';
+    onChange({ images: current });
+  };
+
+  const handleSlotClick = (index: number) => {
+    setCurrentSlotIndex(index);
+    setTimeout(() => multiImageInputRef.current?.click(), 0);
+  };
+
   const showPhone = isBusinessCard || isAds || isSpecialized || isCongrats;
   const showEmail = isBusinessCard || isSpecialized;
   const showWebsite = isBusinessCard || isSpecialized;
@@ -47,8 +77,69 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
   return (
     <div className="space-y-6">
 
-      {/* Image Upload Section */}
-      {showImage && (
+      {/* Multi-image upload for mass-wedding */}
+      {isMassWedding && (
+        <div className="space-y-3">
+          <h3 className="text-lg font-bold">صور العرسان</h3>
+          <p className="text-xs text-muted-foreground">أضف صورة لكل عريس (حتى 6 صور) — تتطابق مع ترتيب الأسماء</p>
+
+          <input
+            ref={multiImageInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleMultiImageUpload}
+            className="hidden"
+          />
+
+          <div className="grid grid-cols-3 gap-2">
+            {Array.from({ length: 6 }, (_, i) => {
+              const img = data.images?.[i];
+              return (
+                <div key={i}>
+                  {img ? (
+                    <div className="relative group">
+                      <img
+                        src={img}
+                        alt={`عريس ${i + 1}`}
+                        className="w-full h-20 object-cover rounded-xl border-2 border-primary/20"
+                      />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center gap-1">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          className="h-6 px-1.5"
+                          onClick={() => handleSlotClick(i)}
+                        >
+                          <Upload className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="h-6 px-1.5"
+                          onClick={() => removeSlotImage(i)}
+                        >
+                          <X className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleSlotClick(i)}
+                      className="w-full h-20 border-2 border-dashed border-primary/30 rounded-xl flex flex-col items-center justify-center gap-1 hover:border-primary/60 hover:bg-primary/5 transition-all cursor-pointer"
+                    >
+                      <ImagePlus className="w-5 h-5 text-primary/40" />
+                      <span className="text-xs text-muted-foreground">عريس {i + 1}</span>
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Single image upload for other categories */}
+      {showImage && !isMassWedding && (
         <div className="space-y-3">
           <h3 className="text-lg font-bold">الصورة الشخصية</h3>
           <input
@@ -106,40 +197,47 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
 
         <div className="space-y-2">
           <Label>
-            {isWedding || isCongrats ? "الاسم الرئيسي / العريس" : "العنوان الرئيسي / الاسم"}
+            {isMassWedding ? "اسم الحدث الرئيسي" :
+             isWedding || isCongrats ? "الاسم الرئيسي / العريس" : "العنوان الرئيسي / الاسم"}
           </Label>
           <Input
             value={data.title}
             onChange={e => onChange({ title: e.target.value })}
-            placeholder={isWedding || isCongrats ? "سامح" : "أحمد محمد"}
+            placeholder={isMassWedding ? "مهرجان الفرح الجماعي الأول" :
+                         isWedding || isCongrats ? "سامح" : "أحمد محمد"}
             data-testid="input-title"
           />
         </div>
 
         <div className="space-y-2">
           <Label>
-            {isWedding || isCongrats ? "اسم الوالد / المناسبة" : "العنوان الفرعي / المسمى الوظيفي"}
+            {isMassWedding ? "التاريخ والمكان" :
+             isWedding || isCongrats ? "اسم الوالد / المناسبة" : "العنوان الفرعي / المسمى الوظيفي"}
           </Label>
           <Input
             value={data.subtitle}
             onChange={e => onChange({ subtitle: e.target.value })}
-            placeholder={isWedding || isCongrats ? "أحمد سعيد الحاج" : "مدير تقني"}
+            placeholder={isMassWedding ? "يوم الجمعة - قاعة الأفراح" :
+                         isWedding || isCongrats ? "أحمد سعيد الحاج" : "مدير تقني"}
             data-testid="input-subtitle"
           />
         </div>
 
         <div className="space-y-2">
           <Label>
-            {isWedding || isCongrats ? "التفاصيل (التاريخ والمكان...)" :
+            {isMassWedding ? "أسماء العرسان (اسم في كل سطر)" :
+             isWedding || isCongrats ? "التفاصيل (التاريخ والمكان...)" :
              isSpecialized ? "الخدمات (افصل بـ ،)" : "الوصف"}
           </Label>
           <Textarea
             value={data.description}
             onChange={e => onChange({ description: e.target.value })}
             className="resize-none"
-            rows={3}
+            rows={isMassWedding ? 6 : 3}
             placeholder={
-              isWedding || isCongrats
+              isMassWedding
+                ? "محمد & نورة\nعبدالله & سارة\nأحمد & فاطمة\nعلي & مريم\nخالد & هدى\nسامي & رنا"
+                : isWedding || isCongrats
                 ? "يوم الجمعة 29.08.2025 - المقيل والزفة\nالمخا - مدينة الكهرباء"
                 : isSpecialized
                 ? "تنظيف وتلميع،تبييض،حشوات تجميلية"
@@ -147,10 +245,13 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
             }
             data-testid="input-description"
           />
+          {isMassWedding && (
+            <p className="text-xs text-muted-foreground">الاسم الأول يقابل الصورة الأولى، والثاني يقابل الثانية...</p>
+          )}
         </div>
 
         {/* Extra text input (for additional info) */}
-        {(isCongrats || isWedding) && (
+        {(isCongrats || isWedding) && !isMassWedding && (
           <div className="space-y-2">
             <Label>نص إضافي (مثل: دعوة خاصة)</Label>
             <Input
@@ -162,7 +263,30 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
           </div>
         )}
 
-        {showPhone && (
+        {isMassWedding && (
+          <>
+            <div className="space-y-2">
+              <Label>التاريخ</Label>
+              <Input
+                value={data.phone || ''}
+                onChange={e => onChange({ phone: e.target.value })}
+                placeholder="يوم الجمعة ١٥ ذو الحجة ١٤٤٦"
+                data-testid="input-phone"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>المكان</Label>
+              <Input
+                value={data.website || ''}
+                onChange={e => onChange({ website: e.target.value })}
+                placeholder="قاعة الأفراح الكبرى - المدينة"
+                data-testid="input-location"
+              />
+            </div>
+          </>
+        )}
+
+        {showPhone && !isMassWedding && (
           <div className="space-y-2">
             <Label>رقم الهاتف</Label>
             <Input

@@ -12,4 +12,5 @@ export interface TemplateData {
     bg: string;
   };
   image?: string;
+  images?: string[];
 }
