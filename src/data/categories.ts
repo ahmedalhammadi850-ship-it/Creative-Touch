@@ -242,6 +242,9 @@ export const categories: Category[] = [
       { id: "38", name: "موجة برتقالية + شعار", defaultData: { ...businessCardData, colors: { primary: "#ea580c", secondary: "#9a3412", accent: "#fbbf24", bg: "#0f172a" } } },
       { id: "39", name: "موجة جانبية + شعار", defaultData: { ...businessCardData, colors: { primary: "#7c3aed", secondary: "#5b21b6", accent: "#a78bfa", bg: "#ffffff" } } },
       { id: "40", name: "نظيف خطوط + شعار", defaultData: { ...businessCardData, colors: { primary: "#0ea5e9", secondary: "#0369a1", accent: "#f59e0b", bg: "#ffffff" } } },
+      { id: "41", name: "كرت خلفي — متدرج مركزي", defaultData: { ...businessCardData, description: "شركة الإبداع التقني", colors: { primary: "#4f46e5", secondary: "#3730a3", accent: "#fbbf24", bg: "#ffffff" } } },
+      { id: "42", name: "كرت خلفي — منقسم جانبي", defaultData: { ...businessCardData, description: "شركة الإبداع التقني", colors: { primary: "#0f766e", secondary: "#134e4a", accent: "#34d399", bg: "#ffffff" } } },
+      { id: "43", name: "كرت خلفي — داكن متوهج", defaultData: { ...businessCardData, description: "شركة الإبداع التقني", colors: { primary: "#7c3aed", secondary: "#5b21b6", accent: "#a78bfa", bg: "#0a0a0a" } } },
     ]
   },
   {
