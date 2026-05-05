@@ -174,7 +174,7 @@ export function TemplateRenderer({ categoryId, templateId, data }: TemplateRende
     : [];
 
   return (
-    <div style={{ position: 'relative', display: 'inline-block' }}>
+    <div id="export-target" style={{ position: 'relative', display: 'inline-block' }}>
       <Suspense fallback={<div className="p-12 text-center text-muted-foreground animate-pulse">جاري تحميل القالب...</div>}>
         <Component data={data} />
       </Suspense>
