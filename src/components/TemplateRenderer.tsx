@@ -53,6 +53,9 @@ const templates = {
   'wedding/6': lazy(() => import('../templates/wedding/Template6')),
   'wedding/7': lazy(() => import('../templates/wedding/Template7')),
   'wedding/8': lazy(() => import('../templates/wedding/Template8')),
+  'wedding/9': lazy(() => import('../templates/wedding/Template9')),
+  'wedding/10': lazy(() => import('../templates/wedding/Template10')),
+  'wedding/11': lazy(() => import('../templates/wedding/Template11')),
 };
 
 export function TemplateRenderer({ categoryId, templateId, data }: TemplateRendererProps) {

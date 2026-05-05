@@ -108,7 +108,43 @@ export const categories: Category[] = [
       { id: "5", name: "زهور رومانسي", defaultData: { ...weddingData, title: "حفل زفاف", subtitle: "علي & فاطمة", description: "يسعدان بدعوتكم\nلحضور حفل زفافهما", colors: { primary: "#be185d", secondary: "#9d174d", accent: "#fbcfe8", bg: "#fff8f0" } } },
       { id: "6", name: "ليلة داكنة", defaultData: { ...weddingData, title: "عبدالله", subtitle: "& نورة", description: "دعوة زفاف ✦\nلحضور حفل الزفاف\n28 - 7 - 2025", colors: { primary: "#0c1a2e", secondary: "#1e3a5f", accent: "#c9a84c", bg: "#0c1a2e" } } },
       { id: "7", name: "ناعم مع صورة", defaultData: { ...weddingData, title: "خالد", subtitle: "& سارة", description: "حفل الزفاف والعشاء\nالجمعة\n15 - 8 - 2025", colors: { primary: "#7c3aed", secondary: "#5b21b6", accent: "#ddd6fe", bg: "#f8f4ef" } } },
-      { id: "8", name: "عصري منقسم", defaultData: { ...weddingData, title: "عمر", subtitle: "& أميرة", description: "حفل الزفاف\n28 - 7 - 2025", colors: { primary: "#0f172a", secondary: "#1e3a8a", accent: "#c9a84c", bg: "#ffffff" } } }
+      { id: "8", name: "عصري منقسم", defaultData: { ...weddingData, title: "عمر", subtitle: "& أميرة", description: "حفل الزفاف\n28 - 7 - 2025", colors: { primary: "#0f172a", secondary: "#1e3a8a", accent: "#c9a84c", bg: "#ffffff" } } },
+      {
+        id: "9", name: "عرس جماعي - الكلاسيكي الملكي",
+        defaultData: {
+          title: "مهرجان الفرح الجماعي الأول",
+          subtitle: "يوم الجمعة ١٥ ذو الحجة ١٤٤٦\nقاعة الأفراح الكبرى - الرياض",
+          description: "محمد & نورة\nعبدالله & سارة\nأحمد & فاطمة\nعلي & مريم\nخالد & هدى\nسامي & رنا\nيوسف & أسماء\nعمر & ليلى\nحسن & منى\nكريم & نادية\nطارق & لينا\nوليد & دانة",
+          phone: "١٥ ذو الحجة ١٤٤٦",
+          email: "",
+          website: "قاعة الأفراح الكبرى",
+          colors: { primary: "#b8962e", secondary: "#2c1810", accent: "#d4af37", bg: "#faf6ef" }
+        }
+      },
+      {
+        id: "10", name: "عرس جماعي - العصري المبسط",
+        defaultData: {
+          title: "مهرجان الفرح الجماعي الأول",
+          subtitle: "يوم الجمعة ١٥ ذو الحجة ١٤٤٦\nقاعة الأفراح الكبرى - الرياض",
+          description: "محمد & نورة\nعبدالله & سارة\nأحمد & فاطمة\nعلي & مريم\nخالد & هدى\nسامي & رنا\nيوسف & أسماء\nعمر & ليلى\nحسن & منى\nكريم & نادية\nطارق & لينا\nوليد & دانة",
+          phone: "١٥ ذو الحجة ١٤٤٦",
+          email: "قاعة الأفراح الكبرى",
+          website: "",
+          colors: { primary: "#be185d", secondary: "#1e1b4b", accent: "#fbcfe8", bg: "#ffffff" }
+        }
+      },
+      {
+        id: "11", name: "عرس جماعي - الفني والملون",
+        defaultData: {
+          title: "مهرجان الفرح الجماعي الأول",
+          subtitle: "يوم الجمعة ١٥ ذو الحجة ١٤٤٦\nقاعة الأفراح الكبرى - الرياض",
+          description: "محمد & نورة\nعبدالله & سارة\nأحمد & فاطمة\nعلي & مريم\nخالد & هدى\nسامي & رنا\nيوسف & أسماء\nعمر & ليلى\nحسن & منى\nكريم & نادية\nطارق & لينا\nوليد & دانة",
+          phone: "١٥ ذو الحجة ١٤٤٦",
+          email: "قاعة الأفراح الكبرى",
+          website: "",
+          colors: { primary: "#9d174d", secondary: "#1e1b4b", accent: "#f9a8d4", bg: "#fff8f9" }
+        }
+      }
     ]
   },
   {
