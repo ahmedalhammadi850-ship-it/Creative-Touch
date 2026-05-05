@@ -34,7 +34,7 @@ export default function Template6({ data }: { data: TemplateData }) {
       <div style={{ position: 'relative', zIndex: 1, padding: '20px 16px 14px' }}>
         {/* Top label */}
         <div style={{ textAlign: 'center', marginBottom: '6px' }}>
-          <span style={{ color: data.colors.accent, fontSize: `${7 * fs}px`, letterSpacing: '0.18em', display: 'block' }}>✦ مهرجان الفرح الجماعي ✦</span>
+          <span style={{ color: data.colors.accent, fontSize: `${7 * fs}px`, letterSpacing: '0.18em', display: 'block' }}>✦ {data.eventLabel ?? 'دعوة عرس جماعي'} ✦</span>
         </div>
 
         {/* Ornament divider */}

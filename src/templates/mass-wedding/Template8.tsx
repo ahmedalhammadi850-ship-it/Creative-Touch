@@ -55,7 +55,7 @@ export default function Template8({ data }: { data: TemplateData }) {
 
         {/* Badge */}
         <div style={{ padding: '2px 14px', border: `1px solid ${data.colors.primary}66`, color: data.colors.primary, fontSize: `${6.5 * fs}px`, letterSpacing: '0.12em', marginBottom: '6px', background: `${data.colors.primary}0a` }}>
-          ✿ دعوة عرس جماعي ✿
+          ✿ {data.eventLabel ?? 'دعوة عرس جماعي'} ✿
         </div>
 
         {/* Title */}

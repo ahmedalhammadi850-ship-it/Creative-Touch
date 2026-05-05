@@ -77,7 +77,7 @@ export default function Template4({ data }: { data: TemplateData }) {
           background: `linear-gradient(to left, ${data.colors.primary}22, ${data.colors.accent}33, ${data.colors.primary}22)`,
           border: `1px solid ${data.colors.primary}55`,
         }}>
-          <span style={{ color: data.colors.primary, fontSize: `${6.5 * fs}px`, letterSpacing: '0.15em' }}>✦ دعوة عرس جماعي ✦</span>
+          <span style={{ color: data.colors.primary, fontSize: `${6.5 * fs}px`, letterSpacing: '0.15em' }}>✦ {data.eventLabel ?? 'دعوة عرس جماعي'} ✦</span>
         </div>
 
         {/* Event title */}

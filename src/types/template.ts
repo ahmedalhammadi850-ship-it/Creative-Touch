@@ -6,6 +6,7 @@ export interface TemplateData {
   email?: string;
   website?: string;
   fontSize?: number;
+  eventLabel?: string;
   colors: {
     primary: string;
     secondary: string;

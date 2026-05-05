@@ -64,7 +64,7 @@ export default function Template5({ data }: { data: TemplateData }) {
             color: data.colors.accent,
             fontSize: `${6.5 * fs}px`, letterSpacing: '0.15em',
           }}>
-            دعوة عرس جماعي
+            {data.eventLabel ?? 'دعوة عرس جماعي'}
           </div>
 
           <div style={{

@@ -66,7 +66,7 @@ export default function Template3({ data }: { data: TemplateData }) {
           borderRadius: '2px',
         }}>
           <div style={{ width: '16px', height: '1px', background: data.colors.primary }} />
-          <span style={{ color: data.colors.primary, fontSize: `${6.5 * fs}px`, letterSpacing: '0.18em' }}>عرس جماعي</span>
+          <span style={{ color: data.colors.primary, fontSize: `${6.5 * fs}px`, letterSpacing: '0.18em' }}>{data.eventLabel ?? 'دعوة عرس جماعي'}</span>
           <div style={{ width: '16px', height: '1px', background: data.colors.primary }} />
         </div>
 

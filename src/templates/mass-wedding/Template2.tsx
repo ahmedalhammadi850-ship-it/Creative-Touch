@@ -104,7 +104,7 @@ export default function Template2({ data }: { data: TemplateData }) {
           marginBottom: '5px',
           background: `${data.colors.primary}0a`,
         }}>
-          ✿ دعوة عرس جماعي ✿
+          ✿ {data.eventLabel ?? 'دعوة عرس جماعي'} ✿
         </div>
 
         {/* Event title */}

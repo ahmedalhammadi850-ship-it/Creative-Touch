@@ -26,7 +26,7 @@ export default function Template7({ data }: { data: TemplateData }) {
       <div style={{ position: 'relative', zIndex: 1, padding: '18px 16px 14px' }}>
         {/* Header on colored strip */}
         <div style={{ textAlign: 'center', marginBottom: '14px' }}>
-          <div style={{ color: data.colors.accent, fontSize: `${6.5 * fs}px`, letterSpacing: '0.2em', marginBottom: '5px', opacity: 0.9 }}>دعوة عرس جماعي</div>
+          <div style={{ color: data.colors.accent, fontSize: `${6.5 * fs}px`, letterSpacing: '0.2em', marginBottom: '5px', opacity: 0.9 }}>{data.eventLabel ?? 'دعوة عرس جماعي'}</div>
           <div style={{ color: '#ffffff', fontSize: `${14 * fs}px`, fontWeight: '800', lineHeight: 1.3, marginBottom: '3px', textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}>{data.title}</div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', margin: '6px 0' }}>
             {[0,1,2].map(k => <div key={k} style={{ width: k===1 ? '20px' : '8px', height: '2px', backgroundColor: data.colors.accent, borderRadius: '1px' }} />)}

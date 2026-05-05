@@ -228,6 +228,17 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
       <div className="space-y-4">
         <h3 className="text-lg font-bold">المحتوى</h3>
 
+        {isMassWedding && (
+          <div className="space-y-2">
+            <Label>تسمية الدعوة</Label>
+            <Input
+              value={data.eventLabel ?? ''}
+              onChange={e => onChange({ eventLabel: e.target.value })}
+              placeholder="دعوة عرس جماعي"
+            />
+          </div>
+        )}
+
         <div className="space-y-2">
           <Label>
             {isMassWedding ? "اسم الحدث الرئيسي" :

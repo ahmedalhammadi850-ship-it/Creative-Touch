@@ -80,7 +80,7 @@ export default function Template1({ data }: { data: TemplateData }) {
 
         {/* Event label */}
         <div style={{ color: data.colors.primary, fontSize: `${7 * fs}px`, letterSpacing: '0.1em', marginBottom: '4px', opacity: 0.8 }}>
-          دعوة عرس جماعي
+          {data.eventLabel ?? 'دعوة عرس جماعي'}
         </div>
 
         {/* Event title */}
