@@ -217,7 +217,10 @@ export const categories: Category[] = [
       { id: "13", name: "اللون المنقسم", defaultData: { ...businessCardData, colors: { primary: "#7c3aed", secondary: "#5b21b6", accent: "#fbbf24", bg: "#faf5ff" } } },
       { id: "14", name: "النيون التقني", defaultData: { ...businessCardData, colors: { primary: "#00b4d8", secondary: "#e8f4f8", accent: "#00f5d4", bg: "#03000f" } } },
       { id: "15", name: "الماسي الفاخر", defaultData: { ...businessCardData, colors: { primary: "#c9a84c", secondary: "#c9a84c", accent: "#c9a84c", bg: "#0a0a0a" } } },
-      { id: "16", name: "المرمري العصري", defaultData: { ...businessCardData, colors: { primary: "#8b5e3c", secondary: "#3d2b1f", accent: "#c9a06a", bg: "#f9f5f0" } } }
+      { id: "16", name: "المرمري العصري", defaultData: { ...businessCardData, colors: { primary: "#8b5e3c", secondary: "#3d2b1f", accent: "#c9a06a", bg: "#f9f5f0" } } },
+      { id: "17", name: "الدائري العصري", defaultData: { ...businessCardData, colors: { primary: "#0d47a1", secondary: "#1565c0", accent: "#42a5f5", bg: "#f0f7ff" } } },
+      { id: "18", name: "المنقسم الجانبي", defaultData: { ...businessCardData, colors: { primary: "#1b5e20", secondary: "#ffffff", accent: "#a5d6a7", bg: "#ffffff" } } },
+      { id: "19", name: "التدرج الجريء الجديد", defaultData: { ...businessCardData, colors: { primary: "#4a148c", secondary: "#6a1b9a", accent: "#ffffff", bg: "#4a148c" } } },
     ]
   },
   {
@@ -260,6 +263,9 @@ export const categories: Category[] = [
       { id: "17", name: "الأخضر الطبيعي", defaultData: { ...weddingData, colors: { primary: "#2d5a27", secondary: "#1a3d15", accent: "#fbbf24", bg: "#f0f7ee" } } },
       { id: "18", name: "الملكي الداكن", defaultData: { ...weddingData, colors: { primary: "#0a1020", secondary: "#c9a84c", accent: "#c9a84c", bg: "#0a1020" } } },
       { id: "19", name: "الورود المائية", defaultData: { ...weddingData, colors: { primary: "#c9748a", secondary: "#7d2e46", accent: "#f4c2ce", bg: "#fdf5f7" } } },
+      { id: "20", name: "الذهبي الفاخر الجديد", defaultData: { ...weddingData, colors: { primary: "#b8860b", secondary: "#5a3e1b", accent: "#ffd700", bg: "#fffbf0" } } },
+      { id: "21", name: "الوردي الربيعي", defaultData: { ...weddingData, colors: { primary: "#c2185b", secondary: "#880e4f", accent: "#f8bbd0", bg: "#fce4ec" } } },
+      { id: "22", name: "الأزرق الأنيق الجديد", defaultData: { ...weddingData, colors: { primary: "#1565c0", secondary: "#0d47a1", accent: "#90caf9", bg: "#e3f2fd" } } },
       {
         id: "9", name: "عرس جماعي - الكلاسيكي الملكي",
         defaultData: {
