@@ -287,6 +287,12 @@ export const categories: Category[] = [
       { id: "20", name: "الذهبي الفاخر الجديد", defaultData: { ...weddingData, colors: { primary: "#b8860b", secondary: "#5a3e1b", accent: "#ffd700", bg: "#fffbf0" } } },
       { id: "21", name: "الوردي الربيعي", defaultData: { ...weddingData, colors: { primary: "#c2185b", secondary: "#880e4f", accent: "#f8bbd0", bg: "#fce4ec" } } },
       { id: "22", name: "الأزرق الأنيق الجديد", defaultData: { ...weddingData, colors: { primary: "#1565c0", secondary: "#0d47a1", accent: "#90caf9", bg: "#e3f2fd" } } },
+      { id: "23", name: "كريمي بزهور بيضاء", defaultData: { ...weddingData, title: "نورة", subtitle: "& عبدالله", description: "يسعدنا دعوتكم لحضور حفل زفافنا\nيوم الخميس ١٥ أكتوبر ٢٠٢٥\nقاعة الأفراح — الرياض", phone: "+966 50 123 4567", colors: { primary: "#8b6b4a", secondary: "#6b4e31", accent: "#c9a87c", bg: "#f8f4ef" } } },
+      { id: "24", name: "دائري زهري فاتح", defaultData: { ...weddingData, title: "سارة", subtitle: "& خالد", description: "يشرفانكم بدعوتكم لحضور\nحفل زفافهما المبارك\nالجمعة ٢٠ سبتمبر ٢٠٢٥", phone: "+966 55 987 6543", website: "قاعة الأفراح", colors: { primary: "#c2748a", secondary: "#8b4560", accent: "#f4b8c8", bg: "#fdf5f7" } } },
+      { id: "25", name: "داكن ذهبي إسلامي", defaultData: { ...weddingData, title: "محمد", subtitle: "& فاطمة", description: "يسعدان بدعوتكم الكريمة\nلحضور حفل الزفاف\nالسبت ٢٥ أكتوبر ١٤٤٧", phone: "+966 50 111 2222", colors: { primary: "#1a1508", secondary: "#0d0b04", accent: "#d4a832", bg: "#0f0c04" } } },
+      { id: "26", name: "خط عربي كبير نباتي", defaultData: { ...weddingData, title: "باسم", subtitle: "علي", description: "يدعوانكم لحضور\nحفل زفافهما السعيد\nالجمعة ١٢ يناير ٢٠٢٦", phone: "+966 50 333 4444", colors: { primary: "#4a7c5a", secondary: "#2d5a3a", accent: "#a8c890", bg: "#faf8f5" } } },
+      { id: "27", name: "ورود مائية مع خواتم", defaultData: { ...weddingData, title: "زاهي", subtitle: "سلمى", description: "يشرفانكم بدعوتكم\nلحضور حفل زفافهما", phone: "17 أكتوبر", website: "قاعة النخيل", colors: { primary: "#c27090", secondary: "#8a3c58", accent: "#f0b8c8", bg: "#fff9f9" } } },
+      { id: "28", name: "نباتي أزرق أنيق", defaultData: { ...weddingData, title: "MY SUITE", subtitle: "& الحبيب", description: "يسعدنا دعوتكم لحضور\nحفل زفافنا المبارك\nالأحد ١٧ أغسطس ٢٠٢٥", phone: "17", website: "قاعة الياسمين", colors: { primary: "#3d7a7a", secondary: "#2a5858", accent: "#7fc4c4", bg: "#f6fbfc" } } },
       {
         id: "9", name: "عرس جماعي - الكلاسيكي الملكي",
         defaultData: {
