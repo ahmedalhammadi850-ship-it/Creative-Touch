@@ -15,4 +15,7 @@ export interface TemplateData {
   };
   image?: string;
   images?: string[];
+  logo?: string;
+  logoPosition?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
+  logoSize?: number;
 }

@@ -69,6 +69,23 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
     setTimeout(() => multiImageInputRef.current?.click(), 0);
   };
 
+  const logoInputRef = useRef<HTMLInputElement>(null);
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      onChange({ logo: ev.target?.result as string });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeLogo = () => {
+    onChange({ logo: '' });
+    if (logoInputRef.current) logoInputRef.current.value = '';
+  };
+
   const showPhone = isBusinessCard || isAds || isSpecialized || isCongrats;
   const showEmail = isBusinessCard || isSpecialized;
   const showWebsite = isBusinessCard || isSpecialized;
@@ -171,8 +188,88 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
         </div>
       )}
 
+      {/* Logo upload for business cards */}
+      {isBusinessCard && (
+        <div className="space-y-3">
+          <h3 className="text-lg font-bold">الشعار (اختياري)</h3>
+          <input
+            ref={logoInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleLogoUpload}
+            className="hidden"
+          />
+          {data.logo ? (
+            <div className="relative group">
+              <img
+                src={data.logo}
+                alt="الشعار"
+                className="w-full h-24 object-contain rounded-xl border-2 border-primary/20 bg-muted/30"
+              />
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex items-center justify-center gap-2">
+                <Button size="sm" variant="secondary" onClick={() => logoInputRef.current?.click()}>
+                  <Upload className="w-3 h-3 ml-1" />تغيير
+                </Button>
+                <Button size="sm" variant="destructive" onClick={removeLogo}>
+                  <X className="w-3 h-3" />
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => logoInputRef.current?.click()}
+              className="w-full h-24 border-2 border-dashed border-primary/30 rounded-xl flex flex-col items-center justify-center gap-2 hover:border-primary/60 hover:bg-primary/5 transition-all cursor-pointer"
+            >
+              <ImagePlus className="w-7 h-7 text-primary/40" />
+              <span className="text-sm text-muted-foreground font-medium">أضف الشعار</span>
+              <span className="text-xs text-muted-foreground">PNG, JPG, WEBP</span>
+            </button>
+          )}
+          {data.logo && (
+            <div className="space-y-3">
+              <div className="space-y-2">
+                <Label>موضع الشعار</Label>
+                <div className="grid grid-cols-3 gap-1.5">
+                  {([
+                    { value: 'top-left', label: 'يسار أعلى' },
+                    { value: 'top-right', label: 'يمين أعلى' },
+                    { value: 'center', label: 'وسط' },
+                    { value: 'bottom-left', label: 'يسار أسفل' },
+                    { value: 'bottom-right', label: 'يمين أسفل' },
+                  ] as const).map(({ value, label }) => (
+                    <button
+                      key={value}
+                      onClick={() => onChange({ logoPosition: value })}
+                      className={`text-xs py-1.5 px-2 rounded-lg border transition-colors ${
+                        (data.logoPosition ?? 'top-left') === value
+                          ? 'bg-primary text-primary-foreground border-primary'
+                          : 'border-input hover:bg-accent'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>حجم الشعار: {data.logoSize ?? 40}px</Label>
+                <input
+                  type="range"
+                  min="24"
+                  max="90"
+                  step="4"
+                  value={data.logoSize ?? 40}
+                  onChange={e => onChange({ logoSize: Number(e.target.value) })}
+                  className="w-full accent-primary"
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Single image upload for other categories */}
-      {showImage && !isMassWedding && (
+      {showImage && !isMassWedding && !isBusinessCard && (
         <div className="space-y-3">
           <h3 className="text-lg font-bold">الصورة الشخصية</h3>
           <input

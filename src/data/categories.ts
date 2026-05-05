@@ -235,6 +235,13 @@ export const categories: Category[] = [
       { id: "31", name: "موجة زرقاء احترافية", defaultData: { ...businessCardData, colors: { primary: "#0ea5e9", secondary: "#1e3a5f", accent: "#f97316", bg: "#ffffff" } } },
       { id: "32", name: "داكن أحمر عربي", defaultData: { ...businessCardData, colors: { primary: "#111111", secondary: "#1a1a1a", accent: "#ef4444", bg: "#111111" } } },
       { id: "33", name: "داكن ذهبي احترافي", defaultData: { ...businessCardData, colors: { primary: "#1e2a3a", secondary: "#162030", accent: "#f59e0b", bg: "#0f1923" } } },
+      { id: "34", name: "موجة ذهبية + شعار", defaultData: { ...businessCardData, colors: { primary: "#f59e0b", secondary: "#1e293b", accent: "#f97316", bg: "#ffffff" } } },
+      { id: "35", name: "موجة داكنة + شعار", defaultData: { ...businessCardData, colors: { primary: "#1e293b", secondary: "#0f172a", accent: "#f59e0b", bg: "#1e293b" } } },
+      { id: "36", name: "قوس رمادي + شعار", defaultData: { ...businessCardData, colors: { primary: "#374151", secondary: "#1f2937", accent: "#ef4444", bg: "#f3f4f6" } } },
+      { id: "37", name: "موجة حمراء + شعار", defaultData: { ...businessCardData, colors: { primary: "#dc2626", secondary: "#991b1b", accent: "#dc2626", bg: "#ffffff" } } },
+      { id: "38", name: "موجة برتقالية + شعار", defaultData: { ...businessCardData, colors: { primary: "#ea580c", secondary: "#9a3412", accent: "#fbbf24", bg: "#0f172a" } } },
+      { id: "39", name: "موجة جانبية + شعار", defaultData: { ...businessCardData, colors: { primary: "#7c3aed", secondary: "#5b21b6", accent: "#a78bfa", bg: "#ffffff" } } },
+      { id: "40", name: "نظيف خطوط + شعار", defaultData: { ...businessCardData, colors: { primary: "#0ea5e9", secondary: "#0369a1", accent: "#f59e0b", bg: "#ffffff" } } },
     ]
   },
   {
