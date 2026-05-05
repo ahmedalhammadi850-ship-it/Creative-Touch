@@ -425,6 +425,81 @@ export const categories: Category[] = [
           fontSize: 14,
           colors: { primary: "#4f46e5", secondary: "#6366f1", accent: "#fbbf24", bg: "#f5f3ff" }
         }
+      },
+      {
+        id: "19", name: "روضة أطفال — مرح ونمو",
+        defaultData: {
+          title: "روضة الأطفال المرحة",
+          subtitle: "تعلم ممتع ونمو",
+          description: "Fun Learning & Growth",
+          phone: "0501234567",
+          email: "info@kids-garden.edu",
+          fontSize: 14,
+          colors: { primary: "#d97706", secondary: "#f59e0b", accent: "#fde68a", bg: "#fff7e6" }
+        }
+      },
+      {
+        id: "20", name: "مدرسة ابتدائية — ستيم",
+        defaultData: {
+          title: "مدرسة المستقبل الابتدائية",
+          subtitle: "برامج ستيم والقيادة",
+          description: "برامج علوم ورياضيات،مهارات القيادة والتفكير،أنشطة تكنولوجيا وبرمجة،رحلات علمية تعليمية",
+          phone: "0509876543",
+          email: "info@stem-school.edu",
+          fontSize: 14,
+          colors: { primary: "#0891b2", secondary: "#0e7490", accent: "#f59e0b", bg: "#f0fbff" }
+        }
+      },
+      {
+        id: "21", name: "ثانوية ومعاهد — أكاديمي",
+        defaultData: {
+          title: "معهد التميز الأكاديمي",
+          subtitle: "التحضير للجامعة والمستقبل",
+          description: "التميز الأكاديمي،تأهيل جامعي متكامل،مسارات علمية وأدبية،تطوير مهارات القيادة",
+          phone: "0551234567",
+          email: "info@excellence.edu",
+          fontSize: 14,
+          colors: { primary: "#1e3a8a", secondary: "#1d4ed8", accent: "#f59e0b", bg: "#eff6ff" }
+        }
+      },
+      {
+        id: "22", name: "معهد لغات — تواصل مع العالم",
+        defaultData: {
+          title: "أكاديمية اللغات العالمية",
+          subtitle: "معهد لغات",
+          description: "إجادة اللغة الإنجليزية،الفرنسية والإسبانية،اللغة الصينية والألمانية,شهادات دولية معتمدة",
+          phone: "0507654321",
+          email: "info@lang-academy.edu",
+          website: "www.global-scholars.edu",
+          fontSize: 14,
+          colors: { primary: "#1d4ed8", secondary: "#3b82f6", accent: "#f59e0b", bg: "#ffffff" }
+        }
+      },
+      {
+        id: "23", name: "معهد تقنية — مستقبلي",
+        defaultData: {
+          title: "معهد آفاق التكنولوجيا",
+          subtitle: "طريقك للابتكار",
+          description: "البرمجة والتطوير،الذكاء الاصطناعي,تصميم الجرافيك والUI،الأمن السيبراني",
+          phone: "0503456789",
+          email: "info@afaq-tech.edu",
+          website: "www.afaq-tech.edu",
+          fontSize: 14,
+          colors: { primary: "#06b6d4", secondary: "#6366f1", accent: "#06b6d4", bg: "#050b1a" }
+        }
+      },
+      {
+        id: "24", name: "مركز إسلامي — قيم ومعرفة",
+        defaultData: {
+          title: "مركز النجاح التعليمي",
+          subtitle: "مركز تحفيظ وعلوم إسلامية",
+          description: "تحفيظ القرآن الكريم،تعليم الأحكام والتجويد،العلوم الإسلامية الأساسية,تربية الأخلاق والقيم",
+          phone: "0512345678",
+          email: "info@annajah.edu",
+          website: "www.annajah-center.edu",
+          fontSize: 14,
+          colors: { primary: "#065f46", secondary: "#047857", accent: "#fbbf24", bg: "#fdf8f0" }
+        }
       }
     ]
   },
