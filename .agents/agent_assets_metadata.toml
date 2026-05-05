@@ -1,0 +1,37 @@
+uploads = []
+
+[[generated]]
+id = "d76L97cccIG4fb5v_H5qU"
+uri = "file://attached_assets/generated_images/business_card.png"
+type = "image"
+title = "luxury business card design"
+
+[[generated]]
+id = "J0f20Q2gP1aLQKnQ7glO5"
+uri = "file://attached_assets/generated_images/product_ad.png"
+type = "image"
+title = "premium product ad layout"
+
+[[generated]]
+id = "8jvXEzXVVQqNFOEHFDmYz"
+uri = "file://attached_assets/generated_images/greeting_card.png"
+type = "image"
+title = "elegant greeting card floral"
+
+[[outputs]]
+id = "CyCft-hagrQoscOJw4D2s"
+uri = "file://attached_assets/generated_images/business_card.png"
+type = "image"
+title = "بطاقة شخصية - Business Card"
+
+[[outputs]]
+id = "VPzUPyiaXY1QdEUVqC9b7"
+uri = "file://attached_assets/generated_images/product_ad.png"
+type = "image"
+title = "إعلان منتج - Product Ad"
+
+[[outputs]]
+id = "WIa_WGtJa1G93ZEMYf3g7"
+uri = "file://attached_assets/generated_images/greeting_card.png"
+type = "image"
+title = "بطاقة تهنئة - Greeting Card"
