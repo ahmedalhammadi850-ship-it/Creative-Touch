@@ -54,17 +54,6 @@ export default function HomePage() {
         boxShadow: '0 1px 20px rgba(99,102,241,0.08)',
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{
-              width: 44, height: 44, borderRadius: 14,
-              background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 4px 15px rgba(99,102,241,0.35)',
-            }}>
-              <LayoutTemplate size={22} color="#fff" />
-            </div>
-            <span style={{ color: '#1e1b4b', fontSize: 20, fontWeight: 900, letterSpacing: '-0.02em' }}>ستوديو القوالب</span>
-          </div>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
             <button
               onClick={() => setLocation('/about')}
@@ -95,6 +84,19 @@ export default function HomePage() {
               ابدأ الآن
             </button>
           </div>
+
+          {/* Logo — left side visually in RTL */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 14,
+              background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: '0 4px 15px rgba(99,102,241,0.35)',
+            }}>
+              <LayoutTemplate size={22} color="#fff" />
+            </div>
+            <span style={{ color: '#1e1b4b', fontSize: 20, fontWeight: 900, letterSpacing: '-0.02em' }}>ستوديو القوالب</span>
+          </div>
         </div>
       </nav>
 
@@ -103,17 +105,6 @@ export default function HomePage() {
         {/* ─── HERO ─── */}
         <section style={{ padding: '90px 24px 80px', textAlign: 'center' }}>
           <div style={{ maxWidth: 780, margin: '0 auto' }}>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: 'linear-gradient(135deg, #eef2ff, #fdf4ff)',
-              border: '1px solid rgba(99,102,241,0.25)',
-              borderRadius: 100, padding: '7px 18px', marginBottom: 30,
-              boxShadow: '0 2px 12px rgba(99,102,241,0.12)',
-            }}>
-              <Sparkles size={14} color="#6366f1" />
-              <span style={{ color: '#6366f1', fontSize: 13, fontWeight: 700 }}>أداة تصميم عربية احترافية — مجاناً ✨</span>
-            </div>
-
             <h1 style={{
               fontSize: 'clamp(38px, 6vw, 72px)', fontWeight: 900,
               color: '#1e1b4b', lineHeight: 1.15, marginBottom: 22,
