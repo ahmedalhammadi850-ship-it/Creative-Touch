@@ -351,7 +351,55 @@ export const categories: Category[] = [
       { id: "9", name: "المنقسم الجريء", defaultData: { ...specializedData, colors: { primary: "#dc2626", secondary: "#991b1b", accent: "#fbbf24", bg: "#fff7ed" } } },
       { id: "10", name: "الليلي الفاخر", defaultData: { ...specializedData, colors: { primary: "#8b5cf6", secondary: "#c4b5fd", accent: "#fbbf24", bg: "#0f0a1e" } } },
       { id: "11", name: "الزجاجي الشفاف", defaultData: { ...specializedData, colors: { primary: "#6366f1", secondary: "#e0e7ff", accent: "#a5f3fc", bg: "#0f0728" } } },
-      { id: "12", name: "النيوني المتوهج", defaultData: { ...specializedData, colors: { primary: "#10b981", secondary: "#d1fae5", accent: "#34d399", bg: "#020f09" } } }
+      { id: "12", name: "النيوني المتوهج", defaultData: { ...specializedData, colors: { primary: "#10b981", secondary: "#d1fae5", accent: "#34d399", bg: "#020f09" } } },
+      {
+        id: "13", name: "تسجيل المدرسة — كلاسيك",
+        defaultData: {
+          title: "مدرسة النور الأهلية",
+          subtitle: "تسجيل العام الدراسي الجديد 1446 - 1447",
+          description: "روضة وتمهيدي،المرحلة الابتدائية،المرحلة المتوسطة،المرحلة الثانوية",
+          phone: "0501234567",
+          email: "al-noor@school.edu",
+          website: "www.alnoor-school.edu",
+          colors: { primary: "#1e40af", secondary: "#1d4ed8", accent: "#fbbf24", bg: "#f8faff" }
+        }
+      },
+      {
+        id: "14", name: "تسجيل المدرسة — عصري",
+        defaultData: {
+          title: "مدرسة المستقبل",
+          subtitle: "باب التسجيل مفتوح — انضم إلى عائلتنا",
+          description: "الروضة والتمهيدي،الابتدائي البناء،المتوسطة الإبداعية،الثانوية المتميزة",
+          phone: "0557654321",
+          email: "info@mostaqbal.edu",
+          website: "www.mostaqbal.edu",
+          colors: { primary: "#0f4c81", secondary: "#1e6fad", accent: "#f59e0b", bg: "#f0f6ff" }
+        }
+      },
+      {
+        id: "15", name: "مزايا المدرسة — شبكة",
+        defaultData: {
+          title: "أكاديمية الإبداع",
+          subtitle: "مدرسة أهلية متميزة — تعليم بمعايير دولية",
+          description: "مناهج دولية معتمدة،معامل علوم وتقنية،أنشطة رياضية وفنية،تعليم اللغات الأجنبية،رحلات ومخيمات تعليمية,دعم نفسي واجتماعي",
+          phone: "0509876543",
+          email: "academy@ibda3.edu",
+          website: "www.ibda3-academy.edu",
+          colors: { primary: "#1a5f3c", secondary: "#2d8a5e", accent: "#fbbf24", bg: "#f0fdf4" }
+        }
+      },
+      {
+        id: "16", name: "مزايا المدرسة — قوائم",
+        defaultData: {
+          title: "مدرسة الرواد الدولية",
+          subtitle: "نشكّل جيل المستقبل بأيدٍ خبيرة ورؤية واضحة",
+          description: "بيئة تعليمية آمنة ومحفّزة،نسب نجاح تتجاوز 98%،معلمون مؤهلون ومتدرّبون،تقنيات حديثة في التعليم,اهتمام شخصي بكل طالب",
+          phone: "0512345678",
+          email: "info@rowad-intl.edu",
+          website: "www.rowad-intl.edu",
+          colors: { primary: "#7c2d12", secondary: "#b45309", accent: "#fde68a", bg: "#fff8f0" }
+        }
+      }
     ]
   },
   {
