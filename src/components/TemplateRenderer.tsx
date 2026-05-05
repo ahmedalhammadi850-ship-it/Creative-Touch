@@ -145,6 +145,7 @@ const templates = {
   'congrats/26': lazy(() => import('../templates/congrats/Template26')),
   'congrats/27': lazy(() => import('../templates/congrats/Template27')),
   'congrats/28': lazy(() => import('../templates/congrats/Template28')),
+  'congrats/29': lazy(() => import('../templates/congrats/Template29')),
 };
 
 export function TemplateRenderer({ categoryId, templateId, data }: TemplateRendererProps) {

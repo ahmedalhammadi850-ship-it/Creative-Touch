@@ -610,6 +610,15 @@ export const categories: Category[] = [
           phone: "", email: "تهنئة خاصة", website: "قاعة الملكية - الرياض",
           colors: { primary: "#92400e", secondary: "#c4b5fd", accent: "#c9a84c", bg: "#0a0800" }
         }
+      },
+      {
+        id: "29", name: "أفراح يمنية - صورة كاملة",
+        defaultData: {
+          title: "أفراح الراعيني", subtitle: "عبدالرحمن الرعيني", image: "",
+          description: "بمناسبة الزفاف قالف الف مبروك",
+          phone: "", email: "عمار ياسر المصطرف - صلاح حسن الحيمي", website: "",
+          colors: { primary: "#c8a050", secondary: "#2a1a08", accent: "#f0d070", bg: "#3a2510" }
+        }
       }
     ]
   }
