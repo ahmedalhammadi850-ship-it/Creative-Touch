@@ -92,49 +92,32 @@ export default function Template1({ data }: { data: TemplateData }) {
           <div style={{ flex: 1, height: '0.5px', background: `linear-gradient(to right, ${data.colors.primary}88, transparent)` }} />
         </div>
 
-        {/* Photos 3x2 grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%' }}>
-          {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
-              {/* Circular photo frame */}
-              <div style={{
-                width: '62px',
-                height: '62px',
-                borderRadius: '50%',
-                border: `2.5px solid ${data.colors.primary}`,
-                boxShadow: `0 0 0 1.5px ${data.colors.bg}, 0 0 0 3px ${data.colors.primary}44`,
-                overflow: 'hidden',
-                background: images[i] ? 'transparent' : `linear-gradient(135deg, ${data.colors.primary}22, ${data.colors.primary}08)`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                position: 'relative',
-              }}>
-                {images[i] ? (
-                  <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                ) : (
-                  <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
-                    <circle cx="15" cy="11" r="6" fill={data.colors.primary} opacity="0.35" />
-                    <path d="M3,28 Q3,20 15,20 Q27,20 27,28" fill={data.colors.primary} opacity="0.35" />
-                  </svg>
-                )}
-              </div>
-              {/* Couple name */}
-              <span style={{
-                color: data.colors.secondary,
-                fontSize: '6.5px',
-                textAlign: 'center',
-                lineHeight: 1.4,
-                maxWidth: '72px',
-                fontWeight: images[i] ? '600' : '400',
-                opacity: couples[i] ? 1 : 0.4,
-              }}>
-                {couples[i] || `العريس ${i + 1}`}
-              </span>
+        {/* Photos grid — only visible slots */}
+        {(() => {
+          const visible = Array.from({ length: 6 }, (_, i) => i).filter(i => !!images[i]);
+          if (visible.length === 0) return null;
+          return (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%' }}>
+              {visible.map(i => (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
+                  <div style={{
+                    width: '62px', height: '62px', borderRadius: '50%',
+                    border: `2.5px solid ${data.colors.primary}`,
+                    boxShadow: `0 0 0 1.5px ${data.colors.bg}, 0 0 0 3px ${data.colors.primary}44`,
+                    overflow: 'hidden', flexShrink: 0,
+                  }}>
+                    <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                  {couples[i] && (
+                    <span style={{ color: data.colors.secondary, fontSize: '6.5px', textAlign: 'center', lineHeight: 1.4, maxWidth: '72px', fontWeight: '600' }}>
+                      {couples[i]}
+                    </span>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          );
+        })()}
 
         {/* Bottom divider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px', width: '100%', margin: '10px 0 6px' }}>

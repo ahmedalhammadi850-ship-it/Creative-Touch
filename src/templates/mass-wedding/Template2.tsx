@@ -130,61 +130,42 @@ export default function Template2({ data }: { data: TemplateData }) {
           <div style={{ flex: 1, height: '0.5px', backgroundColor: `${data.colors.primary}55` }} />
         </div>
 
-        {/* Photos 3x2 grid - rounded square style */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '9px', width: '100%' }}>
-          {Array.from({ length: 6 }, (_, i) => (
-            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
-              {/* Rounded square frame with petal decoration */}
-              <div style={{ position: 'relative' }}>
-                {/* Petal corner decorations */}
-                <svg style={{ position: 'absolute', top: '-4px', right: '-4px', zIndex: 1 }} width="14" height="14" viewBox="0 0 14 14">
-                  <circle cx="7" cy="7" r="4" fill={data.colors.primary} opacity="0.3" />
-                  <circle cx="7" cy="7" r="2" fill={data.colors.accent} opacity="0.5" />
-                </svg>
-                <svg style={{ position: 'absolute', top: '-4px', left: '-4px', zIndex: 1 }} width="14" height="14" viewBox="0 0 14 14">
-                  <circle cx="7" cy="7" r="4" fill={data.colors.primary} opacity="0.3" />
-                  <circle cx="7" cy="7" r="2" fill={data.colors.accent} opacity="0.5" />
-                </svg>
-
-                <div style={{
-                  width: '62px',
-                  height: '68px',
-                  borderRadius: '8px',
-                  border: `1.5px solid ${data.colors.primary}`,
-                  overflow: 'hidden',
-                  background: images[i] ? 'transparent' : `linear-gradient(160deg, ${data.colors.primary}18, ${data.colors.accent}10)`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: `0 2px 8px ${data.colors.primary}22`,
-                }}>
-                  {images[i] ? (
-                    <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  ) : (
-                    <svg width="28" height="32" viewBox="0 0 28 32" fill="none">
-                      <circle cx="14" cy="11" r="6" fill={data.colors.primary} opacity="0.3" />
-                      <path d="M2,30 Q2,22 14,22 Q26,22 26,30" fill={data.colors.primary} opacity="0.3" />
-                      <path d="M8,32 Q8,26 14,26 Q20,26 20,32" fill={data.colors.accent} opacity="0.25" />
+        {/* Photos grid — only visible slots */}
+        {(() => {
+          const visible = Array.from({ length: 6 }, (_, i) => i).filter(i => !!images[i]);
+          if (visible.length === 0) return null;
+          return (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '9px', width: '100%' }}>
+              {visible.map(i => (
+                <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
+                  <div style={{ position: 'relative' }}>
+                    <svg style={{ position: 'absolute', top: '-4px', right: '-4px', zIndex: 1 }} width="14" height="14" viewBox="0 0 14 14">
+                      <circle cx="7" cy="7" r="4" fill={data.colors.primary} opacity="0.3" />
+                      <circle cx="7" cy="7" r="2" fill={data.colors.accent} opacity="0.5" />
                     </svg>
+                    <svg style={{ position: 'absolute', top: '-4px', left: '-4px', zIndex: 1 }} width="14" height="14" viewBox="0 0 14 14">
+                      <circle cx="7" cy="7" r="4" fill={data.colors.primary} opacity="0.3" />
+                      <circle cx="7" cy="7" r="2" fill={data.colors.accent} opacity="0.5" />
+                    </svg>
+                    <div style={{
+                      width: '62px', height: '68px', borderRadius: '8px',
+                      border: `1.5px solid ${data.colors.primary}`,
+                      overflow: 'hidden',
+                      boxShadow: `0 2px 8px ${data.colors.primary}22`,
+                    }}>
+                      <img src={images[i]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  </div>
+                  {couples[i] && (
+                    <span style={{ color: data.colors.secondary, fontSize: '6.5px', textAlign: 'center', lineHeight: 1.4, maxWidth: '72px', fontWeight: '600' }}>
+                      {couples[i]}
+                    </span>
                   )}
                 </div>
-              </div>
-
-              {/* Couple name */}
-              <span style={{
-                color: data.colors.secondary,
-                fontSize: '6.5px',
-                textAlign: 'center',
-                lineHeight: 1.4,
-                maxWidth: '72px',
-                fontWeight: images[i] ? '600' : '400',
-                opacity: couples[i] ? 1 : 0.45,
-              }}>
-                {couples[i] || `العريس ${i + 1}`}
-              </span>
+              ))}
             </div>
-          ))}
-        </div>
+          );
+        })()}
 
         {/* Bottom divider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px', width: '100%', margin: '10px 0 6px' }}>

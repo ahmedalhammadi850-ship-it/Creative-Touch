@@ -105,6 +105,30 @@ export const categories: Category[] = [
           ...massWeddingDefaultData,
           colors: { primary: "#9d174d", secondary: "#1e1b4b", accent: "#f9a8d4", bg: "#fff8f9" }
         }
+      },
+      {
+        id: "3",
+        name: "الليلي المضيء",
+        defaultData: {
+          ...massWeddingDefaultData,
+          colors: { primary: "#c9a84c", secondary: "#f0e8d0", accent: "#f0d060", bg: "#0d1117" }
+        }
+      },
+      {
+        id: "4",
+        name: "الفاخر الكلاسيكي",
+        defaultData: {
+          ...massWeddingDefaultData,
+          colors: { primary: "#b8962e", secondary: "#2c1008", accent: "#e8c86a", bg: "#fdf6ef" }
+        }
+      },
+      {
+        id: "5",
+        name: "العصري الجريء",
+        defaultData: {
+          ...massWeddingDefaultData,
+          colors: { primary: "#1e1b4b", secondary: "#1e1b4b", accent: "#d4af37", bg: "#ffffff" }
+        }
       }
     ]
   },

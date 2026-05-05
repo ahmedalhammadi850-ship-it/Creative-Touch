@@ -11,6 +11,9 @@ interface TemplateRendererProps {
 const templates = {
   'mass-wedding/1': lazy(() => import('../templates/mass-wedding/Template1')),
   'mass-wedding/2': lazy(() => import('../templates/mass-wedding/Template2')),
+  'mass-wedding/3': lazy(() => import('../templates/mass-wedding/Template3')),
+  'mass-wedding/4': lazy(() => import('../templates/mass-wedding/Template4')),
+  'mass-wedding/5': lazy(() => import('../templates/mass-wedding/Template5')),
   'business-card/1': lazy(() => import('../templates/business-card/Template1')),
   'business-card/2': lazy(() => import('../templates/business-card/Template2')),
   'business-card/3': lazy(() => import('../templates/business-card/Template3')),
