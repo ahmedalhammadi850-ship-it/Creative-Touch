@@ -399,6 +399,32 @@ export const categories: Category[] = [
           website: "www.rowad-intl.edu",
           colors: { primary: "#7c2d12", secondary: "#b45309", accent: "#fde68a", bg: "#fff8f0" }
         }
+      },
+      {
+        id: "17", name: "مدرسة احترافية — بانر",
+        defaultData: {
+          title: "مدرسة الأجيال الأهلية",
+          subtitle: "تعليم متميز — مستقبل مشرق",
+          description: "مناهج معتمدة دولياً،معلمون مؤهلون ومتخصصون،أنشطة رياضية وفنية متنوعة،معامل علوم وحاسب متطورة،رعاية نفسية واجتماعية,خصومات للأسر المتعددة",
+          phone: "0501112233",
+          email: "info@ajyal.edu",
+          website: "www.ajyal-school.edu",
+          fontSize: 14,
+          colors: { primary: "#1e3a8a", secondary: "#1d4ed8", accent: "#fbbf24", bg: "#f0f6ff" }
+        }
+      },
+      {
+        id: "18", name: "مدرسة احترافية — أنيق",
+        defaultData: {
+          title: "أكاديمية النخبة",
+          subtitle: "نشكّل العقول ونصنع القادة",
+          description: "بيئة تعليمية آمنة ومحفّزة،مستوى أكاديمي رفيع ومتميز،تقنيات حديثة وسبورات ذكية،اهتمام فردي بكل طالب,رحلات ومخيمات تعليمية",
+          phone: "0557778899",
+          email: "info@nukhba.edu",
+          website: "www.nukhba-academy.edu",
+          fontSize: 14,
+          colors: { primary: "#4f46e5", secondary: "#6366f1", accent: "#fbbf24", bg: "#f5f3ff" }
+        }
       }
     ]
   },
