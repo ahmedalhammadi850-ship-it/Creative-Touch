@@ -227,6 +227,7 @@ export default function EditorPage() {
                 categoryId={categoryId}
                 data={backData}
                 onChange={updateBackData}
+                backCardMode
               />
             ) : (
               <InlineEditor

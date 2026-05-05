@@ -25,7 +25,7 @@ export default function Template43({ data }: { data: TemplateData }) {
       <div className="flex items-center gap-3 z-10 w-full justify-center">
         <div className="flex-1 h-[1px] opacity-20" style={{ background: data.colors.accent }} />
         <span className="text-[8px] font-bold tracking-[0.3em] uppercase opacity-50" style={{ color: data.colors.accent }}>
-          {data.email ? data.email.split('@')[1] || data.email : 'business'}
+          {data.website ? data.website.replace(/^(https?:\/\/)?(www\.)?/, '').split('/')[0] : 'business'}
         </span>
         <div className="flex-1 h-[1px] opacity-20" style={{ background: data.colors.accent }} />
       </div>

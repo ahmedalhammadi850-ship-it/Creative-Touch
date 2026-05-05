@@ -10,9 +10,10 @@ interface InlineEditorProps {
   categoryId: string;
   data: TemplateData;
   onChange: (data: Partial<TemplateData>) => void;
+  backCardMode?: boolean;
 }
 
-export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) {
+export function InlineEditor({ categoryId, data, onChange, backCardMode = false }: InlineEditorProps) {
   const isBusinessCard = categoryId === 'business-card';
   const isAds = categoryId === 'ads';
   const isWedding = categoryId === 'wedding';
@@ -207,7 +208,7 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
         </div>
       )}
 
-      {/* Logo upload for business cards */}
+      {/* Logo upload — shown for business cards (both front and back modes) */}
       {isBusinessCard && (
         <div className="space-y-3">
           <h3 className="text-lg font-bold">الشعار (اختياري)</h3>
@@ -244,7 +245,7 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
               <span className="text-xs text-muted-foreground">PNG, JPG, WEBP</span>
             </button>
           )}
-          {data.logo && (
+          {data.logo && !backCardMode && (
             <div className="space-y-3">
               <div className="space-y-2">
                 <Label>موضع الشعار</Label>
@@ -287,7 +288,7 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
         </div>
       )}
 
-      {/* Single image upload for other categories */}
+      {/* Single image upload for non-business-card, non-mass-wedding categories */}
       {showImage && !isMassWedding && !isBusinessCard && (
         <div className="space-y-3">
           <h3 className="text-lg font-bold">الصورة الشخصية</h3>
@@ -340,167 +341,41 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
         </div>
       )}
 
-      {/* Content Fields */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-bold">المحتوى</h3>
+      {/* =================== BACK CARD MODE =================== */}
+      {backCardMode && (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold">محتوى الوجه الخلفي</h3>
 
-        {isMassWedding && (
           <div className="space-y-2">
-            <Label>تسمية الدعوة</Label>
+            <Label>اسم الشركة / العلامة التجارية</Label>
             <Input
-              value={data.eventLabel ?? ''}
-              onChange={e => onChange({ eventLabel: e.target.value })}
-              placeholder="دعوة عرس جماعي"
+              value={data.description}
+              onChange={e => onChange({ description: e.target.value })}
+              placeholder="شركة الإبداع التقني"
+            />
+            <p className="text-xs text-muted-foreground">النص الرئيسي الظاهر في المنتصف</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>الشعار / الوصف المختصر</Label>
+            <Input
+              value={data.subtitle}
+              onChange={e => onChange({ subtitle: e.target.value })}
+              placeholder="إبداع بلا حدود"
             />
           </div>
-        )}
 
-        <div className="space-y-2">
-          <Label>
-            {isMassWedding ? "اسم الحدث الرئيسي" :
-             isWedding || isCongrats ? "الاسم الرئيسي / العريس" : "العنوان الرئيسي / الاسم"}
-          </Label>
-          <Input
-            value={data.title}
-            onChange={e => onChange({ title: e.target.value })}
-            placeholder={isMassWedding ? "مهرجان الفرح الجماعي الأول" :
-                         isWedding || isCongrats ? "سامح" : "أحمد محمد"}
-            data-testid="input-title"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label>
-            {isMassWedding ? "التاريخ والمكان" :
-             isWedding || isCongrats ? "اسم الوالد / المناسبة" : "العنوان الفرعي / المسمى الوظيفي"}
-          </Label>
-          <Input
-            value={data.subtitle}
-            onChange={e => onChange({ subtitle: e.target.value })}
-            placeholder={isMassWedding ? "يوم الجمعة - قاعة الأفراح" :
-                         isWedding || isCongrats ? "أحمد سعيد الحاج" : "مدير تقني"}
-            data-testid="input-subtitle"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label>
-            {isMassWedding ? "أسماء العرسان (اسم في كل سطر)" :
-             isWedding || isCongrats ? "التفاصيل (التاريخ والمكان...)" :
-             isSpecialized ? "الخدمات (افصل بـ ،)" : "الوصف"}
-          </Label>
-          <Textarea
-            value={data.description}
-            onChange={e => onChange({ description: e.target.value })}
-            className="resize-none"
-            rows={isMassWedding ? 6 : 3}
-            placeholder={
-              isMassWedding
-                ? "محمد & نورة\nعبدالله & سارة\nأحمد & فاطمة\nعلي & مريم\nخالد & هدى\nسامي & رنا"
-                : isWedding || isCongrats
-                ? "يوم الجمعة 29.08.2025 - المقيل والزفة\nالمخا - مدينة الكهرباء"
-                : isSpecialized
-                ? "تنظيف وتلميع،تبييض،حشوات تجميلية"
-                : ""
-            }
-            data-testid="input-description"
-          />
-          {isMassWedding && (
-            <p className="text-xs text-muted-foreground">الاسم الأول يقابل الصورة الأولى، والثاني يقابل الثانية...</p>
-          )}
-        </div>
-
-        {/* Extra text input (for additional info / sender name) */}
-        {(isCongrats || isWedding) && !isMassWedding && (
-          <div className="space-y-2">
-            <Label>اسم المهنئ / النص الختامي</Label>
-            <Input
-              value={data.email || ''}
-              onChange={e => onChange({ email: e.target.value })}
-              placeholder="تهنئة مقدمة من..."
-              data-testid="input-extra-text"
-            />
-          </div>
-        )}
-
-        {/* Congrats specific fields: نص التهنئة + نص الإهداء */}
-        {isCongrats && (
-          <>
-            <div className="space-y-2">
-              <Label>نص التهنئة الرئيسي</Label>
-              <Input
-                value={data.phone || ''}
-                onChange={e => onChange({ phone: e.target.value })}
-                placeholder="تهانينا"
-                data-testid="input-congrats-text"
-              />
-              <p className="text-xs text-muted-foreground">مثل: تهانينا — ألف مبروك — مبارك</p>
-            </div>
-            <div className="space-y-2">
-              <Label>نص الإهداء</Label>
-              <Input
-                value={data.website || ''}
-                onChange={e => onChange({ website: e.target.value })}
-                placeholder="إهداء"
-                data-testid="input-hadya-text"
-              />
-              <p className="text-xs text-muted-foreground">مثل: إهداء — تقديم — بمناسبة</p>
-            </div>
-          </>
-        )}
-
-        {isMassWedding && (
-          <>
-            <div className="space-y-2">
-              <Label>التاريخ</Label>
-              <Input
-                value={data.phone || ''}
-                onChange={e => onChange({ phone: e.target.value })}
-                placeholder="يوم الجمعة ١٥ ذو الحجة ١٤٤٦"
-                data-testid="input-phone"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>المكان</Label>
-              <Input
-                value={data.website || ''}
-                onChange={e => onChange({ website: e.target.value })}
-                placeholder="قاعة الأفراح الكبرى - المدينة"
-                data-testid="input-location"
-              />
-            </div>
-          </>
-        )}
-
-        {showPhone && !isMassWedding && !isCongrats && (
           <div className="space-y-2">
             <Label>رقم الهاتف</Label>
             <Input
               value={data.phone || ''}
               onChange={e => onChange({ phone: e.target.value })}
-              placeholder="0500000000"
+              placeholder="+966 50 000 0000"
               dir="ltr"
               className="text-right"
-              data-testid="input-phone"
             />
           </div>
-        )}
 
-        {showEmail && !isCongrats && !isWedding && (
-          <div className="space-y-2">
-            <Label>البريد الإلكتروني</Label>
-            <Input
-              value={data.email || ''}
-              onChange={e => onChange({ email: e.target.value })}
-              placeholder="email@example.com"
-              dir="ltr"
-              className="text-right"
-              data-testid="input-email"
-            />
-          </div>
-        )}
-
-        {showWebsite && !isCongrats && !isWedding && (
           <div className="space-y-2">
             <Label>الموقع الإلكتروني</Label>
             <Input
@@ -509,54 +384,253 @@ export function InlineEditor({ categoryId, data, onChange }: InlineEditorProps) 
               placeholder="www.example.com"
               dir="ltr"
               className="text-right"
-              data-testid="input-website"
             />
           </div>
-        )}
-      </div>
 
-      {/* Dynamic extra lines for congrats */}
-      {isCongrats && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold">سطور إضافية</h3>
-            {extraLines.length < 5 && (
-              <button
-                onClick={addExtraLine}
-                className="flex items-center gap-1 text-sm text-primary border border-primary/30 rounded-lg px-3 py-1 hover:bg-primary/5 transition-colors"
-              >
-                <Plus className="w-4 h-4" />
-                إضافة سطر
-              </button>
-            )}
-          </div>
-          {extraLines.length === 0 && (
-            <p className="text-xs text-muted-foreground text-center py-3 border border-dashed border-primary/20 rounded-lg">
-              اضغط "إضافة سطر" لإضافة نص مخصص في البطاقة
-            </p>
-          )}
           <div className="space-y-2">
-            {extraLines.map((line, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <Input
-                  value={line}
-                  onChange={e => updateExtraLine(i, e.target.value)}
-                  placeholder={`سطر ${i + 1}...`}
-                  className="flex-1"
-                />
-                <button
-                  onClick={() => removeExtraLine(i)}
-                  className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
+            <Label>البريد الإلكتروني</Label>
+            <Input
+              value={data.email || ''}
+              onChange={e => onChange({ email: e.target.value })}
+              placeholder="info@example.com"
+              dir="ltr"
+              className="text-right"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>حرف الأفاتار (يظهر إذا لم يوجد شعار)</Label>
+            <Input
+              value={data.title}
+              onChange={e => onChange({ title: e.target.value })}
+              placeholder="أ"
+              maxLength={2}
+            />
           </div>
         </div>
       )}
 
-      {/* Colors */}
+      {/* =================== FRONT / NORMAL MODE =================== */}
+      {!backCardMode && (
+        <>
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold">المحتوى</h3>
+
+            {isMassWedding && (
+              <div className="space-y-2">
+                <Label>تسمية الدعوة</Label>
+                <Input
+                  value={data.eventLabel ?? ''}
+                  onChange={e => onChange({ eventLabel: e.target.value })}
+                  placeholder="دعوة عرس جماعي"
+                />
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label>
+                {isMassWedding ? "اسم الحدث الرئيسي" :
+                 isWedding || isCongrats ? "الاسم الرئيسي / العريس" : "العنوان الرئيسي / الاسم"}
+              </Label>
+              <Input
+                value={data.title}
+                onChange={e => onChange({ title: e.target.value })}
+                placeholder={isMassWedding ? "مهرجان الفرح الجماعي الأول" :
+                             isWedding || isCongrats ? "سامح" : "أحمد محمد"}
+                data-testid="input-title"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>
+                {isMassWedding ? "التاريخ والمكان" :
+                 isWedding || isCongrats ? "اسم الوالد / المناسبة" : "العنوان الفرعي / المسمى الوظيفي"}
+              </Label>
+              <Input
+                value={data.subtitle}
+                onChange={e => onChange({ subtitle: e.target.value })}
+                placeholder={isMassWedding ? "يوم الجمعة - قاعة الأفراح" :
+                             isWedding || isCongrats ? "أحمد سعيد الحاج" : "مدير تقني"}
+                data-testid="input-subtitle"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>
+                {isMassWedding ? "أسماء العرسان (اسم في كل سطر)" :
+                 isWedding || isCongrats ? "التفاصيل (التاريخ والمكان...)" :
+                 isSpecialized ? "الخدمات (افصل بـ ،)" : "الوصف"}
+              </Label>
+              <Textarea
+                value={data.description}
+                onChange={e => onChange({ description: e.target.value })}
+                className="resize-none"
+                rows={isMassWedding ? 6 : 3}
+                placeholder={
+                  isMassWedding
+                    ? "محمد & نورة\nعبدالله & سارة\nأحمد & فاطمة\nعلي & مريم\nخالد & هدى\nسامي & رنا"
+                    : isWedding || isCongrats
+                    ? "يوم الجمعة 29.08.2025 - المقيل والزفة\nالمخا - مدينة الكهرباء"
+                    : isSpecialized
+                    ? "تنظيف وتلميع،تبييض،حشوات تجميلية"
+                    : ""
+                }
+                data-testid="input-description"
+              />
+              {isMassWedding && (
+                <p className="text-xs text-muted-foreground">الاسم الأول يقابل الصورة الأولى، والثاني يقابل الثانية...</p>
+              )}
+            </div>
+
+            {/* Extra text input (for additional info / sender name) */}
+            {(isCongrats || isWedding) && !isMassWedding && (
+              <div className="space-y-2">
+                <Label>اسم المهنئ / النص الختامي</Label>
+                <Input
+                  value={data.email || ''}
+                  onChange={e => onChange({ email: e.target.value })}
+                  placeholder="تهنئة مقدمة من..."
+                  data-testid="input-extra-text"
+                />
+              </div>
+            )}
+
+            {/* Congrats specific fields */}
+            {isCongrats && (
+              <>
+                <div className="space-y-2">
+                  <Label>نص التهنئة الرئيسي</Label>
+                  <Input
+                    value={data.phone || ''}
+                    onChange={e => onChange({ phone: e.target.value })}
+                    placeholder="تهانينا"
+                    data-testid="input-congrats-text"
+                  />
+                  <p className="text-xs text-muted-foreground">مثل: تهانينا — ألف مبروك — مبارك</p>
+                </div>
+                <div className="space-y-2">
+                  <Label>نص الإهداء</Label>
+                  <Input
+                    value={data.website || ''}
+                    onChange={e => onChange({ website: e.target.value })}
+                    placeholder="إهداء"
+                    data-testid="input-hadya-text"
+                  />
+                  <p className="text-xs text-muted-foreground">مثل: إهداء — تقديم — بمناسبة</p>
+                </div>
+              </>
+            )}
+
+            {isMassWedding && (
+              <>
+                <div className="space-y-2">
+                  <Label>التاريخ</Label>
+                  <Input
+                    value={data.phone || ''}
+                    onChange={e => onChange({ phone: e.target.value })}
+                    placeholder="يوم الجمعة ١٥ ذو الحجة ١٤٤٦"
+                    data-testid="input-phone"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>المكان</Label>
+                  <Input
+                    value={data.website || ''}
+                    onChange={e => onChange({ website: e.target.value })}
+                    placeholder="قاعة الأفراح الكبرى - المدينة"
+                    data-testid="input-location"
+                  />
+                </div>
+              </>
+            )}
+
+            {showPhone && !isMassWedding && !isCongrats && (
+              <div className="space-y-2">
+                <Label>رقم الهاتف</Label>
+                <Input
+                  value={data.phone || ''}
+                  onChange={e => onChange({ phone: e.target.value })}
+                  placeholder="0500000000"
+                  dir="ltr"
+                  className="text-right"
+                  data-testid="input-phone"
+                />
+              </div>
+            )}
+
+            {showEmail && !isCongrats && !isWedding && (
+              <div className="space-y-2">
+                <Label>البريد الإلكتروني</Label>
+                <Input
+                  value={data.email || ''}
+                  onChange={e => onChange({ email: e.target.value })}
+                  placeholder="email@example.com"
+                  dir="ltr"
+                  className="text-right"
+                  data-testid="input-email"
+                />
+              </div>
+            )}
+
+            {showWebsite && !isCongrats && !isWedding && (
+              <div className="space-y-2">
+                <Label>الموقع الإلكتروني</Label>
+                <Input
+                  value={data.website || ''}
+                  onChange={e => onChange({ website: e.target.value })}
+                  placeholder="www.example.com"
+                  dir="ltr"
+                  className="text-right"
+                  data-testid="input-website"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Dynamic extra lines for congrats */}
+          {isCongrats && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-bold">سطور إضافية</h3>
+                {extraLines.length < 5 && (
+                  <button
+                    onClick={addExtraLine}
+                    className="flex items-center gap-1 text-sm text-primary border border-primary/30 rounded-lg px-3 py-1 hover:bg-primary/5 transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                    إضافة سطر
+                  </button>
+                )}
+              </div>
+              {extraLines.length === 0 && (
+                <p className="text-xs text-muted-foreground text-center py-3 border border-dashed border-primary/20 rounded-lg">
+                  اضغط "إضافة سطر" لإضافة نص مخصص في البطاقة
+                </p>
+              )}
+              <div className="space-y-2">
+                {extraLines.map((line, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <Input
+                      value={line}
+                      onChange={e => updateExtraLine(i, e.target.value)}
+                      placeholder={`سطر ${i + 1}...`}
+                      className="flex-1"
+                    />
+                    <button
+                      onClick={() => removeExtraLine(i)}
+                      className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Colors — always shown */}
       <div className="space-y-4">
         <h3 className="text-lg font-bold">الألوان</h3>
         <div className="grid grid-cols-2 gap-4">
