@@ -60,32 +60,32 @@ export default function Template21({ data }: { data: TemplateData }) {
           {data.description}
         </p>
 
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col" style={{ gap: '4px' }}>
           {data.phone && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center" style={{ gap: '8px', minHeight: '12px' }}>
               <div className="w-3 h-3 rounded flex items-center justify-center flex-shrink-0"
                 style={{ backgroundColor: `${data.colors.primary}18` }}>
                 <div className="w-1 h-1 rounded-full" style={{ backgroundColor: data.colors.primary }} />
               </div>
-              <p dir="ltr" className="text-[8px]" style={{ color: data.colors.secondary }}>{data.phone}</p>
+              <p dir="ltr" className="text-[8px]" style={{ color: data.colors.secondary, margin: 0, lineHeight: 1.2, whiteSpace: 'nowrap' }}>{data.phone}</p>
             </div>
           )}
           {data.email && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center" style={{ gap: '8px', minHeight: '12px' }}>
               <div className="w-3 h-3 rounded flex items-center justify-center flex-shrink-0"
                 style={{ backgroundColor: `${data.colors.primary}18` }}>
                 <div className="w-1 h-1 rounded-full" style={{ backgroundColor: data.colors.primary }} />
               </div>
-              <p dir="ltr" className="text-[8px]" style={{ color: data.colors.secondary }}>{data.email}</p>
+              <p dir="ltr" className="text-[8px]" style={{ color: data.colors.secondary, margin: 0, lineHeight: 1.2, whiteSpace: 'nowrap' }}>{data.email}</p>
             </div>
           )}
           {data.website && (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center" style={{ gap: '8px', minHeight: '12px' }}>
               <div className="w-3 h-3 rounded flex items-center justify-center flex-shrink-0"
                 style={{ backgroundColor: `${data.colors.primary}18` }}>
                 <div className="w-1 h-1 rounded-full" style={{ backgroundColor: data.colors.primary }} />
               </div>
-              <p dir="ltr" className="text-[8px]" style={{ color: data.colors.secondary }}>{data.website}</p>
+              <p dir="ltr" className="text-[8px]" style={{ color: data.colors.secondary, margin: 0, lineHeight: 1.2, whiteSpace: 'nowrap' }}>{data.website}</p>
             </div>
           )}
         </div>
