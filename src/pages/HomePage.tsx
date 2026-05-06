@@ -367,7 +367,7 @@ export default function HomePage() {
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
 
-              {/* Single template plan */}
+              {/* 7 templates plan */}
               <div style={{
                 background: '#fff',
                 borderRadius: 28,
@@ -388,20 +388,27 @@ export default function HomePage() {
                   }}>
                     <Star size={24} color="#10b981" fill="#10b981" />
                   </div>
-                  <h3 style={{ color: '#1e1b4b', fontSize: 22, fontWeight: 900, marginBottom: 8 }}>قالب واحد فقط</h3>
+                  <h3 style={{ color: '#1e1b4b', fontSize: 22, fontWeight: 900, marginBottom: 8 }}>باقة 7 قوالب</h3>
                   <p style={{ color: '#94a3b8', fontSize: 14, lineHeight: 1.75 }}>مثالية لمن يريد تصميماً واحداً محدداً</p>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 32 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 8 }}>
                   <span style={{ color: '#1e1b4b', fontSize: 52, fontWeight: 900, lineHeight: 1 }}>1000</span>
                   <div>
-                    <div style={{ color: '#10b981', fontSize: 16, fontWeight: 800 }}>ريال</div>
+                    <div style={{ color: '#10b981', fontSize: 16, fontWeight: 800 }}>ريال يمني</div>
                     <div style={{ color: '#94a3b8', fontSize: 12, fontWeight: 600 }}>/ مرة واحدة</div>
                   </div>
                 </div>
+                <div style={{ color: '#94a3b8', fontSize: 13, fontWeight: 600, marginBottom: 32 }}>≈ 2 دولار أمريكي</div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 36 }}>
-                  {['تصميم قالب واحد تختاره', 'تصدير PNG بجودة عالية', 'تخصيص ألوان ونصوص وصور', 'صالح للاستخدام الدائم'].map((f, i) => (
+                  {[
+                    'اختر 7 قوالب من أي قائمة',
+                    'من جميع الفئات المتاحة',
+                    'تصدير PNG بجودة عالية',
+                    'تخصيص ألوان ونصوص وصور',
+                    'صالح للاستخدام الدائم',
+                  ].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                       <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                         <Check size={13} color="#10b981" strokeWidth={2.5} />
@@ -422,7 +429,7 @@ export default function HomePage() {
                   onMouseEnter={e => { e.currentTarget.style.background = '#10b981'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = '#10b981'; }}
                   onMouseLeave={e => { e.currentTarget.style.background = '#ecfdf5'; e.currentTarget.style.color = '#059669'; e.currentTarget.style.borderColor = '#a7f3d0'; }}
                 >
-                  اختر قالباً الآن
+                  اختر قوالبك الآن
                 </button>
               </div>
 
