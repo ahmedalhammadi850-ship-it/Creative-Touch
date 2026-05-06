@@ -1,56 +1,61 @@
-# Template Studio
+# Templates Studio
 
-تطبيق ويب عربي لإنشاء وتخصيص قوالب جرافيك: بطاقات أعمال، إعلانات، دعوات زفاف، بطاقات تهنئة.
+An Arabic RTL web app where users browse professional templates (congratulations, wedding, business cards, ads), customize them in an editor, and export to PDF.
 
 ## Run & Operate
 
-- Dev: `npm run dev` (port 5000)
-- Build: `npm run build` → `dist/public`
-- Required env vars (see `.env.example`): `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_STORAGE_BUCKET`, `VITE_FIREBASE_MESSAGING_SENDER_ID`, `VITE_FIREBASE_APP_ID`, `VITE_FIREBASE_MEASUREMENT_ID`
+- **Dev**: `npm run dev` (Vite on port 5000)
+- **Build**: `npm run build`
+- **Typecheck**: `npm run typecheck`
+- Required env vars: `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_STORAGE_BUCKET`, `VITE_FIREBASE_MESSAGING_SENDER_ID`, `VITE_FIREBASE_APP_ID`, `VITE_FIREBASE_MEASUREMENT_ID`
 
 ## Stack
 
-- React 18 + TypeScript, Vite 5
-- Tailwind CSS + Radix UI (shadcn/ui)
-- Zustand (localStorage persist) — all state
-- Wouter routing, TanStack Query, Lucide React
-- html2canvas (PNG export), Framer Motion
+- **Frontend**: React 18 + TypeScript + Vite 5
+- **Routing**: wouter
+- **Styling**: Tailwind CSS (RTL global layout)
+- **UI**: Radix UI components
+- **State**: Zustand (with localStorage persistence)
+- **Auth**: Firebase Authentication
+- **Export**: html-to-image + jsPDF
 
 ## Where things live
 
-- `src/pages/` — HomePage, CategoryPage, EditorPage, AboutPage, LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, AdminLoginPage, AdminDashboard, UserDashboard
-- `src/components/` — InlineEditor, TemplateRenderer, PaymentRequestModal
-- `src/store/` — useTemplateStore, useAuthStore, useAdminStore, usePricingStore, useRequestStore
-- `src/templates/{category}/` — Template components (congrats 1–23, wedding 1–14, business-card 1–11, ads 1–7, mass-wedding 1–8, specialized 1–7)
-- `src/data/categories.ts` — category + template registry (source of truth)
+- `src/App.tsx` — root routes and auth guards
+- `src/pages/` — page components
+- `src/templates/` — per-category template components
+- `src/components/` — shared UI (InlineEditor, TemplateRenderer, etc.)
+- `src/store/` — Zustand stores (auth, admin, template, pricing, requests)
+- `src/data/categories.ts` — category/template config and default data
+- `src/lib/firebase.ts` — Firebase Auth setup
 
 ## Architecture decisions
 
-- **Pure frontend / no backend**: pricing and requests stored in localStorage via Zustand persist
-- **Auth**: Firebase Auth for register/login/email-verification/password-reset; user plan data kept in `useAuthStore` (zustand persist)
-- **Email verification required**: new accounts must verify email before logging in; `sendEmailVerification` called on register
-- **Password reset**: Firebase `sendPasswordResetEmail` sends real email link
-- **Admin credentials hardcoded**: username=`احمد`, password=`123456789`; session persists via `admin-auth` key (separate from Firebase)
-- **Payment requests**: saved to `useRequestStore` + sent to n8n webhook (non-blocking); admin approves/rejects in dashboard
-- **Pricing**: `usePricingStore` drives both HomePage pricing section and AdminDashboard editor; reset-to-default available
+- Pure frontend SPA — no server; all state persisted in localStorage via Zustand
+- Firebase Auth used for email/password login with email verification flow
+- User plan data (free/starter/weekly/monthly) stored in Zustand persist store
+- Admin dashboard uses a separate `useAdminStore` with hardcoded credentials (local only)
+- Template export captures the `#export-target` DOM node via html-to-image → jsPDF
 
 ## Product
 
-- Browse template categories → open editor → customize text/images/colors → export PDF
-- **Free tier**: 2 editable fields (title + subtitle); rest locked behind payment
-- **Auth**: register, login, forgot/reset password (all localStorage)
-- **Payment flow**: user uploads receipt image → saved to request store → admin approves → plan activated
-- **Subscription flow**: user picks a plan → fills name+phone → request saved → admin approves
-- **Admin dashboard** (`/admin`): manage pricing plans, approve/reject activation & subscription requests, view users
+- Browse templates by category (congrats, wedding, business-card, ads, mass-wedding)
+- Inline editor for customizing template fields (text, colors, images)
+- PDF/image export of the final design
+- User registration/login with email verification
+- Subscription plans with a payment request flow
+- Admin dashboard for managing users and payment requests
 
 ## User preferences
 
-- All UI in Arabic (RTL), font Cairo
-- Admin login at `/admin/login` — credentials: احمد / 123456789
-- n8n webhook: `https://ahmedaaasss.app.n8n.cloud/webhook-test/060b55ea-bd8e-4d32-9968-d37bff3b7be5`
+_Populate as you build_
 
 ## Gotchas
 
-- Template registration requires 3 steps: create file, add lazy import in TemplateRenderer, add entry in categories.ts
-- Mass-wedding photo grid: no photos → show all placeholder frames; any photo uploaded → hide empty slots
-- `allowedHosts: true` in vite.config.ts required for Replit proxy
+- The app sets `document.documentElement.dir = "rtl"` globally — all layout is right-to-left
+- Firebase config is stored as plain env vars (VITE_ prefix, exposed to browser) — this is intentional for a frontend-only app
+- Template components are lazy-loaded; new templates must be registered in `TemplateRenderer.tsx`
+
+## Pointers
+
+- Firebase Console: https://console.firebase.google.com/project/projectcard-6a6dd
