@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { categories } from '../data/categories';
 import { usePricingStore } from '../store/usePricingStore';
@@ -7,7 +7,7 @@ import { useRequestStore } from '../store/useRequestStore';
 import {
   Sparkles, Zap, Download, Palette, Star,
   LayoutTemplate, Users, Award, ChevronLeft, ArrowLeft, Check, Crown,
-  LogIn, UserPlus, LogOut, LayoutDashboard, X, Send, CheckCircle
+  LogIn, UserPlus, LogOut, LayoutDashboard, X, Send, CheckCircle, ImageIcon
 } from 'lucide-react';
 
 const categoryIcons: Record<string, string> = {
