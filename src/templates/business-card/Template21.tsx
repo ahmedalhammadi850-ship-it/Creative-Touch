@@ -11,12 +11,6 @@ export default function Template21({ data }: { data: TemplateData }) {
         className="w-[90px] flex-shrink-0 flex flex-col items-center justify-between py-5 px-3"
         style={{ backgroundColor: data.colors.primary }}
       >
-        <div
-          className="w-12 h-12 rounded-full border-2 flex items-center justify-center text-xl font-bold"
-          style={{ borderColor: data.colors.accent, color: data.colors.accent, backgroundColor: `${data.colors.accent}18` }}
-        >
-          {data.title?.charAt(0) || 'A'}
-        </div>
 
         <div className="flex flex-col items-center gap-1.5">
           <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: data.colors.accent }} />

@@ -21,12 +21,6 @@ export default function Template17({ data }: { data: TemplateData }) {
           <h2 className="text-xl font-bold" style={{ color: data.colors.primary }}>{data.title}</h2>
           <p className="text-xs mt-0.5 opacity-80" style={{ color: data.colors.secondary }}>{data.subtitle}</p>
         </div>
-        <div
-          className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold"
-          style={{ backgroundColor: data.colors.primary, color: data.colors.bg }}
-        >
-          {data.title?.charAt(0)}
-        </div>
       </div>
 
       <div className="z-10">

@@ -35,12 +35,6 @@ export default function Template16({ data }: { data: TemplateData }) {
         </div>
       </div>
 
-      {/* Right accent circle */}
-      <div style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', width: '50px', height: '50px', borderRadius: '50%', border: `1.5px solid ${data.colors.accent}66`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: `${data.colors.primary}18`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ color: data.colors.primary, fontSize: '14px', fontWeight: 900 }}>{data.title?.charAt(0) || 'أ'}</span>
-        </div>
-      </div>
     </div>
   );
 }

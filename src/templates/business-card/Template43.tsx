@@ -31,20 +31,8 @@ export default function Template43({ data }: { data: TemplateData }) {
 
       {/* Center: logo + name */}
       <div className="flex flex-col items-center gap-2 z-10">
-        {data.logo ? (
+        {data.logo && (
           <img src={data.logo} alt="logo" className="w-16 h-16 object-contain rounded-2xl mb-1" style={{ boxShadow: `0 0 12px ${data.colors.primary}88` }} />
-        ) : (
-          <div
-            className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl font-black mb-1"
-            style={{
-              background: `${data.colors.primary}22`,
-              border: `1.5px solid ${data.colors.primary}55`,
-              color: data.colors.accent,
-              boxShadow: `0 0 20px ${data.colors.primary}44`,
-            }}
-          >
-            {(data.title || 'ب')[0]}
-          </div>
         )}
         <h2 className="text-[18px] font-black tracking-wide text-center" style={{ color: '#ffffff' }}>
           {data.description || 'شركة الإبداع التقني'}

@@ -20,14 +20,6 @@ export default function Template33({ data }: { data: TemplateData }) {
         className="absolute left-0 top-0 bottom-0 w-[90px] flex flex-col items-center justify-center gap-3"
         style={{ backgroundColor: data.colors.primary }}
       >
-        <div
-          className="w-14 h-14 rounded flex items-center justify-center border"
-          style={{ borderColor: data.colors.accent, backgroundColor: `${data.colors.accent}15` }}
-        >
-          <span className="text-xl font-bold" style={{ color: data.colors.accent }}>
-            {data.title?.charAt(0) || 'A'}
-          </span>
-        </div>
         <div className="w-10 h-px" style={{ backgroundColor: data.colors.accent, opacity: 0.5 }} />
         <p className="text-[6px] tracking-widest text-center px-2" style={{ color: data.colors.accent }}>
           {data.description?.split(',')[0] || 'BRAND'}

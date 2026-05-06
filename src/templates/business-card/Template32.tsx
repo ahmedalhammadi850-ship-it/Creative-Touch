@@ -19,14 +19,6 @@ export default function Template32({ data }: { data: TemplateData }) {
       </svg>
 
       <div className="relative z-10 w-[120px] flex-shrink-0 flex flex-col items-center justify-center gap-3 p-4 border-r border-white/10">
-        <div
-          className="w-16 h-16 flex items-center justify-center rounded"
-          style={{ backgroundColor: `${data.colors.accent}22`, border: `2px solid ${data.colors.accent}` }}
-        >
-          <span className="text-2xl font-bold" style={{ color: data.colors.accent }}>
-            {data.title?.charAt(0) || 'م'}
-          </span>
-        </div>
         <div className="text-center">
           <p className="text-[7px] tracking-widest uppercase" style={{ color: data.colors.accent }}>
             {data.description?.split(',')[0] || 'شركة'}

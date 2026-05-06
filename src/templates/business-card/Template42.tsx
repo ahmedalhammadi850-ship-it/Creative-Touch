@@ -20,15 +20,8 @@ export default function Template42({ data }: { data: TemplateData }) {
 
       {/* Left side content */}
       <div className="absolute top-0 left-0 w-[100px] h-full flex flex-col items-center justify-center gap-2 z-10">
-        {data.logo ? (
+        {data.logo && (
           <img src={data.logo} alt="logo" className="w-12 h-12 object-contain rounded-lg" />
-        ) : (
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center text-xl font-black shadow"
-            style={{ background: `${data.colors.accent}30`, border: `2px solid ${data.colors.accent}66`, color: data.colors.accent }}
-          >
-            {(data.title || 'ب')[0]}
-          </div>
         )}
         <div className="w-8 h-[1px]" style={{ background: `${data.colors.accent}88` }} />
       </div>

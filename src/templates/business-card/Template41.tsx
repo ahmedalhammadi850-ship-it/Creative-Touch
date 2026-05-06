@@ -24,15 +24,8 @@ export default function Template41({ data }: { data: TemplateData }) {
       {/* Center content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full gap-2 px-8">
         {/* Logo image or letter avatar */}
-        {data.logo ? (
+        {data.logo && (
           <img src={data.logo} alt="logo" className="w-14 h-14 object-contain rounded-xl mb-1" />
-        ) : (
-          <div
-            className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black mb-1 shadow-lg"
-            style={{ background: `${data.colors.accent}22`, border: `2px solid ${data.colors.accent}55`, color: data.colors.accent }}
-          >
-            {(data.title || 'ب')[0]}
-          </div>
         )}
 
         {/* Company name */}

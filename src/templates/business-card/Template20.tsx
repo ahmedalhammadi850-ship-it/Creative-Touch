@@ -25,13 +25,6 @@ export default function Template20({ data }: { data: TemplateData }) {
       />
 
       <div className="relative z-10 flex flex-col justify-between p-5 w-[55%] border-r border-white/10">
-        <div
-          className="w-10 h-10 rounded-full border flex items-center justify-center text-[10px] font-bold"
-          style={{ borderColor: data.colors.accent, color: data.colors.accent }}
-        >
-          {data.title?.charAt(0) || 'L'}
-        </div>
-
         <div>
           <p className="text-[8px] tracking-[0.2em] uppercase mb-1" style={{ color: data.colors.accent }}>
             {data.description || 'COMPANY NAME'}

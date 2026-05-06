@@ -19,13 +19,6 @@ export default function Template13({ data }: { data: TemplateData }) {
         <div style={{ position: 'absolute', top: -20, right: -20, width: 80, height: 80, borderRadius: '50%', background: 'rgba(255,255,255,0.07)' }} />
         <div style={{ position: 'absolute', bottom: -15, left: -15, width: 60, height: 60, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
         <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 10px' }}>
-          <div style={{
-            width: '38px', height: '38px', borderRadius: '50%',
-            background: 'rgba(255,255,255,0.15)', border: '2px solid rgba(255,255,255,0.3)',
-            margin: '0 auto 8px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <span style={{ color: '#fff', fontSize: '16px', fontWeight: 900 }}>{data.title?.charAt(0) || 'أ'}</span>
-          </div>
           <div style={{ width: '28px', height: '1.5px', background: `${data.colors.accent}`, margin: '0 auto 6px' }} />
           <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: '7px', letterSpacing: '0.1em' }}>محترف</div>
         </div>

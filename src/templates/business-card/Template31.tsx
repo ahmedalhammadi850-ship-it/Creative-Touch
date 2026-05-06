@@ -53,12 +53,6 @@ export default function Template31({ data }: { data: TemplateData }) {
           <path d="M0,0 Q20,80 0,140 Q25,190 0,220 L80,220 L80,0 Z" fill={data.colors.primary} opacity="0.4"/>
         </svg>
 
-        <div
-          className="relative z-10 w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold border-2"
-          style={{ backgroundColor: data.colors.accent, borderColor: 'rgba(255,255,255,0.3)', color: '#fff' }}
-        >
-          {data.title?.charAt(0) || 'G'}
-        </div>
         <p className="relative z-10 text-white text-[7px] mt-2 text-center px-2 font-medium opacity-90 leading-tight">
           {data.description?.split(',')[0] || 'Company'}
         </p>

@@ -11,12 +11,6 @@ export default function Template18({ data }: { data: TemplateData }) {
         className="w-20 flex-shrink-0 flex flex-col items-center justify-center gap-3"
         style={{ backgroundColor: data.colors.primary }}
       >
-        <div
-          className="w-12 h-12 rounded-full border-2 flex items-center justify-center text-lg font-bold"
-          style={{ borderColor: data.colors.accent, color: data.colors.accent }}
-        >
-          {data.title?.charAt(0)}
-        </div>
         <div className="w-8 h-px" style={{ backgroundColor: data.colors.accent }} />
         <div className="text-[7px] tracking-widest rotate-0" style={{ color: data.colors.accent }}>✦</div>
       </div>
