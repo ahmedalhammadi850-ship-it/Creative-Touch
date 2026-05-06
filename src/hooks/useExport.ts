@@ -1,4 +1,5 @@
 import { toPng } from 'html-to-image';
+import { jsPDF } from 'jspdf';
 
 const CAIRO_FONTS: { url: string; weight: string }[] = [
   {
@@ -55,8 +56,13 @@ async function buildFontEmbedCSS(): Promise<string> {
   return results.join('\n');
 }
 
+// Convert screen pixels (at 96 DPI) to mm for jsPDF
+function pxToMm(px: number): number {
+  return (px / 96) * 25.4;
+}
+
 export function useExport() {
-  const exportAsPng = async () => {
+  const exportAsPdf = async () => {
     const original = document.getElementById('export-target');
     if (!original) return;
 
@@ -82,18 +88,13 @@ export function useExport() {
         fontEmbedCSS: fontEmbedCSS || undefined,
       };
 
-      // First call: primes the internal resource cache (fonts, images, stylesheets).
-      // This is a known requirement of html-to-image — the second call produces
-      // the correctly-rendered output.
+      // First call primes the internal resource cache (known html-to-image requirement)
       await toPng(original, options).catch(() => null);
 
-      // Second call: the real capture.
+      // Second call produces the correctly-rendered output
       const rawDataUrl = await toPng(original, options);
 
-      // Post-process: draw the raw output onto a canvas cropped to exact element
-      // dimensions. This acts as a guaranteed overflow:hidden clip, fixing the
-      // SVG foreignObject bug in Chromium where overflow:hidden on child elements
-      // doesn't clip absolute-positioned descendants during html-to-image capture.
+      // Crop to exact card bounds via canvas — fixes SVG foreignObject overflow:hidden bug
       const img = new Image();
       img.src = rawDataUrl;
       await new Promise<void>((resolve, reject) => {
@@ -105,20 +106,29 @@ export function useExport() {
       canvas.width = canvasWidth;
       canvas.height = canvasHeight;
       const ctx = canvas.getContext('2d')!;
-
-      // Draw only the exact card area — crops any bleed from overflow
       ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
 
-      const finalDataUrl = canvas.toDataURL('image/png', 1);
+      const pngDataUrl = canvas.toDataURL('image/png', 1);
 
-      const link = document.createElement('a');
-      link.download = `creative-touch-${Date.now()}.png`;
-      link.href = finalDataUrl;
-      link.click();
+      // PDF page sized exactly to the card in mm (96 DPI screen reference)
+      const widthMm = pxToMm(elementWidth);
+      const heightMm = pxToMm(elementHeight);
+
+      const pdf = new jsPDF({
+        orientation: widthMm > heightMm ? 'landscape' : 'portrait',
+        unit: 'mm',
+        format: [widthMm, heightMm],
+        compress: true,
+      });
+
+      // Embed the captured image filling the entire PDF page
+      pdf.addImage(pngDataUrl, 'PNG', 0, 0, widthMm, heightMm, undefined, 'FAST');
+
+      pdf.save(`creative-touch-${Date.now()}.pdf`);
     } catch (e) {
-      console.error('Export failed', e);
+      console.error('PDF export failed', e);
     }
   };
 
-  return { exportAsPng };
+  return { exportAsPdf };
 }

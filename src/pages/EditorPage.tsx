@@ -44,7 +44,7 @@ export default function EditorPage() {
   const [showPayment, setShowPayment] = useState(false);
 
   const { setTemplate, templateData, updateData, resetData, duplicateTemplate } = useTemplateStore();
-  const { exportAsPng } = useExport();
+  const { exportAsPdf } = useExport();
 
   const isBusinessCard = categoryId === 'business-card';
   const isFrontCard = isBusinessCard && !BACK_CARD_IDS.includes(templateId || '');
@@ -92,8 +92,8 @@ export default function EditorPage() {
   };
 
   const handleExport = async () => {
-    toast({ title: 'جاري التصدير...', description: 'يرجى الانتظار بينما يتم تحضير الصورة.' });
-    await exportAsPng();
+    toast({ title: 'جاري التصدير...', description: 'يرجى الانتظار بينما يتم تحضير الملف.' });
+    await exportAsPdf();
   };
 
   const handleResetBack = () => {
@@ -156,7 +156,7 @@ export default function EditorPage() {
           </Button>
           <Button onClick={handleExport} className="bg-primary hover:bg-primary/90 text-white shadow-md">
             <Download className="w-4 h-4 ml-2" />
-            تصدير PNG
+            تصدير PDF
           </Button>
         </div>
       </header>
