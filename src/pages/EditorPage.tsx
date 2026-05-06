@@ -244,12 +244,14 @@ export default function EditorPage() {
                 data={backData}
                 onChange={updateBackData}
                 backCardMode
+                onRequestPayment={() => setShowPayment(true)}
               />
             ) : (
               <InlineEditor
                 categoryId={categoryId}
                 data={frontData}
                 onChange={updateFrontData}
+                onRequestPayment={() => setShowPayment(true)}
               />
             )}
           </div>
