@@ -234,8 +234,150 @@ export function InlineEditor({ categoryId, data, onChange, backCardMode = false,
         </>
       )}
 
-      {/* =================== FRONT / NORMAL MODE =================== */}
-      {!backCardMode && (
+      {/* =================== BUSINESS CARD — FULLY FREE =================== */}
+      {!backCardMode && isBusinessCard && (
+        <>
+          {/* Free badge */}
+          <div style={{
+            background: 'linear-gradient(135deg, #ecfdf5, #d1fae5)',
+            border: '2px solid #6ee7b7',
+            borderRadius: 14, padding: '10px 16px',
+            display: 'flex', alignItems: 'center', gap: 10,
+          }}>
+            <span style={{ fontSize: 20 }}>🎁</span>
+            <div>
+              <p style={{ color: '#065f46', fontSize: 13, fontWeight: 800, margin: 0, fontFamily: "'Cairo', sans-serif" }}>
+                بطاقات الأعمال مجانية بالكامل!
+              </p>
+              <p style={{ color: '#059669', fontSize: 12, margin: 0, fontFamily: "'Cairo', sans-serif" }}>
+                جميع الحقول مفتوحة بدون أي رسوم
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold">المحتوى</h3>
+
+            <div className="space-y-2">
+              <Label>الاسم الكامل / اسم الشركة</Label>
+              <Input
+                value={data.title}
+                onChange={e => onChange({ title: e.target.value })}
+                placeholder="أحمد محمد"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>المسمى الوظيفي</Label>
+              <Input
+                value={data.subtitle}
+                onChange={e => onChange({ subtitle: e.target.value })}
+                placeholder="مدير تقني"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>اسم الشركة / الوصف</Label>
+              <Input
+                value={data.description || ''}
+                onChange={e => onChange({ description: e.target.value })}
+                placeholder="شركة الإبداع التقني"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>رقم الهاتف</Label>
+              <Input
+                value={data.phone || ''}
+                onChange={e => onChange({ phone: e.target.value })}
+                placeholder="+967 71 000 0000"
+                dir="ltr"
+                className="text-right"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>البريد الإلكتروني</Label>
+              <Input
+                value={data.email || ''}
+                onChange={e => onChange({ email: e.target.value })}
+                placeholder="info@example.com"
+                dir="ltr"
+                className="text-right"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>الموقع الإلكتروني</Label>
+              <Input
+                value={data.website || ''}
+                onChange={e => onChange({ website: e.target.value })}
+                placeholder="www.example.com"
+                dir="ltr"
+                className="text-right"
+              />
+            </div>
+          </div>
+
+          {/* Logo upload */}
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold">الشعار (اختياري)</h3>
+            <input ref={logoInputRef} type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
+            {data.logo ? (
+              <div style={{ position: 'relative', display: 'inline-block' }}>
+                <img src={data.logo} alt="logo" style={{ height: 80, maxWidth: '100%', borderRadius: 10, objectFit: 'contain', border: '1.5px solid #e2e8f0' }} />
+                <button
+                  onClick={removeLogo}
+                  style={{ position: 'absolute', top: -8, left: -8, background: '#ef4444', border: 'none', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                  <X size={12} color="#fff" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => logoInputRef.current?.click()}
+                style={{
+                  width: '100%', height: 80,
+                  border: '2px dashed #6ee7b7', borderRadius: 12,
+                  background: '#f0fdf4', display: 'flex',
+                  flexDirection: 'column', alignItems: 'center',
+                  justifyContent: 'center', gap: 6, cursor: 'pointer',
+                }}>
+                <ImagePlus size={22} color="#059669" />
+                <span style={{ color: '#059669', fontSize: 13, fontFamily: "'Cairo', sans-serif", fontWeight: 700 }}>رفع الشعار</span>
+              </button>
+            )}
+          </div>
+
+          {/* Colors */}
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold">الألوان</h3>
+            <div className="grid grid-cols-2 gap-4">
+              {([
+                { key: 'primary', label: 'الأساسي' },
+                { key: 'secondary', label: 'الثانوي' },
+                { key: 'accent', label: 'التمييز' },
+                { key: 'bg', label: 'الخلفية' },
+              ] as { key: keyof TemplateData['colors']; label: string }[]).map(({ key, label }) => (
+                <div key={key} className="space-y-2">
+                  <Label>{label}</Label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={data.colors[key]}
+                      onChange={e => handleColorChange(key, e.target.value)}
+                      className="h-8 w-8 rounded cursor-pointer border-0 p-0"
+                    />
+                    <span className="text-xs text-muted-foreground uppercase">{data.colors[key]}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* =================== FRONT / NORMAL MODE (non-business-card) =================== */}
+      {!backCardMode && !isBusinessCard && (
         <>
           <div className="space-y-4">
             <h3 className="text-lg font-bold">المحتوى</h3>
@@ -326,12 +468,8 @@ export function InlineEditor({ categoryId, data, onChange, backCardMode = false,
           <div className="space-y-4">
 
             {/* Image upload — locked */}
-            {showImage && !isMassWedding && !isBusinessCard && (
+            {showImage && !isMassWedding && (
               <LockedImageSlot label="الصورة الشخصية" />
-            )}
-
-            {isBusinessCard && (
-              <LockedImageSlot label="الشعار (اختياري)" />
             )}
 
             {isMassWedding && (

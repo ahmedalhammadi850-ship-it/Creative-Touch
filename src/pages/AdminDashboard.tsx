@@ -13,6 +13,8 @@ import type { AppRequest } from '../store/useRequestStore';
 import type { PricingPlan } from '../store/usePricingStore';
 
 type Tab = 'requests' | 'pricing' | 'users';
+type RequestFilter = 'all' | 'pending' | 'approved' | 'rejected';
+type PlanFilter = 'all' | 'activation' | 'starter' | 'weekly' | 'monthly';
 
 const STATUS_LABEL: Record<string, { label: string; color: string; bg: string }> = {
   pending:  { label: 'قيد الانتظار', color: '#d97706', bg: '#fef9ee' },
@@ -61,7 +63,8 @@ export default function AdminDashboard() {
   const [editingPlan, setEditingPlan] = useState<string | null>(null);
   const [editBuf, setEditBuf] = useState<Partial<PricingPlan>>({});
   const [previewImg, setPreviewImg] = useState<string | null>(null);
-  const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
+  const [filterStatus, setFilterStatus] = useState<RequestFilter>('all');
+  const [filterPlan, setFilterPlan] = useState<PlanFilter>('all');
   const [changingPlan, setChangingPlan] = useState<string | null>(null);
 
   const pendingCount = requests.filter(r => r.status === 'pending').length;
@@ -74,13 +77,20 @@ export default function AdminDashboard() {
     if (editingPlan) { updatePlan(editingPlan, editBuf); setEditingPlan(null); setEditBuf({}); }
   };
 
-  const filtered = filterStatus === 'all' ? requests : requests.filter(r => r.status === filterStatus);
-
   const resolvePlanId = (req: AppRequest): User['plan'] => {
     if (req.planId && PLAN_ID_MAP[req.planId]) return PLAN_ID_MAP[req.planId];
     if (req.plan && PLAN_ID_MAP[req.plan]) return PLAN_ID_MAP[req.plan];
     return 'starter';
   };
+
+  const filtered = requests.filter(r => {
+    if (filterStatus !== 'all' && r.status !== filterStatus) return false;
+    if (filterPlan === 'activation') return r.type === 'activation';
+    if (filterPlan === 'starter') return r.type === 'subscription' && resolvePlanId(r) === 'starter';
+    if (filterPlan === 'weekly') return r.type === 'subscription' && resolvePlanId(r) === 'weekly';
+    if (filterPlan === 'monthly') return r.type === 'subscription' && resolvePlanId(r) === 'monthly';
+    return true;
+  });
 
   const handleApprove = (req: AppRequest) => {
     updateStatus(req.id, 'approved');
@@ -156,14 +166,46 @@ export default function AdminDashboard() {
               ))}
             </div>
 
-            {/* Filter */}
-            <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+            {/* Status Filter */}
+            <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+              <span style={{ color: '#94a3b8', fontSize: 12, fontWeight: 700 }}>الحالة:</span>
               {(['all', 'pending', 'approved', 'rejected'] as const).map(f => (
                 <button key={f} onClick={() => setFilterStatus(f)}
                   style={{ padding: '7px 16px', borderRadius: 10, border: 'none', cursor: 'pointer', fontSize: 13, fontWeight: 700, fontFamily: "'Cairo',sans-serif", background: filterStatus === f ? '#6366f1' : '#fff', color: filterStatus === f ? '#fff' : '#64748b', boxShadow: filterStatus === f ? '0 4px 12px rgba(99,102,241,0.3)' : '0 1px 4px rgba(0,0,0,0.07)' }}>
                   {f === 'all' ? 'الكل' : STATUS_LABEL[f].label}
                 </button>
               ))}
+            </div>
+
+            {/* Plan / Type Filter */}
+            <div style={{ display: 'flex', gap: 8, marginBottom: 22, flexWrap: 'wrap', alignItems: 'center', padding: '12px 14px', background: '#fff', borderRadius: 14, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+              <span style={{ color: '#64748b', fontSize: 12, fontWeight: 700 }}>نوع الطلب:</span>
+              {([
+                { id: 'all',        label: 'الجميع',        color: '#6366f1', activeColor: '#6366f1' },
+                { id: 'activation', label: '🔓 تفعيل قالب',  color: '#f59e0b', activeColor: '#f59e0b' },
+                { id: 'starter',    label: '📦 باقة 7 قوالب', color: '#10b981', activeColor: '#10b981' },
+                { id: 'weekly',     label: '📅 الخطة الأسبوعية', color: '#6366f1', activeColor: '#6366f1' },
+                { id: 'monthly',    label: '⭐ الخطة الشهرية', color: '#a855f7', activeColor: '#a855f7' },
+              ] as const).map(f => {
+                const active = filterPlan === f.id;
+                const count = f.id === 'all' ? requests.length
+                  : f.id === 'activation' ? requests.filter(r => r.type === 'activation').length
+                  : requests.filter(r => r.type === 'subscription' && resolvePlanId(r) === f.id).length;
+                return (
+                  <button key={f.id} onClick={() => setFilterPlan(f.id)}
+                    style={{
+                      padding: '7px 14px', borderRadius: 10, border: active ? `2px solid ${f.activeColor}` : '2px solid #e2e8f0',
+                      cursor: 'pointer', fontSize: 12, fontWeight: 800, fontFamily: "'Cairo',sans-serif",
+                      background: active ? `${f.activeColor}18` : '#f8fafc',
+                      color: active ? f.activeColor : '#64748b',
+                      display: 'flex', alignItems: 'center', gap: 5,
+                      transition: 'all 0.15s',
+                    }}>
+                    {f.label}
+                    <span style={{ background: active ? f.activeColor : '#e2e8f0', color: active ? '#fff' : '#64748b', borderRadius: 20, padding: '1px 7px', fontSize: 11 }}>{count}</span>
+                  </button>
+                );
+              })}
             </div>
 
             {/* Requests list */}
