@@ -219,7 +219,7 @@ export const categories: Category[] = [
       { id: "15", name: "الماسي الفاخر", defaultData: { ...businessCardData, colors: { primary: "#c9a84c", secondary: "#c9a84c", accent: "#c9a84c", bg: "#0a0a0a" } } },
       { id: "16", name: "المرمري العصري", defaultData: { ...businessCardData, colors: { primary: "#8b5e3c", secondary: "#3d2b1f", accent: "#c9a06a", bg: "#f9f5f0" } } },
       { id: "17", name: "الدائري العصري", defaultData: { ...businessCardData, colors: { primary: "#0d47a1", secondary: "#1565c0", accent: "#42a5f5", bg: "#f0f7ff" } } },
-      { id: "18", name: "المنقسم الجانبي", defaultData: { ...businessCardData, colors: { primary: "#1b5e20", secondary: "#ffffff", accent: "#a5d6a7", bg: "#ffffff" } } },
+      { id: "18", name: "المنقسم الجانبي", defaultData: { ...businessCardData, colors: { primary: "#1b5e20", secondary: "#2e7d32", accent: "#a5d6a7", bg: "#ffffff" } } },
       { id: "19", name: "التدرج الجريء الجديد", defaultData: { ...businessCardData, colors: { primary: "#4a148c", secondary: "#6a1b9a", accent: "#ffffff", bg: "#4a148c" } } },
       { id: "20", name: "الداكن الزجاجي الفاخر", defaultData: { ...businessCardData, colors: { primary: "#c9a84c", secondary: "#c9a84c", accent: "#c9a84c", bg: "#0d0d0d" } } },
       { id: "21", name: "كلاسيك أزرق ملكي", defaultData: { ...businessCardData, colors: { primary: "#1e3a8a", secondary: "#1e3a8a", accent: "#fbbf24", bg: "#f8fafc" } } },
