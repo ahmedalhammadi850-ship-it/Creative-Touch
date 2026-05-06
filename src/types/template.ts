@@ -1,3 +1,10 @@
+export interface FieldFontSizes {
+  name?: number;
+  jobTitle?: number;
+  company?: number;
+  contact?: number;
+}
+
 export interface TemplateData {
   title: string;
   subtitle: string;
@@ -6,6 +13,7 @@ export interface TemplateData {
   email?: string;
   website?: string;
   fontSize?: number;
+  fieldFontSizes?: FieldFontSizes;
   eventLabel?: string;
   colors: {
     primary: string;

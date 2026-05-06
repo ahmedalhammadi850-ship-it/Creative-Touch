@@ -163,24 +163,6 @@ const templates = {
   'congrats/29': lazy(() => import('../templates/congrats/Template29')),
 };
 
-const INLINE_FONT_SIZES = [2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 14, 16, 18, 19, 20, 22, 23, 24, 30];
-const TAILWIND_FONT_SIZES: [string, number][] = [
-  ['text-xs', 12], ['text-sm', 14], ['text-base', 16],
-  ['text-lg', 18], ['text-xl', 20], ['text-2xl', 24], ['text-3xl', 30],
-];
-
-function buildFontScaleCSS(scale: number): string {
-  const r = (n: number) => Math.round(n * 100) / 100;
-  const lines: string[] = [];
-  for (const px of INLINE_FONT_SIZES) {
-    lines.push(`#export-target [style*="font-size: ${px}px"]{font-size:${r(px * scale)}px!important}`);
-  }
-  for (const [cls, px] of TAILWIND_FONT_SIZES) {
-    lines.push(`#export-target .${cls}{font-size:${r(px * scale)}px!important}`);
-  }
-  return lines.join('');
-}
-
 export function TemplateRenderer({ categoryId, templateId, data }: TemplateRendererProps) {
   const key = `${categoryId}/${templateId}` as keyof typeof templates;
   const Component = templates[key];
@@ -194,16 +176,8 @@ export function TemplateRenderer({ categoryId, templateId, data }: TemplateRende
     ? (data.images || []).filter(v => v && typeof v === 'string' && !v.startsWith('data:image'))
     : [];
 
-  const isBusinessCard = categoryId === 'business-card';
-  const fontSize = data.fontSize ?? 16;
-  const scale = fontSize / 16;
-  const injectFontScale = isBusinessCard && scale !== 1;
-
   return (
     <div id="export-target" style={{ position: 'relative', display: 'inline-block' }}>
-      {injectFontScale && (
-        <style dangerouslySetInnerHTML={{ __html: buildFontScaleCSS(scale) }} />
-      )}
       <Suspense fallback={<div className="p-12 text-center text-muted-foreground animate-pulse">جاري تحميل القالب...</div>}>
         <Component data={data} />
       </Suspense>

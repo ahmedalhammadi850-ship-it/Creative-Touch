@@ -3,13 +3,13 @@ interface Props { data: TemplateData; }
 
 export default function BusinessCardTemplate8({ data }: Props) {
   const { title, subtitle, phone, email, website, colors, image } = data;
+  const ffs = data.fieldFontSizes ?? {};
   return (
     <div id="template-preview" style={{
       width: 340, height: 220, position: 'relative', overflow: 'hidden',
       fontFamily: 'Cairo, sans-serif', direction: 'rtl',
       background: colors.bg || '#f5f5f5', display: 'flex',
     }}>
-      {/* Right: colored block with diagonal cut */}
       <div style={{
         position: 'absolute', top: 0, right: 0, bottom: 0, width: 195,
         background: `linear-gradient(160deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
@@ -17,7 +17,6 @@ export default function BusinessCardTemplate8({ data }: Props) {
         zIndex: 0,
       }} />
 
-      {/* Accent diagonal strip */}
       <div style={{
         position: 'absolute', top: 0, right: 175, bottom: 0, width: 14,
         background: colors.accent,
@@ -25,14 +24,13 @@ export default function BusinessCardTemplate8({ data }: Props) {
         zIndex: 1, opacity: 0.9,
       }} />
 
-      {/* Left text section */}
       <div style={{
         width: 175, flexShrink: 0, zIndex: 2,
         display: 'flex', flexDirection: 'column', justifyContent: 'center',
         padding: '16px 14px 16px 20px', gap: 5,
       }}>
-        <h1 style={{ color: colors.primary, fontSize: 19, fontWeight: 900, margin: 0, lineHeight: 1.1 }}>{title || 'أحمد محمد'}</h1>
-        <p style={{ color: colors.secondary, fontSize: 10, fontWeight: 700, margin: 0 }}>{subtitle || 'مدير مبيعات'}</p>
+        <h1 style={{ color: colors.primary, fontSize: ffs.name ?? 19, fontWeight: 900, margin: 0, lineHeight: 1.1 }}>{title || 'أحمد محمد'}</h1>
+        <p style={{ color: colors.secondary, fontSize: ffs.jobTitle ?? 10, fontWeight: 700, margin: 0 }}>{subtitle || 'مدير مبيعات'}</p>
         <div style={{ width: 30, height: 2, background: colors.accent, borderRadius: 1 }} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 3, marginTop: 2 }}>
           {[
@@ -40,12 +38,11 @@ export default function BusinessCardTemplate8({ data }: Props) {
             email || 'email@domain.com',
             website || 'www.domain.com',
           ].map((v, i) => (
-            <p key={i} style={{ color: '#555', fontSize: 8.5, margin: 0 }}>{v}</p>
+            <p key={i} style={{ color: '#555', fontSize: ffs.contact ?? 8.5, margin: 0 }}>{v}</p>
           ))}
         </div>
       </div>
 
-      {/* Right: photo area */}
       <div style={{ flex: 1, zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{
           width: 82, height: 82, borderRadius: '50%',
