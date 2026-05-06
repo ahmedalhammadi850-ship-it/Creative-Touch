@@ -49,7 +49,7 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
   const { addRequest } = useRequestStore();
   const [, setLocation] = useLocation();
   const [name, setName] = useState(user?.name || '');
-  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState(user?.email || '');
   const [error, setError] = useState('');
   const [done, setDone] = useState(false);
 
@@ -73,8 +73,8 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !phone.trim()) { setError('يرجى ملء جميع الحقول'); return; }
-    addRequest({ type: 'subscription', userId: user.id, userName: name.trim(), userPhone: phone.trim(), userEmail: user.email, plan, planId });
+    if (!name.trim() || !email.trim()) { setError('يرجى ملء جميع الحقول'); return; }
+    addRequest({ type: 'subscription', userId: user.id, userName: name.trim(), userPhone: 'عبر البريد', userEmail: email.trim(), plan, planId });
     setDone(true);
   };
 
@@ -105,11 +105,11 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>
                 <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>الاسم الكامل</label>
-                <input value={name} onChange={e => setName(e.target.value)} style={inp} onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
+                <input value={name} onChange={e => setName(e.target.value)} style={inp} placeholder="أدخل اسمك الكامل" onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
               </div>
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>رقم الهاتف</label>
-                <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} dir="ltr" style={{ ...inp, textAlign: 'right' }} onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>البريد الإلكتروني</label>
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} dir="ltr" style={{ ...inp, textAlign: 'right' }} placeholder="example@mail.com" onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
               </div>
               {error && <p style={{ color: '#dc2626', fontSize: 13, fontWeight: 600, margin: 0 }}>{error}</p>}
               <button type="submit" style={{ padding: '13px', borderRadius: 14, background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 15, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: "'Cairo',sans-serif", marginTop: 4 }}>
@@ -120,6 +120,7 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
         </div>
       </div>
     </div>
+
   );
 }
 
