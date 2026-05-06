@@ -60,3 +60,20 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+/* ── Responsive overrides ────────────────────────────────── */
+@media (max-width: 640px) {
+  .nav-text-links      { display: none !important; }
+  .stats-card-inner    { padding: 28px 20px !important; }
+  .cta-banner-inner    { padding: 36px 20px !important; }
+  .section-heading-xl  { font-size: clamp(24px, 7vw, 38px) !important; }
+  .hero-section        { padding-top: 60px !important; padding-bottom: 56px !important; }
+  .pricing-card-inner  { padding: 30px 22px !important; }
+  .category-grid       { grid-template-columns: 1fr !important; }
+}
+
+@media (min-width: 641px) and (max-width: 900px) {
+  .stats-card-inner   { padding: 32px 28px !important; }
+  .cta-banner-inner   { padding: 48px 32px !important; }
+  .category-grid      { grid-template-columns: repeat(2, 1fr) !important; }
+}

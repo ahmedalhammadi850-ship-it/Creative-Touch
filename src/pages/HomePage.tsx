@@ -207,11 +207,13 @@ export default function HomePage() {
           {/* Right: actions */}
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <button onClick={() => document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' })}
+              className="nav-text-links"
               style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#6366f1', fontSize: 14, fontWeight: 700, padding: '9px 16px', borderRadius: 10 }}
               onMouseEnter={e => (e.currentTarget.style.background = '#eef2ff')} onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
               الأسعار
             </button>
             <button onClick={() => setLocation('/about')}
+              className="nav-text-links"
               style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#6366f1', fontSize: 14, fontWeight: 700, padding: '9px 16px', borderRadius: 10 }}
               onMouseEnter={e => (e.currentTarget.style.background = '#eef2ff')} onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
               من نحن
@@ -275,7 +277,7 @@ export default function HomePage() {
       <div style={{ position: 'relative', zIndex: 1 }}>
 
         {/* ─── HERO ─── */}
-        <section style={{ padding: '90px 24px 80px', textAlign: 'center' }}>
+        <section className="hero-section" style={{ padding: '90px 24px 80px', textAlign: 'center' }}>
           <div style={{ maxWidth: 780, margin: '0 auto' }}>
             <h1 style={{ fontSize: 'clamp(38px, 6vw, 72px)', fontWeight: 900, color: '#1e1b4b', lineHeight: 1.15, marginBottom: 22, letterSpacing: '-0.03em' }}>
               صمّم بطاقة{' '}
@@ -305,7 +307,7 @@ export default function HomePage() {
 
         {/* ─── STATS ─── */}
         <section style={{ padding: '0 24px 80px' }}>
-          <div style={{ maxWidth: 980, margin: '0 auto', background: '#fff', borderRadius: 28, padding: '40px 52px', boxShadow: '0 8px 50px rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.1)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 28 }}>
+          <div className="stats-card-inner" style={{ maxWidth: 980, margin: '0 auto', background: '#fff', borderRadius: 28, padding: '40px 52px', boxShadow: '0 8px 50px rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.1)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 28 }}>
             {stats.map(({ icon: Icon, label, value, color }) => (
               <div key={label} style={{ textAlign: 'center' }}>
                 <div style={{ width: 54, height: 54, borderRadius: 16, background: `${color}18`, border: `1px solid ${color}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
@@ -326,10 +328,10 @@ export default function HomePage() {
                 <Star size={13} color="#a855f7" fill="#a855f7" />
                 <span style={{ color: '#a855f7', fontSize: 13, fontWeight: 700 }}>الفئات المتاحة</span>
               </div>
-              <h2 style={{ color: '#1e1b4b', fontSize: 38, fontWeight: 900, letterSpacing: '-0.02em', marginBottom: 12 }}>كل مناسبة لها تصميمها</h2>
+              <h2 className="section-heading-xl" style={{ color: '#1e1b4b', fontSize: 38, fontWeight: 900, letterSpacing: '-0.02em', marginBottom: 12 }}>كل مناسبة لها تصميمها</h2>
               <p style={{ color: '#94a3b8', fontSize: 16 }}>اختر الفئة المناسبة وابدأ التخصيص فوراً</p>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 1fr))', gap: 22 }}>
+            <div className="category-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 1fr))', gap: 22 }}>
               {categories.map((cat) => {
                 const c = categoryColors[cat.id] || { from: '#6366f1', to: '#a855f7', glow: 'rgba(99,102,241,0.3)' };
                 return (
@@ -365,7 +367,7 @@ export default function HomePage() {
         <section style={{ padding: '0 24px 100px' }}>
           <div style={{ maxWidth: 960, margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: 52 }}>
-              <h2 style={{ color: '#1e1b4b', fontSize: 36, fontWeight: 900, letterSpacing: '-0.02em', marginBottom: 12 }}>كيف يعمل؟</h2>
+              <h2 className="section-heading-xl" style={{ color: '#1e1b4b', fontSize: 36, fontWeight: 900, letterSpacing: '-0.02em', marginBottom: 12 }}>كيف يعمل؟</h2>
               <p style={{ color: '#94a3b8', fontSize: 16 }}>ثلاث خطوات بسيطة للحصول على تصميمك</p>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 22 }}>
@@ -393,7 +395,7 @@ export default function HomePage() {
                 <Crown size={13} color="#f59e0b" fill="#f59e0b" />
                 <span style={{ color: '#d97706', fontSize: 13, fontWeight: 700 }}>خطط الاشتراك</span>
               </div>
-              <h2 style={{ color: '#1e1b4b', fontSize: 38, fontWeight: 900, letterSpacing: '-0.02em', marginBottom: 12 }}>أسعار بسيطة وشفافة</h2>
+              <h2 className="section-heading-xl" style={{ color: '#1e1b4b', fontSize: 38, fontWeight: 900, letterSpacing: '-0.02em', marginBottom: 12 }}>أسعار بسيطة وشفافة</h2>
               <p style={{ color: '#94a3b8', fontSize: 16 }}>اختر الخطة المناسبة لك وابدأ التصميم فوراً</p>
             </div>
 
@@ -402,7 +404,7 @@ export default function HomePage() {
                 const pc = planColors[plan.id] || planColors.weekly;
                 const isMonthly = plan.id === 'monthly';
                 return (
-                  <div key={plan.id} style={{
+                  <div key={plan.id} className="pricing-card-inner" style={{
                     background: isMonthly ? 'linear-gradient(145deg,#6366f1 0%,#a855f7 100%)' : '#fff',
                     borderRadius: 28, padding: '40px 34px',
                     border: `2px solid ${pc.border}`,
@@ -463,7 +465,7 @@ export default function HomePage() {
 
         {/* ─── CTA BANNER ─── */}
         <section style={{ padding: '0 24px 100px' }}>
-          <div style={{ maxWidth: 920, margin: '0 auto', background: 'linear-gradient(135deg,#6366f1 0%,#a855f7 50%,#ec4899 100%)', borderRadius: 32, padding: '60px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden', boxShadow: '0 20px 60px rgba(99,102,241,0.4)' }}>
+          <div className="cta-banner-inner" style={{ maxWidth: 920, margin: '0 auto', background: 'linear-gradient(135deg,#6366f1 0%,#a855f7 50%,#ec4899 100%)', borderRadius: 32, padding: '60px 48px', textAlign: 'center', position: 'relative', overflow: 'hidden', boxShadow: '0 20px 60px rgba(99,102,241,0.4)' }}>
             <div style={{ position: 'absolute', top: -60, left: -60, width: 220, height: 220, borderRadius: '50%', background: 'rgba(255,255,255,0.08)' }} />
             <div style={{ position: 'absolute', bottom: -50, right: -50, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.06)' }} />
             <div style={{ position: 'relative' }}>

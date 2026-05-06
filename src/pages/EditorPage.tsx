@@ -208,7 +208,7 @@ export default function EditorPage() {
       )}
 
       <div className="flex flex-1 overflow-hidden flex-col md:flex-row">
-        <main className="flex-1 overflow-auto bg-[#e5e7eb] flex flex-col items-center justify-center p-8 relative">
+        <main className="flex-1 overflow-auto bg-[#e5e7eb] flex flex-col items-center justify-center p-4 sm:p-8 relative">
           <div
             className="absolute inset-0 pointer-events-none"
             style={{ backgroundSize: '20px 20px', backgroundImage: 'radial-gradient(#d1d5db 1px, transparent 1px)' }}
