@@ -9,14 +9,16 @@ export default function Template31({ data }: { data: TemplateData }) {
       style={{ backgroundColor: '#ffffff' }}
     >
       <div className="relative flex-1 flex flex-col justify-between p-5 z-10">
-        <div
-          className="inline-block px-3 py-1 text-white font-bold" style={{ backgroundColor: data.colors.primary, fontSize: 13 + _d }}
-        >
-          {data.title}
+        <div>
+          <div
+            className="inline-block px-3 py-1 text-white font-bold" style={{ backgroundColor: data.colors.primary, fontSize: 13 + _d }}
+          >
+            {data.title}
+          </div>
+          <p className="mt-1" style={{ color: '#555', fontSize: 10 + _d }}>{data.subtitle}</p>
         </div>
-        <p className="mt-1" style={{ color: '#555', fontSize: 10 + _d }}>{data.subtitle}</p>
 
-        <div className="flex flex-col gap-1 mt-auto">
+        <div className="flex flex-col gap-1">
           {data.description && (
             <div className="flex items-start gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full mt-0.5 flex-shrink-0" style={{ backgroundColor: data.colors.primary }} />
