@@ -230,7 +230,6 @@ export default function AdminDashboard() {
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '6px 20px' }}>
                           <p style={{ margin: 0, fontSize: 14 }}><strong>الاسم:</strong> {req.userName}</p>
-                          <p style={{ margin: 0, fontSize: 14 }}><strong>الهاتف:</strong> {req.userPhone}</p>
                           {req.userEmail && <p style={{ margin: 0, fontSize: 14 }}><strong>البريد:</strong> {req.userEmail}</p>}
                           {req.templateName && req.templateName !== 'غير محدد' && <p style={{ margin: 0, fontSize: 14 }}><strong>القالب:</strong> {req.templateName}</p>}
                           <p style={{ margin: 0, fontSize: 12, color: '#94a3b8' }}><strong>التاريخ:</strong> {new Date(req.createdAt).toLocaleDateString('ar-YE')}</p>
