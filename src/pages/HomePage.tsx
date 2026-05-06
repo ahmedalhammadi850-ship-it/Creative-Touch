@@ -2,7 +2,7 @@ import { useLocation } from 'wouter';
 import { categories } from '../data/categories';
 import {
   Sparkles, Zap, Download, Palette, Star, ArrowLeft,
-  LayoutTemplate, Users, Award, ChevronLeft
+  LayoutTemplate, Users, Award, ChevronLeft, Check, Crown
 } from 'lucide-react';
 
 const categoryIcons: Record<string, string> = {
@@ -55,6 +55,21 @@ export default function HomePage() {
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+            <button
+              onClick={() => {
+                document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              style={{
+                background: 'transparent', border: 'none', cursor: 'pointer',
+                color: '#6366f1', fontSize: 14, fontWeight: 700,
+                padding: '9px 18px', borderRadius: 10,
+                transition: 'background 0.2s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#eef2ff')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+            >
+              الأسعار
+            </button>
             <button
               onClick={() => setLocation('/about')}
               style={{
@@ -328,6 +343,163 @@ export default function HomePage() {
                   <p style={{ color: '#94a3b8', fontSize: 14, lineHeight: 1.85 }}>{step.desc}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ─── PRICING ─── */}
+        <section id="pricing-section" style={{ padding: '0 24px 100px' }}>
+          <div style={{ maxWidth: 860, margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: 52 }}>
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                background: '#fef9ee', border: '1px solid #fde68a',
+                borderRadius: 100, padding: '7px 18px', marginBottom: 18,
+              }}>
+                <Crown size={13} color="#f59e0b" fill="#f59e0b" />
+                <span style={{ color: '#d97706', fontSize: 13, fontWeight: 700 }}>خطط الاشتراك</span>
+              </div>
+              <h2 style={{ color: '#1e1b4b', fontSize: 38, fontWeight: 900, letterSpacing: '-0.02em', marginBottom: 12 }}>
+                أسعار بسيطة وشفافة
+              </h2>
+              <p style={{ color: '#94a3b8', fontSize: 16 }}>اختر الخطة المناسبة لك وابدأ التصميم فوراً</p>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+
+              {/* Weekly plan */}
+              <div style={{
+                background: '#fff',
+                borderRadius: 28,
+                padding: '40px 36px',
+                border: '2px solid #e0e7ff',
+                boxShadow: '0 4px 30px rgba(99,102,241,0.08)',
+                display: 'flex', flexDirection: 'column', gap: 0,
+                transition: 'transform 0.25s, box-shadow 0.25s',
+              }}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px)'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 16px 50px rgba(99,102,241,0.15)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 30px rgba(99,102,241,0.08)'; }}
+              >
+                <div style={{ marginBottom: 28 }}>
+                  <div style={{
+                    width: 48, height: 48, borderRadius: 16,
+                    background: '#eef2ff', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    marginBottom: 20,
+                  }}>
+                    <Zap size={24} color="#6366f1" />
+                  </div>
+                  <h3 style={{ color: '#1e1b4b', fontSize: 22, fontWeight: 900, marginBottom: 8 }}>الخطة الأسبوعية</h3>
+                  <p style={{ color: '#94a3b8', fontSize: 14, lineHeight: 1.75 }}>مثالية للاستخدام القصير والمناسبات</p>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 32 }}>
+                  <span style={{ color: '#1e1b4b', fontSize: 52, fontWeight: 900, lineHeight: 1 }}>300</span>
+                  <div>
+                    <div style={{ color: '#6366f1', fontSize: 16, fontWeight: 800 }}>ريال</div>
+                    <div style={{ color: '#94a3b8', fontSize: 12, fontWeight: 600 }}>/ أسبوع</div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 36 }}>
+                  {['وصول كامل لجميع القوالب', 'تصدير PNG بجودة عالية', 'تخصيص ألوان ونصوص وصور', 'دعم فني خلال الأسبوع'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#eef2ff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <Check size={13} color="#6366f1" strokeWidth={2.5} />
+                      </div>
+                      <span style={{ color: '#475569', fontSize: 14, fontWeight: 600 }}>{f}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setLocation('/category/congrats')}
+                  style={{
+                    width: '100%', padding: '14px', borderRadius: 14,
+                    background: '#eef2ff', border: '2px solid #c7d2fe',
+                    color: '#6366f1', fontSize: 15, fontWeight: 800, cursor: 'pointer',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#6366f1'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = '#6366f1'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = '#eef2ff'; e.currentTarget.style.color = '#6366f1'; e.currentTarget.style.borderColor = '#c7d2fe'; }}
+                >
+                  اشترك أسبوعياً
+                </button>
+              </div>
+
+              {/* Monthly plan — highlighted */}
+              <div style={{
+                background: 'linear-gradient(145deg, #6366f1 0%, #a855f7 100%)',
+                borderRadius: 28,
+                padding: '40px 36px',
+                border: '2px solid transparent',
+                boxShadow: '0 12px 50px rgba(99,102,241,0.35)',
+                display: 'flex', flexDirection: 'column', gap: 0,
+                position: 'relative', overflow: 'hidden',
+                transition: 'transform 0.25s, box-shadow 0.25s',
+              }}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-6px)'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 24px 70px rgba(99,102,241,0.45)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 12px 50px rgba(99,102,241,0.35)'; }}
+              >
+                {/* Decorative blobs */}
+                <div style={{ position: 'absolute', top: -40, left: -40, width: 140, height: 140, borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }} />
+                <div style={{ position: 'absolute', bottom: -30, right: -30, width: 110, height: 110, borderRadius: '50%', background: 'rgba(255,255,255,0.07)' }} />
+
+                {/* Best value badge */}
+                <div style={{
+                  position: 'absolute', top: 20, left: 20,
+                  background: '#fbbf24', color: '#78350f',
+                  fontSize: 11, fontWeight: 800, padding: '4px 12px', borderRadius: 20,
+                }}>
+                  الأوفر
+                </div>
+
+                <div style={{ position: 'relative', marginBottom: 28 }}>
+                  <div style={{
+                    width: 48, height: 48, borderRadius: 16,
+                    background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    marginBottom: 20,
+                  }}>
+                    <Crown size={24} color="#fbbf24" fill="#fbbf24" />
+                  </div>
+                  <h3 style={{ color: '#fff', fontSize: 22, fontWeight: 900, marginBottom: 8 }}>الخطة الشهرية</h3>
+                  <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 14, lineHeight: 1.75 }}>الأفضل للاستخدام المستمر والمحترفين</p>
+                </div>
+
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 32 }}>
+                  <span style={{ color: '#fff', fontSize: 52, fontWeight: 900, lineHeight: 1 }}>8000</span>
+                  <div>
+                    <div style={{ color: '#fbbf24', fontSize: 16, fontWeight: 800 }}>ريال</div>
+                    <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12, fontWeight: 600 }}>/ شهر</div>
+                  </div>
+                </div>
+
+                <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 36 }}>
+                  {['وصول كامل لجميع القوالب', 'تصدير PNG بجودة عالية', 'تخصيص ألوان ونصوص وصور', 'دعم فني على مدار الشهر', 'قوالب جديدة حصرية شهرياً'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <Check size={13} color="#fbbf24" strokeWidth={2.5} />
+                      </div>
+                      <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: 14, fontWeight: 600 }}>{f}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setLocation('/category/congrats')}
+                  style={{
+                    position: 'relative', width: '100%', padding: '14px', borderRadius: 14,
+                    background: '#fff', border: 'none',
+                    color: '#6366f1', fontSize: 15, fontWeight: 800, cursor: 'pointer',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+                    transition: 'transform 0.2s, box-shadow 0.2s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.02)'; e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.2)'; }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)'; }}
+                >
+                  اشترك شهرياً
+                </button>
+              </div>
+
             </div>
           </div>
         </section>
