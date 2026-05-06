@@ -56,7 +56,7 @@ async function buildFontEmbedCSS(): Promise<string> {
   return results.join('\n');
 }
 
-// Convert screen pixels (at 96 DPI) to mm for jsPDF
+// CSS pixels are always 1/96 inch — correct at any device pixel ratio
 function pxToMm(px: number): number {
   return (px / 96) * 25.4;
 }
@@ -80,21 +80,22 @@ export function useExport() {
 
       const options = {
         pixelRatio,
-        quality: 1,
-        backgroundColor: undefined,
         cacheBust: true,
         width: elementWidth,
         height: elementHeight,
         fontEmbedCSS: fontEmbedCSS || undefined,
       };
 
-      // First call primes the internal resource cache (known html-to-image requirement)
+      // Call 1 & 2: prime html-to-image's internal resource cache.
+      // The library requires at least two calls for all fonts/images/stylesheets
+      // to be fully inlined — the second call is the accurate one.
+      await toPng(original, options).catch(() => null);
       await toPng(original, options).catch(() => null);
 
-      // Second call produces the correctly-rendered output
+      // Call 3: the definitive capture.
       const rawDataUrl = await toPng(original, options);
 
-      // Crop to exact card bounds via canvas — fixes SVG foreignObject overflow:hidden bug
+      // Load the raw image so we can inspect its natural pixel dimensions.
       const img = new Image();
       img.src = rawDataUrl;
       await new Promise<void>((resolve, reject) => {
@@ -102,27 +103,39 @@ export function useExport() {
         img.onerror = reject;
       });
 
+      // Create a canvas exactly matching the card size (pixelRatio applied).
+      // Fill with white first so any transparent pixels in the source render
+      // correctly in the PDF instead of showing jsPDF's default transparent/white.
       const canvas = document.createElement('canvas');
       canvas.width = canvasWidth;
       canvas.height = canvasHeight;
       const ctx = canvas.getContext('2d')!;
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+      // Draw the captured image at its natural canvas size — this simultaneously
+      // copies and clips the output to the exact card bounds, eliminating any
+      // overflow bleed caused by the SVG foreignObject overflow:hidden bug.
       ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
 
-      const pngDataUrl = canvas.toDataURL('image/png', 1);
+      const pngDataUrl = canvas.toDataURL('image/png');
 
-      // PDF page sized exactly to the card in mm (96 DPI screen reference)
+      // Build PDF page sized exactly to the card dimensions in mm.
+      // Do NOT pass orientation — with a custom format array jsPDF uses
+      // the dimensions as-is, and passing orientation can swap width/height
+      // in some versions when they don't match the named orientation.
       const widthMm = pxToMm(elementWidth);
       const heightMm = pxToMm(elementHeight);
 
       const pdf = new jsPDF({
-        orientation: widthMm > heightMm ? 'landscape' : 'portrait',
         unit: 'mm',
         format: [widthMm, heightMm],
-        compress: true,
+        compress: false, // no additional compression — preserve image data exactly
       });
 
-      // Embed the captured image filling the entire PDF page
-      pdf.addImage(pngDataUrl, 'PNG', 0, 0, widthMm, heightMm, undefined, 'FAST');
+      // Embed with 'NONE' compression: lossless, no zlib overhead on the image data
+      pdf.addImage(pngDataUrl, 'PNG', 0, 0, widthMm, heightMm, undefined, 'NONE');
 
       pdf.save(`creative-touch-${Date.now()}.pdf`);
     } catch (e) {
