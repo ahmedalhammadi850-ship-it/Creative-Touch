@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Upload, X, ImagePlus, Plus, Lock, Send } from 'lucide-react';
+import { Upload, X, ImagePlus, Plus, Lock, Send, Minus } from 'lucide-react';
 import type { TemplateData } from '../types/template';
 
 interface InlineEditorProps {
@@ -231,6 +231,62 @@ export function InlineEditor({ categoryId, data, onChange, backCardMode = false,
               ))}
             </div>
           </div>
+
+          {/* Font size — back card */}
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold">حجم الخط</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <button
+                onClick={() => onChange({ fontSize: Math.max(70, (data.fontSize ?? 100) - 5) })}
+                disabled={(data.fontSize ?? 100) <= 70}
+                style={{
+                  width: 36, height: 36, borderRadius: 10,
+                  border: '1.5px solid #e2e8f0', background: (data.fontSize ?? 100) <= 70 ? '#f1f5f9' : '#fff',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: (data.fontSize ?? 100) <= 70 ? 'not-allowed' : 'pointer',
+                  color: (data.fontSize ?? 100) <= 70 ? '#cbd5e1' : '#374151',
+                }}
+              >
+                <Minus size={15} />
+              </button>
+              <div style={{
+                flex: 1, height: 36, borderRadius: 10,
+                border: '1.5px solid #e2e8f0', background: '#f8f7ff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontFamily: "'Cairo', sans-serif", fontWeight: 700,
+                fontSize: 15, color: '#3730a3',
+              }}>
+                {data.fontSize ?? 100}٪
+              </div>
+              <button
+                onClick={() => onChange({ fontSize: Math.min(150, (data.fontSize ?? 100) + 5) })}
+                disabled={(data.fontSize ?? 100) >= 150}
+                style={{
+                  width: 36, height: 36, borderRadius: 10,
+                  border: '1.5px solid #e2e8f0', background: (data.fontSize ?? 100) >= 150 ? '#f1f5f9' : '#fff',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: (data.fontSize ?? 100) >= 150 ? 'not-allowed' : 'pointer',
+                  color: (data.fontSize ?? 100) >= 150 ? '#cbd5e1' : '#374151',
+                }}
+              >
+                <Plus size={15} />
+              </button>
+              {(data.fontSize ?? 100) !== 100 && (
+                <button
+                  onClick={() => onChange({ fontSize: 100 })}
+                  style={{
+                    padding: '0 12px', height: 36, borderRadius: 10,
+                    border: '1.5px solid #fecaca', background: '#fef2f2',
+                    cursor: 'pointer', color: '#dc2626',
+                    fontSize: 12, fontWeight: 700,
+                    fontFamily: "'Cairo', sans-serif",
+                  }}
+                >
+                  إعادة
+                </button>
+              )}
+            </div>
+          </div>
         </>
       )}
 
@@ -346,6 +402,68 @@ export function InlineEditor({ categoryId, data, onChange, backCardMode = false,
                 <span style={{ color: '#059669', fontSize: 13, fontFamily: "'Cairo', sans-serif", fontWeight: 700 }}>رفع الشعار</span>
               </button>
             )}
+          </div>
+
+          {/* Font size */}
+          <div className="space-y-3">
+            <h3 className="text-lg font-bold">حجم الخط</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <button
+                onClick={() => onChange({ fontSize: Math.max(70, (data.fontSize ?? 100) - 5) })}
+                disabled={(data.fontSize ?? 100) <= 70}
+                style={{
+                  width: 36, height: 36, borderRadius: 10,
+                  border: '1.5px solid #e2e8f0', background: (data.fontSize ?? 100) <= 70 ? '#f1f5f9' : '#fff',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: (data.fontSize ?? 100) <= 70 ? 'not-allowed' : 'pointer',
+                  color: (data.fontSize ?? 100) <= 70 ? '#cbd5e1' : '#374151',
+                }}
+              >
+                <Minus size={15} />
+              </button>
+
+              <div style={{
+                flex: 1, height: 36, borderRadius: 10,
+                border: '1.5px solid #e2e8f0', background: '#f8f7ff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontFamily: "'Cairo', sans-serif", fontWeight: 700,
+                fontSize: 15, color: '#3730a3',
+              }}>
+                {data.fontSize ?? 100}٪
+              </div>
+
+              <button
+                onClick={() => onChange({ fontSize: Math.min(150, (data.fontSize ?? 100) + 5) })}
+                disabled={(data.fontSize ?? 100) >= 150}
+                style={{
+                  width: 36, height: 36, borderRadius: 10,
+                  border: '1.5px solid #e2e8f0', background: (data.fontSize ?? 100) >= 150 ? '#f1f5f9' : '#fff',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  cursor: (data.fontSize ?? 100) >= 150 ? 'not-allowed' : 'pointer',
+                  color: (data.fontSize ?? 100) >= 150 ? '#cbd5e1' : '#374151',
+                }}
+              >
+                <Plus size={15} />
+              </button>
+
+              {(data.fontSize ?? 100) !== 100 && (
+                <button
+                  onClick={() => onChange({ fontSize: 100 })}
+                  style={{
+                    padding: '0 12px', height: 36, borderRadius: 10,
+                    border: '1.5px solid #fecaca', background: '#fef2f2',
+                    cursor: 'pointer', color: '#dc2626',
+                    fontSize: 12, fontWeight: 700,
+                    fontFamily: "'Cairo', sans-serif",
+                  }}
+                >
+                  إعادة
+                </button>
+              )}
+            </div>
+            <p style={{ color: '#94a3b8', fontSize: 12, margin: 0, fontFamily: "'Cairo', sans-serif" }}>
+              يؤثر على جميع النصوص في الكارت وعند التصدير
+            </p>
           </div>
 
           {/* Colors */}
@@ -491,21 +609,21 @@ export function InlineEditor({ categoryId, data, onChange, backCardMode = false,
               </div>
             )}
 
-            {/* Font size — locked for mass-wedding */}
-            {isMassWedding && (
-              <div className="space-y-2">
-                <Label className="text-muted-foreground/70">حجم الخط</Label>
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  padding: '8px 12px', borderRadius: 10,
-                  border: '1.5px solid #e2e8f0', background: '#f8f7ff',
-                  cursor: 'not-allowed',
-                }}>
-                  <Lock size={14} color="#a5b4fc" />
-                  <span style={{ color: '#94a3b8', fontSize: 13 }}>100%</span>
-                </div>
+            {/* Font size — locked for all non-business-card */}
+            <div className="space-y-2">
+              <Label className="text-muted-foreground/70">حجم الخط</Label>
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                padding: '8px 12px', borderRadius: 10,
+                border: '1.5px solid #e2e8f0', background: '#f8f7ff',
+                cursor: 'not-allowed',
+              }}>
+                <Lock size={14} color="#a5b4fc" />
+                <span style={{ color: '#94a3b8', fontSize: 13, fontFamily: "'Cairo', sans-serif" }}>
+                  تكبير الخط — يتطلب التفعيل
+                </span>
               </div>
-            )}
+            </div>
 
             {/* Description */}
             <LockedTextarea

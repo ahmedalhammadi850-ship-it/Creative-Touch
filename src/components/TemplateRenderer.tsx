@@ -176,8 +176,17 @@ export function TemplateRenderer({ categoryId, templateId, data }: TemplateRende
     ? (data.images || []).filter(v => v && typeof v === 'string' && !v.startsWith('data:image'))
     : [];
 
+  const scale = (data.fontSize ?? 100) / 100;
+
   return (
-    <div id="export-target" style={{ position: 'relative', display: 'inline-block' }}>
+    <div
+      id="export-target"
+      style={{
+        position: 'relative',
+        display: 'inline-block',
+        zoom: scale,
+      } as React.CSSProperties}
+    >
       <Suspense fallback={<div className="p-12 text-center text-muted-foreground animate-pulse">جاري تحميل القالب...</div>}>
         <Component data={data} />
       </Suspense>
