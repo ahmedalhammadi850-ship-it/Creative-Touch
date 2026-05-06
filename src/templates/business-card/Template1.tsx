@@ -2,6 +2,7 @@ import type { TemplateData } from '../../types/template';
 
 export default function Template1({ data }: { data: TemplateData }) {
   const ffs = data.fieldFontSizes ?? {};
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div
       id="template-preview"
@@ -18,15 +19,15 @@ export default function Template1({ data }: { data: TemplateData }) {
       />
 
       <div className="z-10 mt-2">
-        <h2 className="font-bold tracking-wide" style={{ color: data.colors.primary, fontSize: ffs.name ?? 24 }}>{data.title}</h2>
-        <p className="opacity-90 mt-1" style={{ color: data.colors.secondary, fontSize: ffs.jobTitle ?? 14 }}>{data.subtitle}</p>
+        <h2 className="font-bold tracking-wide" style={{ color: data.colors.primary, fontSize: (ffs.name ?? 24) + _d }}>{data.title}</h2>
+        <p className="opacity-90 mt-1" style={{ color: data.colors.secondary, fontSize: (ffs.jobTitle ?? 14) + _d }}>{data.subtitle}</p>
       </div>
 
       <div className="z-10 space-y-1 mt-auto">
-        <p className="font-bold mb-2" style={{ fontSize: ffs.company ?? 10 }}>{data.description}</p>
-        {data.phone && <p dir="ltr" className="text-right opacity-80" style={{ fontSize: ffs.contact ?? 10 }}>{data.phone}</p>}
-        {data.email && <p dir="ltr" className="text-right opacity-80" style={{ fontSize: ffs.contact ?? 10 }}>{data.email}</p>}
-        {data.website && <p dir="ltr" className="text-right opacity-80" style={{ fontSize: ffs.contact ?? 10 }}>{data.website}</p>}
+        <p className="font-bold mb-2" style={{ fontSize: (ffs.company ?? 10) + _d }}>{data.description}</p>
+        {data.phone && <p dir="ltr" className="text-right opacity-80" style={{ fontSize: (ffs.contact ?? 10) + _d }}>{data.phone}</p>}
+        {data.email && <p dir="ltr" className="text-right opacity-80" style={{ fontSize: (ffs.contact ?? 10) + _d }}>{data.email}</p>}
+        {data.website && <p dir="ltr" className="text-right opacity-80" style={{ fontSize: (ffs.contact ?? 10) + _d }}>{data.website}</p>}
       </div>
     </div>
   );

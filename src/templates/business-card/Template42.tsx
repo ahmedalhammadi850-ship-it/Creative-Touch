@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template42({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div
       id="template-preview"
@@ -28,22 +29,22 @@ export default function Template42({ data }: { data: TemplateData }) {
 
       {/* Right content */}
       <div className="absolute top-0 right-0 w-[200px] h-full flex flex-col items-center justify-center gap-2 pr-6 pl-2 z-10" dir="rtl">
-        <h2 className="text-[16px] font-black leading-tight text-right" style={{ color: data.colors.primary }}>
+        <h2 className="font-black leading-tight text-right" style={{ color: data.colors.primary, fontSize: 16 + _d }}>
           {data.description || 'شركة الإبداع التقني'}
         </h2>
         <div className="w-12 h-[2px] rounded self-end" style={{ background: data.colors.accent }} />
-        <p className="text-[10px] font-bold text-right opacity-70" style={{ color: data.colors.secondary }}>
+        <p className="font-bold text-right opacity-70" style={{ color: data.colors.secondary, fontSize: 10 + _d }}>
           {data.subtitle || 'مدير تقني'}
         </p>
         <div className="flex flex-col gap-1 w-full mt-1">
           {data.website && (
-            <p dir="ltr" className="text-[8.5px] font-bold text-right" style={{ color: data.colors.primary }}>{data.website}</p>
+            <p dir="ltr" className="font-bold text-right" style={{ color: data.colors.primary, fontSize: 8.5 + _d }}>{data.website}</p>
           )}
           {data.email && (
-            <p dir="ltr" className="text-[8.5px] text-right opacity-70" style={{ color: data.colors.secondary }}>{data.email}</p>
+            <p dir="ltr" className="text-right opacity-70" style={{ color: data.colors.secondary, fontSize: 8.5 + _d }}>{data.email}</p>
           )}
           {data.phone && (
-            <p dir="ltr" className="text-[8.5px] text-right opacity-70" style={{ color: data.colors.secondary }}>{data.phone}</p>
+            <p dir="ltr" className="text-right opacity-70" style={{ color: data.colors.secondary, fontSize: 8.5 + _d }}>{data.phone}</p>
           )}
         </div>
       </div>

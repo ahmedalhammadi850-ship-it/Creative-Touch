@@ -2,6 +2,7 @@ import type { TemplateData } from '../../types/template';
 
 export default function Template16({ data }: { data: TemplateData }) {
   const ffs = data.fieldFontSizes ?? {};
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div id="template-preview" style={{
       width: '340px', height: '220px',
@@ -22,13 +23,13 @@ export default function Template16({ data }: { data: TemplateData }) {
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '16px 20px 16px 16px', position: 'relative', zIndex: 1 }}>
         <div style={{ color: data.colors.primary, fontSize: '6px', letterSpacing: '0.28em', marginBottom: '7px', opacity: 0.55 }}>BUSINESS CARD</div>
-        <div style={{ color: data.colors.secondary, fontSize: ffs.name ?? 23, fontWeight: 900, lineHeight: 1.1, marginBottom: '4px', textShadow: `0 1px 6px ${data.colors.primary}22` }}>{data.title}</div>
-        <div style={{ color: data.colors.primary, fontSize: ffs.jobTitle ?? 10, fontWeight: 700, marginBottom: '11px' }}>{data.subtitle}</div>
+        <div style={{ color: data.colors.secondary, fontSize: (ffs.name ?? 23) + _d, fontWeight: 900, lineHeight: 1.1, marginBottom: '4px', textShadow: `0 1px 6px ${data.colors.primary}22` }}>{data.title}</div>
+        <div style={{ color: data.colors.primary, fontSize: (ffs.jobTitle ?? 10) + _d, fontWeight: 700, marginBottom: '11px' }}>{data.subtitle}</div>
         <div style={{ width: '38px', height: '2px', background: `linear-gradient(to left, ${data.colors.accent}, ${data.colors.primary})`, borderRadius: '1px', marginBottom: '10px' }} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-          {data.phone && <span style={{ color: data.colors.secondary, fontSize: ffs.contact ?? 7.5, opacity: 0.75 }} dir="ltr">{data.phone}</span>}
-          {data.email && <span style={{ color: data.colors.secondary, fontSize: ffs.contact ?? 7.5, opacity: 0.65 }} dir="ltr">{data.email}</span>}
-          {data.website && <span style={{ color: data.colors.secondary, fontSize: ffs.contact ?? 7.5, opacity: 0.65 }} dir="ltr">{data.website}</span>}
+          {data.phone && <span style={{ color: data.colors.secondary, fontSize: (ffs.contact ?? 7.5) + _d, opacity: 0.75 }} dir="ltr">{data.phone}</span>}
+          {data.email && <span style={{ color: data.colors.secondary, fontSize: (ffs.contact ?? 7.5) + _d, opacity: 0.65 }} dir="ltr">{data.email}</span>}
+          {data.website && <span style={{ color: data.colors.secondary, fontSize: (ffs.contact ?? 7.5) + _d, opacity: 0.65 }} dir="ltr">{data.website}</span>}
         </div>
       </div>
     </div>

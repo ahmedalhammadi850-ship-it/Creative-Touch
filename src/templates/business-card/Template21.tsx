@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template21({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div
       id="template-preview"
@@ -23,14 +24,12 @@ export default function Template21({ data }: { data: TemplateData }) {
       <div className="flex-1 flex flex-col justify-between p-5">
         <div>
           <h2
-            className="text-[18px] font-bold leading-tight"
-            style={{ color: data.colors.primary }}
+            className="font-bold leading-tight" style={{ color: data.colors.primary, fontSize: 18 + _d }}
           >
             {data.title}
           </h2>
           <p
-            className="text-[10px] mt-0.5 tracking-widest uppercase font-medium"
-            style={{ color: data.colors.accent }}
+            className="mt-0.5 tracking-widest uppercase font-medium" style={{ color: data.colors.accent, fontSize: 10 + _d }}
           >
             {data.subtitle}
           </p>
@@ -42,8 +41,7 @@ export default function Template21({ data }: { data: TemplateData }) {
         </div>
 
         <p
-          className="text-[9px] leading-relaxed opacity-70"
-          style={{ color: data.colors.secondary }}
+          className="leading-relaxed opacity-70" style={{ color: data.colors.secondary, fontSize: 9 + _d }}
         >
           {data.description}
         </p>
@@ -55,7 +53,7 @@ export default function Template21({ data }: { data: TemplateData }) {
                 style={{ backgroundColor: `${data.colors.primary}18` }}>
                 <div className="w-1 h-1 rounded-full" style={{ backgroundColor: data.colors.primary }} />
               </div>
-              <p dir="ltr" className="text-[8px]" style={{ color: data.colors.secondary, margin: 0, lineHeight: 1.2, whiteSpace: 'nowrap' }}>{data.phone}</p>
+              <p dir="ltr" className="" style={{ color: data.colors.secondary, margin: 0, lineHeight: 1.2, whiteSpace: 'nowrap', fontSize: 8 + _d }}>{data.phone}</p>
             </div>
           )}
           {data.email && (
@@ -64,7 +62,7 @@ export default function Template21({ data }: { data: TemplateData }) {
                 style={{ backgroundColor: `${data.colors.primary}18` }}>
                 <div className="w-1 h-1 rounded-full" style={{ backgroundColor: data.colors.primary }} />
               </div>
-              <p dir="ltr" className="text-[8px]" style={{ color: data.colors.secondary, margin: 0, lineHeight: 1.2, whiteSpace: 'nowrap' }}>{data.email}</p>
+              <p dir="ltr" className="" style={{ color: data.colors.secondary, margin: 0, lineHeight: 1.2, whiteSpace: 'nowrap', fontSize: 8 + _d }}>{data.email}</p>
             </div>
           )}
           {data.website && (
@@ -73,7 +71,7 @@ export default function Template21({ data }: { data: TemplateData }) {
                 style={{ backgroundColor: `${data.colors.primary}18` }}>
                 <div className="w-1 h-1 rounded-full" style={{ backgroundColor: data.colors.primary }} />
               </div>
-              <p dir="ltr" className="text-[8px]" style={{ color: data.colors.secondary, margin: 0, lineHeight: 1.2, whiteSpace: 'nowrap' }}>{data.website}</p>
+              <p dir="ltr" className="" style={{ color: data.colors.secondary, margin: 0, lineHeight: 1.2, whiteSpace: 'nowrap', fontSize: 8 + _d }}>{data.website}</p>
             </div>
           )}
         </div>

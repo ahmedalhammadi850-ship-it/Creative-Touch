@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template31({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div
       id="template-preview"
@@ -9,36 +10,35 @@ export default function Template31({ data }: { data: TemplateData }) {
     >
       <div className="relative flex-1 flex flex-col justify-between p-5 z-10">
         <div
-          className="inline-block px-3 py-1 text-white text-[13px] font-bold"
-          style={{ backgroundColor: data.colors.primary }}
+          className="inline-block px-3 py-1 text-white font-bold" style={{ backgroundColor: data.colors.primary, fontSize: 13 + _d }}
         >
           {data.title}
         </div>
-        <p className="text-[10px] mt-1" style={{ color: '#555' }}>{data.subtitle}</p>
+        <p className="mt-1" style={{ color: '#555', fontSize: 10 + _d }}>{data.subtitle}</p>
 
         <div className="flex flex-col gap-1 mt-auto">
           {data.description && (
             <div className="flex items-start gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full mt-0.5 flex-shrink-0" style={{ backgroundColor: data.colors.primary }} />
-              <p className="text-[8px] leading-tight" style={{ color: '#444' }}>{data.description}</p>
+              <p className="leading-tight" style={{ color: '#444', fontSize: 8 + _d }}>{data.description}</p>
             </div>
           )}
           {data.email && (
             <div className="flex items-center gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: data.colors.primary }} />
-              <p dir="ltr" className="text-[8px]" style={{ color: '#444' }}>{data.email}</p>
+              <p dir="ltr" className="" style={{ color: '#444', fontSize: 8 + _d }}>{data.email}</p>
             </div>
           )}
           {data.website && (
             <div className="flex items-center gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: data.colors.primary }} />
-              <p dir="ltr" className="text-[8px]" style={{ color: '#444' }}>{data.website}</p>
+              <p dir="ltr" className="" style={{ color: '#444', fontSize: 8 + _d }}>{data.website}</p>
             </div>
           )}
           {data.phone && (
             <div className="flex items-center gap-1.5">
               <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: data.colors.primary }} />
-              <p dir="ltr" className="text-[8px]" style={{ color: '#444' }}>{data.phone}</p>
+              <p dir="ltr" className="" style={{ color: '#444', fontSize: 8 + _d }}>{data.phone}</p>
             </div>
           )}
         </div>
@@ -53,7 +53,7 @@ export default function Template31({ data }: { data: TemplateData }) {
           <path d="M0,0 Q20,80 0,140 Q25,190 0,220 L80,220 L80,0 Z" fill={data.colors.primary} opacity="0.4"/>
         </svg>
 
-        <p className="relative z-10 text-white text-[7px] mt-2 text-center px-2 font-medium opacity-90 leading-tight">
+        <p className="relative z-10 text-white mt-2 text-center px-2 font-medium opacity-90 leading-tight" style={{ fontSize: 7 + _d }}>
           {data.description?.split(',')[0] || 'Company'}
         </p>
       </div>

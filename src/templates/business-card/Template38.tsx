@@ -22,6 +22,7 @@ function LogoLayer({ data }: { data: TemplateData }) {
 }
 
 export default function Template38({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div
       id="template-preview"
@@ -36,8 +37,8 @@ export default function Template38({ data }: { data: TemplateData }) {
 
       {/* Name block — white text on dark = max contrast */}
       <div className="relative z-10 px-6 pt-4">
-        <h2 className="text-[20px] font-extrabold text-white leading-tight tracking-wide">{data.title}</h2>
-        <p className="text-[9px] font-bold mt-0.5 tracking-widest uppercase" style={{ color: data.colors.accent }}>{data.subtitle}</p>
+        <h2 className="font-extrabold text-white leading-tight tracking-wide" style={{ fontSize: 20 + _d }}>{data.title}</h2>
+        <p className="font-bold mt-0.5 tracking-widest uppercase" style={{ color: data.colors.accent, fontSize: 9 + _d }}>{data.subtitle}</p>
       </div>
 
       {/* Divider */}
@@ -50,7 +51,7 @@ export default function Template38({ data }: { data: TemplateData }) {
             <div className="w-4 h-4 rounded flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.accent }}>
               <div className="w-1.5 h-1.5 bg-white rounded-full" />
             </div>
-            <p dir="ltr" className="text-[8.5px] font-medium text-white">{data.phone}</p>
+            <p dir="ltr" className="font-medium text-white" style={{ fontSize: 8.5 + _d }}>{data.phone}</p>
           </div>
         )}
         {data.email && (
@@ -58,7 +59,7 @@ export default function Template38({ data }: { data: TemplateData }) {
             <div className="w-4 h-4 rounded flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.accent }}>
               <div className="w-1.5 h-1.5 bg-white rounded-full" />
             </div>
-            <p dir="ltr" className="text-[8.5px] font-medium text-white">{data.email}</p>
+            <p dir="ltr" className="font-medium text-white" style={{ fontSize: 8.5 + _d }}>{data.email}</p>
           </div>
         )}
         {data.website && (
@@ -66,7 +67,7 @@ export default function Template38({ data }: { data: TemplateData }) {
             <div className="w-4 h-4 rounded flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.accent }}>
               <div className="w-1.5 h-1.5 bg-white rounded-full" />
             </div>
-            <p dir="ltr" className="text-[8.5px] font-medium text-white">{data.website}</p>
+            <p dir="ltr" className="font-medium text-white" style={{ fontSize: 8.5 + _d }}>{data.website}</p>
           </div>
         )}
       </div>

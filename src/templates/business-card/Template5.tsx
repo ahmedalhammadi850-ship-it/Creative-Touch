@@ -4,6 +4,7 @@ interface Props { data: TemplateData; }
 export default function BusinessCardTemplate5({ data }: Props) {
   const { title, subtitle, phone, email, website, colors, image } = data;
   const ffs = data.fieldFontSizes ?? {};
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div id="template-preview" style={{
       width: 340, height: 220, position: 'relative', overflow: 'hidden',
@@ -38,8 +39,8 @@ export default function BusinessCardTemplate5({ data }: Props) {
           {[0,1,2].map(i => <div key={i} style={{ width: 5, height: 5, borderRadius: '50%', background: i === 0 ? colors.accent : `${colors.accent}44` }} />)}
         </div>
 
-        <h1 style={{ color: '#ffffff', fontSize: ffs.name ?? 22, fontWeight: 900, margin: 0, lineHeight: 1.0 }}>{title || 'أحمد محمد'}</h1>
-        <p style={{ color: colors.accent, fontSize: ffs.jobTitle ?? 11, fontWeight: 700, margin: 0 }}>{subtitle || 'مدير تنفيذي'}</p>
+        <h1 style={{ color: '#ffffff', fontSize: (ffs.name ?? 22) + _d, fontWeight: 900, margin: 0, lineHeight: 1.0 }}>{title || 'أحمد محمد'}</h1>
+        <p style={{ color: colors.accent, fontSize: (ffs.jobTitle ?? 11) + _d, fontWeight: 700, margin: 0 }}>{subtitle || 'مدير تنفيذي'}</p>
 
         <div style={{ height: 1, background: `linear-gradient(to left, ${colors.accent}55, transparent)`, margin: '4px 0' }} />
 
@@ -51,7 +52,7 @@ export default function BusinessCardTemplate5({ data }: Props) {
           ].map((item, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
               <span style={{ color: colors.accent, fontSize: 7, fontWeight: 800, width: 10, flexShrink: 0 }}>{item.label}</span>
-              <p style={{ color: '#cccccc', fontSize: ffs.contact ?? 9, margin: 0 }}>{item.val}</p>
+              <p style={{ color: '#cccccc', fontSize: (ffs.contact ?? 9) + _d, margin: 0 }}>{item.val}</p>
             </div>
           ))}
         </div>

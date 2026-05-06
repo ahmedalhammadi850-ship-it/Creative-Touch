@@ -2,6 +2,7 @@ import type { TemplateData } from '../../types/template';
 
 export default function Template15({ data }: { data: TemplateData }) {
   const ffs = data.fieldFontSizes ?? {};
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div id="template-preview" style={{
       width: '340px', height: '220px',
@@ -30,12 +31,12 @@ export default function Template15({ data }: { data: TemplateData }) {
 
       <div style={{ position: 'relative', zIndex: 1, padding: '0 22px' }}>
         <div style={{ color: data.colors.accent, fontSize: '6px', letterSpacing: '0.32em', marginBottom: '8px', opacity: 0.8 }}>✦ بطاقة أعمال ✦</div>
-        <div style={{ color: '#fff', fontSize: ffs.name ?? 22, fontWeight: 900, lineHeight: 1.1, marginBottom: '3px', textShadow: `0 0 20px ${data.colors.accent}66` }}>{data.title}</div>
-        <div style={{ color: data.colors.accent, fontSize: ffs.jobTitle ?? 9.5, fontWeight: 700, marginBottom: '10px' }}>{data.subtitle}</div>
+        <div style={{ color: '#fff', fontSize: (ffs.name ?? 22) + _d, fontWeight: 900, lineHeight: 1.1, marginBottom: '3px', textShadow: `0 0 20px ${data.colors.accent}66` }}>{data.title}</div>
+        <div style={{ color: data.colors.accent, fontSize: (ffs.jobTitle ?? 9.5) + _d, fontWeight: 700, marginBottom: '10px' }}>{data.subtitle}</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-          {data.phone && <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: ffs.contact ?? 7.5 }} dir="ltr">{data.phone}</span>}
-          {data.email && <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: ffs.contact ?? 7.5 }} dir="ltr">{data.email}</span>}
-          {data.website && <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: ffs.contact ?? 7.5 }} dir="ltr">{data.website}</span>}
+          {data.phone && <span style={{ color: 'rgba(255,255,255,0.65)', fontSize: (ffs.contact ?? 7.5) + _d }} dir="ltr">{data.phone}</span>}
+          {data.email && <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: (ffs.contact ?? 7.5) + _d }} dir="ltr">{data.email}</span>}
+          {data.website && <span style={{ color: 'rgba(255,255,255,0.55)', fontSize: (ffs.contact ?? 7.5) + _d }} dir="ltr">{data.website}</span>}
         </div>
       </div>
     </div>

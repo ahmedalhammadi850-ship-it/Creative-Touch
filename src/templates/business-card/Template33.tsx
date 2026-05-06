@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template33({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div
       id="template-preview"
@@ -21,17 +22,17 @@ export default function Template33({ data }: { data: TemplateData }) {
         style={{ backgroundColor: data.colors.primary }}
       >
         <div className="w-10 h-px" style={{ backgroundColor: data.colors.accent, opacity: 0.5 }} />
-        <p className="text-[6px] tracking-widest text-center px-2" style={{ color: data.colors.accent }}>
+        <p className="tracking-widest text-center px-2" style={{ color: data.colors.accent, fontSize: 6 + _d }}>
           {data.description?.split(',')[0] || 'BRAND'}
         </p>
       </div>
 
       <div className="flex-1 flex flex-col justify-between pl-[106px] pr-5 py-5">
         <div>
-          <h2 className="text-[17px] font-bold leading-tight" style={{ color: '#ffffff' }}>
+          <h2 className="font-bold leading-tight" style={{ color: '#ffffff', fontSize: 17 + _d }}>
             {data.title}
           </h2>
-          <p className="text-[10px] mt-0.5 tracking-wider" style={{ color: data.colors.accent }}>
+          <p className="mt-0.5 tracking-wider" style={{ color: data.colors.accent, fontSize: 10 + _d }}>
             {data.subtitle}
           </p>
         </div>
@@ -47,7 +48,7 @@ export default function Template33({ data }: { data: TemplateData }) {
               <div className="w-3 h-3 rounded-sm flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.accent }}>
                 <div className="w-1.5 h-1.5 bg-white rounded-full" />
               </div>
-              <p dir="ltr" className="text-[8px] text-white/70">{data.phone}</p>
+              <p dir="ltr" className="text-white/70" style={{ fontSize: 8 + _d }}>{data.phone}</p>
             </div>
           )}
           {data.email && (
@@ -55,7 +56,7 @@ export default function Template33({ data }: { data: TemplateData }) {
               <div className="w-3 h-3 rounded-sm flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.accent }}>
                 <div className="w-1.5 h-1.5 bg-white rounded-full" />
               </div>
-              <p dir="ltr" className="text-[8px] text-white/70">{data.email}</p>
+              <p dir="ltr" className="text-white/70" style={{ fontSize: 8 + _d }}>{data.email}</p>
             </div>
           )}
           {data.website && (
@@ -63,7 +64,7 @@ export default function Template33({ data }: { data: TemplateData }) {
               <div className="w-3 h-3 rounded-sm flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.accent }}>
                 <div className="w-1.5 h-1.5 bg-white rounded-full" />
               </div>
-              <p dir="ltr" className="text-[8px] text-white/70">{data.website}</p>
+              <p dir="ltr" className="text-white/70" style={{ fontSize: 8 + _d }}>{data.website}</p>
             </div>
           )}
         </div>

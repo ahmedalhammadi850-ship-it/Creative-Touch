@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template41({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div
       id="template-preview"
@@ -29,7 +30,7 @@ export default function Template41({ data }: { data: TemplateData }) {
         )}
 
         {/* Company name */}
-        <h2 className="text-[18px] font-black text-center leading-tight" style={{ color: '#ffffff', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
+        <h2 className="font-black text-center leading-tight" style={{ color: '#ffffff', textShadow: '0 2px 8px rgba(0,0,0,0.3)', fontSize: 18 + _d }}>
           {data.description || 'شركة الإبداع التقني'}
         </h2>
 
@@ -37,17 +38,17 @@ export default function Template41({ data }: { data: TemplateData }) {
         <div className="w-16 h-[1.5px] rounded" style={{ background: data.colors.accent }} />
 
         {/* Tagline */}
-        <p className="text-[10px] font-semibold text-center opacity-80" style={{ color: '#ffffff' }}>
+        <p className="font-semibold text-center opacity-80" style={{ color: '#ffffff', fontSize: 10 + _d }}>
           {data.subtitle || 'مدير تقني'}
         </p>
 
         {/* Contact row */}
         <div className="flex items-center gap-4 mt-1">
           {data.website && (
-            <p dir="ltr" className="text-[9px] font-bold opacity-90" style={{ color: data.colors.accent }}>{data.website}</p>
+            <p dir="ltr" className="font-bold opacity-90" style={{ color: data.colors.accent, fontSize: 9 + _d }}>{data.website}</p>
           )}
           {data.phone && (
-            <p dir="ltr" className="text-[9px] font-bold opacity-90" style={{ color: '#ffffffcc' }}>{data.phone}</p>
+            <p dir="ltr" className="font-bold opacity-90" style={{ color: '#ffffffcc', fontSize: 9 + _d }}>{data.phone}</p>
           )}
         </div>
       </div>

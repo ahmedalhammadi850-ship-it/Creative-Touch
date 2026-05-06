@@ -4,6 +4,7 @@ interface Props { data: TemplateData; }
 export default function BusinessCardTemplate8({ data }: Props) {
   const { title, subtitle, phone, email, website, colors, image } = data;
   const ffs = data.fieldFontSizes ?? {};
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div id="template-preview" style={{
       width: 340, height: 220, position: 'relative', overflow: 'hidden',
@@ -29,8 +30,8 @@ export default function BusinessCardTemplate8({ data }: Props) {
         display: 'flex', flexDirection: 'column', justifyContent: 'center',
         padding: '16px 14px 16px 20px', gap: 5,
       }}>
-        <h1 style={{ color: colors.primary, fontSize: ffs.name ?? 19, fontWeight: 900, margin: 0, lineHeight: 1.1 }}>{title || 'أحمد محمد'}</h1>
-        <p style={{ color: colors.secondary, fontSize: ffs.jobTitle ?? 10, fontWeight: 700, margin: 0 }}>{subtitle || 'مدير مبيعات'}</p>
+        <h1 style={{ color: colors.primary, fontSize: (ffs.name ?? 19) + _d, fontWeight: 900, margin: 0, lineHeight: 1.1 }}>{title || 'أحمد محمد'}</h1>
+        <p style={{ color: colors.secondary, fontSize: (ffs.jobTitle ?? 10) + _d, fontWeight: 700, margin: 0 }}>{subtitle || 'مدير مبيعات'}</p>
         <div style={{ width: 30, height: 2, background: colors.accent, borderRadius: 1 }} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 3, marginTop: 2 }}>
           {[
@@ -38,7 +39,7 @@ export default function BusinessCardTemplate8({ data }: Props) {
             email || 'email@domain.com',
             website || 'www.domain.com',
           ].map((v, i) => (
-            <p key={i} style={{ color: '#555', fontSize: ffs.contact ?? 8.5, margin: 0 }}>{v}</p>
+            <p key={i} style={{ color: '#555', fontSize: (ffs.contact ?? 8.5) + _d, margin: 0 }}>{v}</p>
           ))}
         </div>
       </div>

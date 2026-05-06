@@ -2,6 +2,7 @@ import type { TemplateData } from '../../types/template';
 
 export default function Template19({ data }: { data: TemplateData }) {
   const ffs = data.fieldFontSizes ?? {};
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div
       id="template-preview"
@@ -16,17 +17,17 @@ export default function Template19({ data }: { data: TemplateData }) {
       <div className="absolute top-8 right-8 w-8 h-8 rounded-full opacity-20" style={{ border: `2px solid ${data.colors.accent}` }} />
 
       <div className="z-10 p-5 pb-2">
-        <h2 className="font-bold" style={{ color: data.colors.accent, fontSize: ffs.name ?? 20 }}>{data.title}</h2>
-        <p className="mt-0.5 opacity-80" style={{ color: data.colors.accent, fontSize: ffs.jobTitle ?? 10 }}>{data.subtitle}</p>
+        <h2 className="font-bold" style={{ color: data.colors.accent, fontSize: (ffs.name ?? 20) + _d }}>{data.title}</h2>
+        <p className="mt-0.5 opacity-80" style={{ color: data.colors.accent, fontSize: (ffs.jobTitle ?? 10) + _d }}>{data.subtitle}</p>
       </div>
 
       <div className="z-10 px-5 pb-5">
         <div className="w-full h-px mb-3 opacity-30" style={{ backgroundColor: data.colors.accent }} />
-        <p className="mb-2 opacity-80" style={{ color: data.colors.accent, fontSize: ffs.company ?? 9 }}>{data.description}</p>
+        <p className="mb-2 opacity-80" style={{ color: data.colors.accent, fontSize: (ffs.company ?? 9) + _d }}>{data.description}</p>
         <div className="flex flex-col gap-0.5">
-          {data.phone && <p dir="ltr" className="opacity-75" style={{ color: data.colors.accent, fontSize: ffs.contact ?? 9 }}>{data.phone}</p>}
-          {data.email && <p dir="ltr" className="opacity-75" style={{ color: data.colors.accent, fontSize: ffs.contact ?? 9 }}>{data.email}</p>}
-          {data.website && <p dir="ltr" className="opacity-75" style={{ color: data.colors.accent, fontSize: ffs.contact ?? 9 }}>{data.website}</p>}
+          {data.phone && <p dir="ltr" className="opacity-75" style={{ color: data.colors.accent, fontSize: (ffs.contact ?? 9) + _d }}>{data.phone}</p>}
+          {data.email && <p dir="ltr" className="opacity-75" style={{ color: data.colors.accent, fontSize: (ffs.contact ?? 9) + _d }}>{data.email}</p>}
+          {data.website && <p dir="ltr" className="opacity-75" style={{ color: data.colors.accent, fontSize: (ffs.contact ?? 9) + _d }}>{data.website}</p>}
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ interface Props { data: TemplateData; }
 export default function BusinessCardTemplate7({ data }: Props) {
   const { title, subtitle, phone, email, website, colors, image } = data;
   const ffs = data.fieldFontSizes ?? {};
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div id="template-preview" style={{
       width: 340, height: 220, position: 'relative', overflow: 'hidden',
@@ -48,12 +49,12 @@ export default function BusinessCardTemplate7({ data }: Props) {
 
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
           <div style={{ width: 8, height: 8, borderRadius: '50%', background: colors.accent, boxShadow: `0 0 10px ${colors.accent}`, marginBottom: 4 }} />
-          <h1 style={{ color: '#ffffff', fontSize: ffs.name ?? 20, fontWeight: 900, margin: 0, lineHeight: 1.0 }}>{title || 'أحمد محمد'}</h1>
-          <p style={{ color: colors.accent, fontSize: ffs.jobTitle ?? 10, margin: 0 }}>{subtitle || 'مطور برمجيات'}</p>
+          <h1 style={{ color: '#ffffff', fontSize: (ffs.name ?? 20) + _d, fontWeight: 900, margin: 0, lineHeight: 1.0 }}>{title || 'أحمد محمد'}</h1>
+          <p style={{ color: colors.accent, fontSize: (ffs.jobTitle ?? 10) + _d, margin: 0 }}>{subtitle || 'مطور برمجيات'}</p>
           <div style={{ height: 1, background: `linear-gradient(to left, transparent, ${colors.accent}66)`, margin: '3px 0' }} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {[phone || '+966 50 000 0000', email || 'email@domain.com', website || 'website.com'].map((v,i) => (
-              <p key={i} style={{ color: 'rgba(255,255,255,0.6)', fontSize: ffs.contact ?? 8.5, margin: 0 }}>{v}</p>
+              <p key={i} style={{ color: 'rgba(255,255,255,0.6)', fontSize: (ffs.contact ?? 8.5) + _d, margin: 0 }}>{v}</p>
             ))}
           </div>
         </div>

@@ -4,6 +4,7 @@ interface Props { data: TemplateData; }
 export default function BusinessCardTemplate6({ data }: Props) {
   const { title, subtitle, phone, email, website, colors, image } = data;
   const ffs = data.fieldFontSizes ?? {};
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div id="template-preview" style={{
       width: 340, height: 220, position: 'relative', overflow: 'hidden',
@@ -18,8 +19,8 @@ export default function BusinessCardTemplate6({ data }: Props) {
       </svg>
 
       <div style={{ position: 'relative', zIndex: 2, padding: '14px 22px 0' }}>
-        <h1 style={{ color: '#ffffff', fontSize: ffs.name ?? 22, fontWeight: 900, margin: 0, lineHeight: 1.0 }}>{title || 'أحمد محمد'}</h1>
-        <p style={{ color: colors.accent, fontSize: ffs.jobTitle ?? 10, fontWeight: 700, margin: '3px 0 0', letterSpacing: 1 }}>{subtitle || 'مستشار قانوني'}</p>
+        <h1 style={{ color: '#ffffff', fontSize: (ffs.name ?? 22) + _d, fontWeight: 900, margin: 0, lineHeight: 1.0 }}>{title || 'أحمد محمد'}</h1>
+        <p style={{ color: colors.accent, fontSize: (ffs.jobTitle ?? 10) + _d, fontWeight: 700, margin: '3px 0 0', letterSpacing: 1 }}>{subtitle || 'مستشار قانوني'}</p>
       </div>
 
       <div style={{
@@ -50,19 +51,19 @@ export default function BusinessCardTemplate6({ data }: Props) {
           {phone && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
               <svg width="8" height="8" viewBox="0 0 8 8" fill={colors.primary}><rect x="1" y="1" width="6" height="6" rx="1"/></svg>
-              <span style={{ color: colors.secondary, fontSize: ffs.contact ?? 9, fontWeight: 600 }}>{phone}</span>
+              <span style={{ color: colors.secondary, fontSize: (ffs.contact ?? 9) + _d, fontWeight: 600 }}>{phone}</span>
             </div>
           )}
           {email && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
               <svg width="8" height="8" viewBox="0 0 8 8" fill={colors.accent}><rect x="1" y="2" width="6" height="4" rx="1"/><path d="M1 2.5l3 2 3-2" stroke="#fff" strokeWidth="0.7" fill="none"/></svg>
-              <span style={{ color: colors.secondary, fontSize: ffs.contact ?? 9, fontWeight: 600 }}>{email}</span>
+              <span style={{ color: colors.secondary, fontSize: (ffs.contact ?? 9) + _d, fontWeight: 600 }}>{email}</span>
             </div>
           )}
           {website && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
               <svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke={colors.primary} strokeWidth="0.8"><circle cx="4" cy="4" r="3"/><ellipse cx="4" cy="4" rx="1.5" ry="3"/><line x1="1" y1="4" x2="7" y2="4"/></svg>
-              <span style={{ color: colors.secondary, fontSize: ffs.contact ?? 9, fontWeight: 600 }}>{website}</span>
+              <span style={{ color: colors.secondary, fontSize: (ffs.contact ?? 9) + _d, fontWeight: 600 }}>{website}</span>
             </div>
           )}
         </div>

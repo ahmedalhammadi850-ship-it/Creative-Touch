@@ -2,6 +2,7 @@ import type { TemplateData } from '../../types/template';
 
 export default function Template10({ data }: { data: TemplateData }) {
   const ffs = data.fieldFontSizes ?? {};
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div id="template-preview" style={{ width: '340px', height: '220px', position: 'relative', overflow: 'hidden', fontFamily: "'Helvetica Neue', Arial, sans-serif", direction: 'rtl', backgroundColor: data.colors.bg, border: `1px solid ${data.colors.primary}22` }}>
       <div style={{ height: '6px', background: `linear-gradient(to left, ${data.colors.primary}, ${data.colors.accent})` }} />
@@ -19,21 +20,21 @@ export default function Template10({ data }: { data: TemplateData }) {
         <div>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
             <div>
-              <div style={{ color: data.colors.primary, fontSize: ffs.name ?? 22, fontWeight: '900', lineHeight: 1.1 }}>{data.title}</div>
-              <div style={{ color: data.colors.secondary, fontSize: ffs.jobTitle ?? 11, marginTop: '2px', opacity: 0.7 }}>{data.subtitle}</div>
+              <div style={{ color: data.colors.primary, fontSize: (ffs.name ?? 22) + _d, fontWeight: '900', lineHeight: 1.1 }}>{data.title}</div>
+              <div style={{ color: data.colors.secondary, fontSize: (ffs.jobTitle ?? 11) + _d, marginTop: '2px', opacity: 0.7 }}>{data.subtitle}</div>
             </div>
             <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: `linear-gradient(135deg, ${data.colors.primary}22, ${data.colors.accent}33)`, border: `2px solid ${data.colors.primary}44`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: data.colors.primary, opacity: 0.5 }} />
             </div>
           </div>
-          <div style={{ color: data.colors.primary, fontSize: ffs.company ?? 9, marginTop: '6px', fontWeight: '600', opacity: 0.75 }}>{data.description}</div>
+          <div style={{ color: data.colors.primary, fontSize: (ffs.company ?? 9) + _d, marginTop: '6px', fontWeight: '600', opacity: 0.75 }}>{data.description}</div>
         </div>
 
         <div style={{ borderTop: `1px solid ${data.colors.primary}22`, paddingTop: '10px' }}>
           <div style={{ display: 'flex', gap: '14px' }} dir="ltr">
-            {data.phone && <span style={{ color: data.colors.secondary, fontSize: ffs.contact ?? 9, opacity: 0.7 }}>{data.phone}</span>}
-            {data.email && <span style={{ color: data.colors.secondary, fontSize: ffs.contact ?? 9, opacity: 0.7 }}>{data.email}</span>}
-            {data.website && <span style={{ color: data.colors.secondary, fontSize: ffs.contact ?? 9, opacity: 0.7 }}>{data.website}</span>}
+            {data.phone && <span style={{ color: data.colors.secondary, fontSize: (ffs.contact ?? 9) + _d, opacity: 0.7 }}>{data.phone}</span>}
+            {data.email && <span style={{ color: data.colors.secondary, fontSize: (ffs.contact ?? 9) + _d, opacity: 0.7 }}>{data.email}</span>}
+            {data.website && <span style={{ color: data.colors.secondary, fontSize: (ffs.contact ?? 9) + _d, opacity: 0.7 }}>{data.website}</span>}
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template43({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div
       id="template-preview"
@@ -23,7 +24,7 @@ export default function Template43({ data }: { data: TemplateData }) {
       {/* Top row: subtle brand line */}
       <div className="flex items-center gap-3 z-10 w-full justify-center">
         <div className="flex-1 h-[1px] opacity-20" style={{ background: data.colors.accent }} />
-        <span className="text-[8px] font-bold tracking-[0.3em] uppercase opacity-50" style={{ color: data.colors.accent }}>
+        <span className="font-bold tracking-[0.3em] uppercase opacity-50" style={{ color: data.colors.accent, fontSize: 8 + _d }}>
           {data.website ? data.website.replace(/^(https?:\/\/)?(www\.)?/, '').split('/')[0] : 'business'}
         </span>
         <div className="flex-1 h-[1px] opacity-20" style={{ background: data.colors.accent }} />
@@ -34,10 +35,10 @@ export default function Template43({ data }: { data: TemplateData }) {
         {data.logo && (
           <img src={data.logo} alt="logo" className="w-16 h-16 object-contain rounded-2xl mb-1" style={{ boxShadow: `0 0 12px ${data.colors.primary}88` }} />
         )}
-        <h2 className="text-[18px] font-black tracking-wide text-center" style={{ color: '#ffffff' }}>
+        <h2 className="font-black tracking-wide text-center" style={{ color: '#ffffff', fontSize: 18 + _d }}>
           {data.description || 'شركة الإبداع التقني'}
         </h2>
-        <p className="text-[9px] font-semibold tracking-widest uppercase text-center" style={{ color: data.colors.accent }}>
+        <p className="font-semibold tracking-widest uppercase text-center" style={{ color: data.colors.accent, fontSize: 9 + _d }}>
           {data.subtitle || 'مدير تقني'}
         </p>
       </div>
@@ -45,13 +46,13 @@ export default function Template43({ data }: { data: TemplateData }) {
       {/* Bottom contact row */}
       <div className="flex items-center gap-4 z-10">
         {data.phone && (
-          <p dir="ltr" className="text-[8px] font-bold" style={{ color: '#ffffff88' }}>{data.phone}</p>
+          <p dir="ltr" className="font-bold" style={{ color: '#ffffff88', fontSize: 8 + _d }}>{data.phone}</p>
         )}
         {data.phone && data.website && (
           <div className="w-1 h-1 rounded-full" style={{ background: data.colors.accent }} />
         )}
         {data.website && (
-          <p dir="ltr" className="text-[8px] font-bold" style={{ color: data.colors.accent }}>{data.website}</p>
+          <p dir="ltr" className="font-bold" style={{ color: data.colors.accent, fontSize: 8 + _d }}>{data.website}</p>
         )}
       </div>
     </div>

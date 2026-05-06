@@ -2,6 +2,7 @@ import type { TemplateData } from '../../types/template';
 
 export default function Template20({ data }: { data: TemplateData }) {
   const ffs = data.fieldFontSizes ?? {};
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div
       id="template-preview"
@@ -17,7 +18,7 @@ export default function Template20({ data }: { data: TemplateData }) {
 
       <div className="relative z-10 flex flex-col justify-between p-5 w-[55%] border-r border-white/10">
         <div>
-          <p className="tracking-[0.2em] uppercase mb-1" style={{ color: data.colors.accent, fontSize: ffs.company ?? 8 }}>
+          <p className="tracking-[0.2em] uppercase mb-1" style={{ color: data.colors.accent, fontSize: (ffs.company ?? 8) + _d }}>
             {data.description || 'COMPANY NAME'}
           </p>
           <div className="w-8 h-px" style={{ backgroundColor: data.colors.accent }} />
@@ -26,10 +27,10 @@ export default function Template20({ data }: { data: TemplateData }) {
 
       <div className="relative z-10 flex flex-col justify-between p-5 w-[45%]">
         <div>
-          <h2 className="font-bold tracking-wide leading-tight" style={{ color: '#ffffff', fontSize: ffs.name ?? 14 }}>
+          <h2 className="font-bold tracking-wide leading-tight" style={{ color: '#ffffff', fontSize: (ffs.name ?? 14) + _d }}>
             {data.title}
           </h2>
-          <p className="mt-0.5 tracking-wider uppercase" style={{ color: data.colors.accent, fontSize: ffs.jobTitle ?? 9 }}>
+          <p className="mt-0.5 tracking-wider uppercase" style={{ color: data.colors.accent, fontSize: (ffs.jobTitle ?? 9) + _d }}>
             {data.subtitle}
           </p>
         </div>
@@ -38,19 +39,19 @@ export default function Template20({ data }: { data: TemplateData }) {
           {data.phone && (
             <div className="flex items-center gap-1.5">
               <div className="w-1 h-1 rounded-full" style={{ backgroundColor: data.colors.accent }} />
-              <p dir="ltr" style={{ color: 'rgba(255,255,255,0.7)', fontSize: ffs.contact ?? 8 }}>{data.phone}</p>
+              <p dir="ltr" style={{ color: 'rgba(255,255,255,0.7)', fontSize: (ffs.contact ?? 8) + _d }}>{data.phone}</p>
             </div>
           )}
           {data.email && (
             <div className="flex items-center gap-1.5">
               <div className="w-1 h-1 rounded-full" style={{ backgroundColor: data.colors.accent }} />
-              <p dir="ltr" style={{ color: 'rgba(255,255,255,0.7)', fontSize: ffs.contact ?? 8 }}>{data.email}</p>
+              <p dir="ltr" style={{ color: 'rgba(255,255,255,0.7)', fontSize: (ffs.contact ?? 8) + _d }}>{data.email}</p>
             </div>
           )}
           {data.website && (
             <div className="flex items-center gap-1.5">
               <div className="w-1 h-1 rounded-full" style={{ backgroundColor: data.colors.accent }} />
-              <p dir="ltr" style={{ color: 'rgba(255,255,255,0.7)', fontSize: ffs.contact ?? 8 }}>{data.website}</p>
+              <p dir="ltr" style={{ color: 'rgba(255,255,255,0.7)', fontSize: (ffs.contact ?? 8) + _d }}>{data.website}</p>
             </div>
           )}
         </div>

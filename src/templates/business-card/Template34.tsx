@@ -22,6 +22,7 @@ function LogoLayer({ data }: { data: TemplateData }) {
 }
 
 export default function Template34({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div
       id="template-preview"
@@ -35,11 +36,11 @@ export default function Template34({ data }: { data: TemplateData }) {
           <path d="M80,0 L130,0 L130,220 L55,220 Z" fill={data.colors.primary} opacity="0.35" />
         </svg>
         <div className="relative z-10">
-          <p className="text-[10px] font-bold tracking-widest uppercase text-white leading-tight">{data.description?.split(',')[0] || 'الشركة'}</p>
+          <p className="font-bold tracking-widest uppercase text-white leading-tight" style={{ fontSize: 10 + _d }}>{data.description?.split(',')[0] || 'الشركة'}</p>
           <div className="mt-1.5 w-8 h-0.5 rounded bg-white opacity-50" />
         </div>
         <div className="relative z-10">
-          <p className="text-[7px] text-white/60 leading-relaxed">{data.subtitle}</p>
+          <p className="text-white/60 leading-relaxed" style={{ fontSize: 7 + _d }}>{data.subtitle}</p>
         </div>
         {/* Bottom accent triangles */}
         <svg className="absolute bottom-0 left-0 w-full" viewBox="0 0 130 40" preserveAspectRatio="none" style={{ height: 40 }}>
@@ -51,27 +52,27 @@ export default function Template34({ data }: { data: TemplateData }) {
       {/* White right panel — all text on white = max contrast */}
       <div className="flex-1 flex flex-col justify-between p-4 pl-5">
         <div>
-          <h2 className="text-[17px] font-extrabold leading-tight" style={{ color: '#111111' }}>{data.title}</h2>
-          <p className="text-[9px] font-semibold mt-1 uppercase tracking-wider" style={{ color: data.colors.primary }}>{data.subtitle}</p>
+          <h2 className="font-extrabold leading-tight" style={{ color: '#111111', fontSize: 17 + _d }}>{data.title}</h2>
+          <p className="font-semibold mt-1 uppercase tracking-wider" style={{ color: data.colors.primary, fontSize: 9 + _d }}>{data.subtitle}</p>
           <div className="mt-2 w-8 h-0.5 rounded" style={{ backgroundColor: data.colors.accent }} />
         </div>
         <div className="flex flex-col gap-1.5">
           {data.phone && (
             <div className="flex items-center gap-2">
               <div className="w-3.5 h-3.5 rounded-full flex-shrink-0" style={{ backgroundColor: data.colors.accent }} />
-              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#222' }}>{data.phone}</p>
+              <p dir="ltr" className="font-medium" style={{ color: '#222', fontSize: 8.5 + _d }}>{data.phone}</p>
             </div>
           )}
           {data.email && (
             <div className="flex items-center gap-2">
               <div className="w-3.5 h-3.5 rounded-full flex-shrink-0" style={{ backgroundColor: data.colors.accent }} />
-              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#222' }}>{data.email}</p>
+              <p dir="ltr" className="font-medium" style={{ color: '#222', fontSize: 8.5 + _d }}>{data.email}</p>
             </div>
           )}
           {data.website && (
             <div className="flex items-center gap-2">
               <div className="w-3.5 h-3.5 rounded-full flex-shrink-0" style={{ backgroundColor: data.colors.accent }} />
-              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#222' }}>{data.website}</p>
+              <p dir="ltr" className="font-medium" style={{ color: '#222', fontSize: 8.5 + _d }}>{data.website}</p>
             </div>
           )}
         </div>

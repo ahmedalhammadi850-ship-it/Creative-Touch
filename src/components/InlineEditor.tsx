@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Upload, X, ImagePlus, Plus, Lock, Send, Minus, RotateCcw } from 'lucide-react';
+import { Upload, X, ImagePlus, Lock, Send, RotateCcw } from 'lucide-react';
 import type { TemplateData } from '../types/template';
 
 const DEFAULT_FS = 16;
@@ -12,60 +12,99 @@ const MAX_FS = 36;
 
 function FontSizeControl({ fontSize, onChange }: { fontSize: number; onChange: (v: number) => void }) {
   const isDefault = fontSize === DEFAULT_FS;
-  const btn = (active: boolean): React.CSSProperties => ({
-    width: 36, height: 36, borderRadius: 10,
-    border: '1.5px solid #e2e8f0',
-    background: active ? '#fff' : '#f1f5f9',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    cursor: active ? 'pointer' : 'not-allowed',
-    color: active ? '#374151' : '#cbd5e1',
-    flexShrink: 0,
-  });
+  const delta = fontSize - DEFAULT_FS;
+  const canDecrease = fontSize > MIN_FS;
+  const canIncrease = fontSize < MAX_FS;
+
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <h3 className="text-lg font-bold">حجم الخط</h3>
+
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <button style={btn(fontSize > MIN_FS)} disabled={fontSize <= MIN_FS}
-          onClick={() => onChange(Math.max(MIN_FS, fontSize - 1))}>
-          <Minus size={14} />
+
+        {/* A- button */}
+        <button
+          disabled={!canDecrease}
+          onClick={() => onChange(Math.max(MIN_FS, fontSize - 1))}
+          style={{
+            height: 40, padding: '0 14px', borderRadius: 10, flexShrink: 0,
+            border: '1.5px solid #e2e8f0',
+            background: canDecrease ? 'linear-gradient(135deg,#fff,#f1f5f9)' : '#f8fafc',
+            cursor: canDecrease ? 'pointer' : 'not-allowed',
+            color: canDecrease ? '#374151' : '#cbd5e1',
+            display: 'flex', alignItems: 'center', gap: 2,
+            fontFamily: "'Cairo', sans-serif",
+            boxShadow: canDecrease ? '0 1px 4px rgba(0,0,0,0.08)' : 'none',
+            transition: 'all 0.15s',
+          }}
+        >
+          <span style={{ fontSize: 13, fontWeight: 900, letterSpacing: '-0.5px' }}>A</span>
+          <span style={{ fontSize: 10, fontWeight: 900, marginTop: 4 }}>−</span>
         </button>
+
+        {/* Size indicator */}
         <div style={{
-          flex: 1, height: 36, borderRadius: 10,
+          flex: 1, height: 40, borderRadius: 10,
           border: '1.5px solid #e2e8f0', background: '#f8f7ff',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
         }}>
-          <input
-            type="number" min={MIN_FS} max={MAX_FS} value={fontSize}
-            onChange={e => {
-              const v = parseInt(e.target.value, 10);
-              if (!isNaN(v)) onChange(Math.min(MAX_FS, Math.max(MIN_FS, v)));
-            }}
-            style={{
-              width: 38, background: 'transparent', border: 'none', outline: 'none',
-              textAlign: 'center', fontFamily: "'Cairo', sans-serif",
-              fontWeight: 700, fontSize: 15, color: '#3730a3',
-            }}
-          />
-          <span style={{ color: '#6366f1', fontSize: 12, fontWeight: 600 }}>px</span>
+          <span style={{ fontFamily: "'Cairo', sans-serif", fontWeight: 900, fontSize: 15, color: '#3730a3' }}>
+            {fontSize}
+          </span>
+          <span style={{ color: '#6366f1', fontSize: 11, fontWeight: 600 }}>px</span>
+          {delta !== 0 && (
+            <span style={{
+              fontSize: 10, fontWeight: 700,
+              color: delta > 0 ? '#059669' : '#dc2626',
+              background: delta > 0 ? '#ecfdf5' : '#fef2f2',
+              border: `1px solid ${delta > 0 ? '#bbf7d0' : '#fecaca'}`,
+              borderRadius: 6, padding: '1px 5px',
+            }}>
+              {delta > 0 ? `+${delta}` : delta}
+            </span>
+          )}
         </div>
-        <button style={btn(fontSize < MAX_FS)} disabled={fontSize >= MAX_FS}
-          onClick={() => onChange(Math.min(MAX_FS, fontSize + 1))}>
-          <Plus size={14} />
+
+        {/* A+ button */}
+        <button
+          disabled={!canIncrease}
+          onClick={() => onChange(Math.min(MAX_FS, fontSize + 1))}
+          style={{
+            height: 40, padding: '0 14px', borderRadius: 10, flexShrink: 0,
+            border: '1.5px solid #c7d2fe',
+            background: canIncrease ? 'linear-gradient(135deg,#6366f1,#818cf8)' : '#f8fafc',
+            cursor: canIncrease ? 'pointer' : 'not-allowed',
+            color: canIncrease ? '#fff' : '#cbd5e1',
+            display: 'flex', alignItems: 'center', gap: 2,
+            fontFamily: "'Cairo', sans-serif",
+            boxShadow: canIncrease ? '0 2px 8px rgba(99,102,241,0.35)' : 'none',
+            transition: 'all 0.15s',
+          }}
+        >
+          <span style={{ fontSize: 16, fontWeight: 900, letterSpacing: '-0.5px' }}>A</span>
+          <span style={{ fontSize: 11, fontWeight: 900, marginTop: -4 }}>+</span>
         </button>
+
+        {/* Reset button */}
         {!isDefault && (
-          <button onClick={() => onChange(DEFAULT_FS)} title="إعادة للافتراضي"
+          <button
+            onClick={() => onChange(DEFAULT_FS)}
+            title="إعادة للافتراضي"
             style={{
-              width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+              width: 40, height: 40, borderRadius: 10, flexShrink: 0,
               border: '1.5px solid #fecaca', background: '#fef2f2',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               cursor: 'pointer', color: '#dc2626',
-            }}>
+              boxShadow: '0 1px 4px rgba(220,38,38,0.12)',
+            }}
+          >
             <RotateCcw size={13} />
           </button>
         )}
       </div>
+
       <p style={{ color: '#94a3b8', fontSize: 12, margin: 0, fontFamily: "'Cairo', sans-serif" }}>
-        افتراضي {DEFAULT_FS}px — يغيّر الخط فقط بدون تأثير على حجم الكارت
+        الحجم الافتراضي {DEFAULT_FS}px — يؤثر على جميع نصوص البطاقة
       </p>
     </div>
   );

@@ -22,6 +22,7 @@ function LogoLayer({ data }: { data: TemplateData }) {
 }
 
 export default function Template36({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div
       id="template-preview"
@@ -31,10 +32,10 @@ export default function Template36({ data }: { data: TemplateData }) {
       {/* Dark header band */}
       <div className="h-[75px] flex items-center px-5" style={{ backgroundColor: data.colors.secondary }}>
         <div className="flex flex-col">
-          <span className="text-[16px] font-extrabold tracking-wide text-white leading-tight">
+          <span className="font-extrabold tracking-wide text-white leading-tight" style={{ fontSize: 16 + _d }}>
             {data.description?.split(',')[0] || data.title}
           </span>
-          <span className="text-[8px] tracking-[0.2em] text-white/55 mt-0.5 uppercase">
+          <span className="tracking-[0.2em] text-white/55 mt-0.5 uppercase" style={{ fontSize: 8 + _d }}>
             {data.subtitle}
           </span>
         </div>
@@ -50,8 +51,8 @@ export default function Template36({ data }: { data: TemplateData }) {
       {/* Content on light background — dark text for max contrast */}
       <div className="flex-1 flex flex-row items-center px-5 gap-4">
         <div className="flex-1 border-r-2 pr-4" style={{ borderColor: data.colors.accent }}>
-          <h2 className="text-[15px] font-extrabold" style={{ color: '#111111' }}>{data.title}</h2>
-          <p className="text-[9px] mt-0.5 font-semibold tracking-wide" style={{ color: data.colors.accent }}>{data.subtitle}</p>
+          <h2 className="font-extrabold" style={{ color: '#111111', fontSize: 15 + _d }}>{data.title}</h2>
+          <p className="mt-0.5 font-semibold tracking-wide" style={{ color: data.colors.accent, fontSize: 9 + _d }}>{data.subtitle}</p>
         </div>
         <div className="flex flex-col gap-2">
           {data.phone && (
@@ -59,7 +60,7 @@ export default function Template36({ data }: { data: TemplateData }) {
               <div className="w-4 h-4 rounded flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.accent }}>
                 <div className="w-1.5 h-1.5 bg-white rounded-full" />
               </div>
-              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#1a1a1a' }}>{data.phone}</p>
+              <p dir="ltr" className="font-medium" style={{ color: '#1a1a1a', fontSize: 8.5 + _d }}>{data.phone}</p>
             </div>
           )}
           {data.email && (
@@ -67,7 +68,7 @@ export default function Template36({ data }: { data: TemplateData }) {
               <div className="w-4 h-4 rounded flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.accent }}>
                 <div className="w-1.5 h-1.5 bg-white rounded-full" />
               </div>
-              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#1a1a1a' }}>{data.email}</p>
+              <p dir="ltr" className="font-medium" style={{ color: '#1a1a1a', fontSize: 8.5 + _d }}>{data.email}</p>
             </div>
           )}
           {data.website && (
@@ -75,7 +76,7 @@ export default function Template36({ data }: { data: TemplateData }) {
               <div className="w-4 h-4 rounded flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.accent }}>
                 <div className="w-1.5 h-1.5 bg-white rounded-full" />
               </div>
-              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#1a1a1a' }}>{data.website}</p>
+              <p dir="ltr" className="font-medium" style={{ color: '#1a1a1a', fontSize: 8.5 + _d }}>{data.website}</p>
             </div>
           )}
         </div>

@@ -22,6 +22,7 @@ function LogoLayer({ data }: { data: TemplateData }) {
 }
 
 export default function Template37({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 16) - 16;
   return (
     <div
       id="template-preview"
@@ -37,8 +38,7 @@ export default function Template37({ data }: { data: TemplateData }) {
         {/* Tagline text vertical on colored band — white on color = clear */}
         <div className="relative z-10 h-full flex items-center justify-center">
           <p
-            className="text-[7px] font-bold tracking-[0.25em] uppercase text-white"
-            style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg)' }}
+            className="font-bold tracking-[0.25em] uppercase text-white" style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg)', fontSize: 7 + _d }}
           >
             {data.description?.split(',')[0] || data.subtitle}
           </p>
@@ -48,8 +48,8 @@ export default function Template37({ data }: { data: TemplateData }) {
       {/* White right panel — dark text for max contrast */}
       <div className="relative z-10 flex-1 flex flex-col justify-between py-5 px-5">
         <div>
-          <h2 className="text-[18px] font-extrabold leading-tight" style={{ color: '#111111' }}>{data.title}</h2>
-          <p className="text-[9px] font-semibold tracking-wider mt-1 uppercase" style={{ color: data.colors.primary }}>{data.subtitle}</p>
+          <h2 className="font-extrabold leading-tight" style={{ color: '#111111', fontSize: 18 + _d }}>{data.title}</h2>
+          <p className="font-semibold tracking-wider mt-1 uppercase" style={{ color: data.colors.primary, fontSize: 9 + _d }}>{data.subtitle}</p>
           <div className="mt-2 w-10 h-[2.5px] rounded" style={{ backgroundColor: data.colors.accent }} />
         </div>
         <div className="flex flex-col gap-2">
@@ -58,7 +58,7 @@ export default function Template37({ data }: { data: TemplateData }) {
               <div className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.primary }}>
                 <div className="w-1.5 h-1.5 bg-white rounded-full" />
               </div>
-              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#1a1a1a' }}>{data.phone}</p>
+              <p dir="ltr" className="font-medium" style={{ color: '#1a1a1a', fontSize: 8.5 + _d }}>{data.phone}</p>
             </div>
           )}
           {data.email && (
@@ -66,7 +66,7 @@ export default function Template37({ data }: { data: TemplateData }) {
               <div className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.primary }}>
                 <div className="w-1.5 h-1.5 bg-white rounded-full" />
               </div>
-              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#1a1a1a' }}>{data.email}</p>
+              <p dir="ltr" className="font-medium" style={{ color: '#1a1a1a', fontSize: 8.5 + _d }}>{data.email}</p>
             </div>
           )}
           {data.website && (
@@ -74,7 +74,7 @@ export default function Template37({ data }: { data: TemplateData }) {
               <div className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: data.colors.primary }}>
                 <div className="w-1.5 h-1.5 bg-white rounded-full" />
               </div>
-              <p dir="ltr" className="text-[8.5px] font-medium" style={{ color: '#1a1a1a' }}>{data.website}</p>
+              <p dir="ltr" className="font-medium" style={{ color: '#1a1a1a', fontSize: 8.5 + _d }}>{data.website}</p>
             </div>
           )}
         </div>
