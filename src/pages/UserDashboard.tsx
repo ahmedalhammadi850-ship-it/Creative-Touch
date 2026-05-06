@@ -9,12 +9,12 @@ import {
 } from 'lucide-react';
 
 const ALL_CATEGORIES = [
-  { id: 'congrats',      name: 'بطاقات التهنئة',  desc: 'بطاقات للأفراح والمناسبات',       emoji: '🎊', color: '#f59e0b', bg: '#fffbeb', border: '#fde68a', count: 23 },
-  { id: 'wedding',       name: 'دعوات الزفاف',    desc: 'دعوات زفاف أنيقة وكلاسيكية',      emoji: '💍', color: '#d946ef', bg: '#fdf4ff', border: '#f0abfc', count: 14 },
-  { id: 'business-card', name: 'بطاقات الأعمال',  desc: 'بطاقات احترافية لهويتك المهنية',   emoji: '🪪', color: '#6366f1', bg: '#eef2ff', border: '#c7d2fe', count: 11 },
-  { id: 'mass-wedding',  name: 'عرس جماعي',       desc: 'دعوات عرس جماعي مع صور العرسان',  emoji: '👰', color: '#ec4899', bg: '#fdf2f8', border: '#f9a8d4', count: 8  },
-  { id: 'ads',           name: 'إعلانات التواصل', desc: 'تصاميم جذابة لحملاتك الإعلانية',   emoji: '📣', color: '#ef4444', bg: '#fef2f2', border: '#fecaca', count: 7  },
-  { id: 'specialized',   name: 'عيادات ومراكز',   desc: 'قوالب للعيادات والمراكز التعليمية', emoji: '🏥', color: '#10b981', bg: '#ecfdf5', border: '#a7f3d0', count: 7  },
+  { id: 'congrats',      name: 'بطاقات التهنئة',  desc: 'بطاقات للأفراح والمناسبات',       emoji: '🎊', color: '#f59e0b', bg: '#fffbeb', border: '#fde68a', count: 29 },
+  { id: 'wedding',       name: 'دعوات الزفاف',    desc: 'دعوات زفاف أنيقة وكلاسيكية',      emoji: '💍', color: '#d946ef', bg: '#fdf4ff', border: '#f0abfc', count: 32 },
+  { id: 'business-card', name: 'بطاقات الأعمال',  desc: 'بطاقات احترافية لهويتك المهنية',   emoji: '🪪', color: '#6366f1', bg: '#eef2ff', border: '#c7d2fe', count: 34 },
+  { id: 'mass-wedding',  name: 'عرس جماعي',       desc: 'دعوات عرس جماعي مع صور العرسان',  emoji: '👰', color: '#ec4899', bg: '#fdf2f8', border: '#f9a8d4', count: 13 },
+  { id: 'ads',           name: 'إعلانات التواصل', desc: 'تصاميم جذابة لحملاتك الإعلانية',   emoji: '📣', color: '#ef4444', bg: '#fef2f2', border: '#fecaca', count: 12 },
+  { id: 'specialized',   name: 'عيادات ومراكز',   desc: 'قوالب للعيادات والمراكز التعليمية', emoji: '🏥', color: '#10b981', bg: '#ecfdf5', border: '#a7f3d0', count: 24 },
 ];
 
 const PLAN_LABELS: Record<string, string> = {
