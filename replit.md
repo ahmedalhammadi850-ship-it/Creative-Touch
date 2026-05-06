@@ -26,9 +26,11 @@
 
 ## Architecture decisions
 
-- **Pure frontend / no backend**: all auth, pricing, and requests stored in localStorage via Zustand persist
-- **Admin credentials hardcoded**: username=`احمد`, password=`123456789`; session persists via `admin-auth` key
-- **Password reset**: generates 6-digit code shown on screen (no email service); valid 15 min in-memory
+- **Pure frontend / no backend**: pricing and requests stored in localStorage via Zustand persist
+- **Auth**: Firebase Auth for register/login/email-verification/password-reset; user plan data kept in `useAuthStore` (zustand persist)
+- **Email verification required**: new accounts must verify email before logging in; `sendEmailVerification` called on register
+- **Password reset**: Firebase `sendPasswordResetEmail` sends real email link
+- **Admin credentials hardcoded**: username=`احمد`, password=`123456789`; session persists via `admin-auth` key (separate from Firebase)
 - **Payment requests**: saved to `useRequestStore` + sent to n8n webhook (non-blocking); admin approves/rejects in dashboard
 - **Pricing**: `usePricingStore` drives both HomePage pricing section and AdminDashboard editor; reset-to-default available
 
