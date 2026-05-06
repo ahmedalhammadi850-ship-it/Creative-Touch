@@ -7,17 +7,16 @@ export default function Template43({ data }: { data: TemplateData }) {
       className="relative overflow-hidden w-[340px] h-[220px] flex flex-col items-center justify-between py-5 px-8"
       style={{ backgroundColor: '#0a0a0a', fontFamily: 'Cairo, sans-serif' }}
     >
-      {/* Glowing bg orb */}
+      {/* Glowing bg orb — using radial-gradient (compatible with html2canvas) */}
       <div
         className="absolute rounded-full pointer-events-none"
         style={{
-          width: 220,
-          height: 220,
+          width: 280,
+          height: 280,
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          background: `radial-gradient(circle, ${data.colors.primary}44 0%, transparent 70%)`,
-          filter: 'blur(30px)',
+          background: `radial-gradient(circle, ${data.colors.primary}55 0%, ${data.colors.primary}22 40%, transparent 70%)`,
         }}
       />
 
@@ -33,7 +32,7 @@ export default function Template43({ data }: { data: TemplateData }) {
       {/* Center: logo + name */}
       <div className="flex flex-col items-center gap-2 z-10">
         {data.logo ? (
-          <img src={data.logo} alt="logo" className="w-16 h-16 object-contain rounded-2xl mb-1" style={{ filter: 'drop-shadow(0 0 12px ' + data.colors.primary + '88)' }} />
+          <img src={data.logo} alt="logo" className="w-16 h-16 object-contain rounded-2xl mb-1" style={{ boxShadow: `0 0 12px ${data.colors.primary}88` }} />
         ) : (
           <div
             className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl font-black mb-1"
