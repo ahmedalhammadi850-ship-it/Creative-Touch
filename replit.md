@@ -1,58 +1,54 @@
 # Template Studio
 
-A web-based application for creating and customizing graphic templates including business cards, advertisements, wedding invitations, mass-wedding invitations, and congratulations cards.
+تطبيق ويب عربي لإنشاء وتخصيص قوالب جرافيك: بطاقات أعمال، إعلانات، دعوات زفاف، بطاقات تهنئة.
 
-## Tech Stack
+## Run & Operate
 
-- **Frontend:** React 18 + TypeScript
-- **Build Tool:** Vite 5
-- **Styling:** Tailwind CSS + Radix UI (shadcn/ui)
-- **State Management:** Zustand (with localStorage persistence)
-- **Routing:** Wouter
-- **Data Fetching:** TanStack Query
-- **Icons:** Lucide React, React Icons
-- **Animation:** Framer Motion
-- **Export:** html2canvas (PNG export)
-- **Package Manager:** npm
+- Dev: `npm run dev` (port 5000)
+- Build: `npm run build` → `dist/public`
+- No env vars required (all state in localStorage)
 
-## Project Structure
+## Stack
 
-- `src/pages/` — High-level page components (HomePage, CategoryPage, EditorPage)
-- `src/components/` — UI components including InlineEditor and TemplateRenderer
-- `src/templates/` — Template designs organized by category:
-  - `mass-wedding/` — Templates 1–8 (multi-photo grid with placeholder behavior)
-  - `business-card/` — Templates 1–11
-  - `ads/` — Templates 1–7
-  - `wedding/` — Templates 1–14 (includes both single-invite and mass-wedding list styles)
-  - `specialized/` — Templates 1–7
-  - `congrats/` — Templates 1–23
-- `src/store/` — Zustand store for template state
-- `src/hooks/` — Custom hooks (useExport, useAuth)
-- `src/lib/` — Utility functions
-- `src/types/` — TypeScript types
-- `src/data/categories.ts` — Category + template registry (defaultData per template)
-- `src/components/TemplateRenderer.tsx` — Lazy-loads templates by category/id key
+- React 18 + TypeScript, Vite 5
+- Tailwind CSS + Radix UI (shadcn/ui)
+- Zustand (localStorage persist) — all state
+- Wouter routing, TanStack Query, Lucide React
+- html2canvas (PNG export), Framer Motion
 
-## Template Registration
+## Where things live
 
-When adding a new template:
-1. Create `src/templates/{category}/Template{N}.tsx`
-2. Add a lazy import entry in `TemplateRenderer.tsx`
-3. Add a `{ id, name, defaultData }` entry in the correct category array in `categories.ts`
+- `src/pages/` — HomePage, CategoryPage, EditorPage, AboutPage, LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, AdminLoginPage, AdminDashboard
+- `src/components/` — InlineEditor, TemplateRenderer, PaymentRequestModal
+- `src/store/` — useTemplateStore, useAuthStore, useAdminStore, usePricingStore, useRequestStore
+- `src/templates/{category}/` — Template components (congrats 1–23, wedding 1–14, business-card 1–11, ads 1–7, mass-wedding 1–8, specialized 1–7)
+- `src/data/categories.ts` — category + template registry (source of truth)
 
-## Mass-Wedding Photo Behavior
+## Architecture decisions
 
-Templates 1–8 follow this photo grid rule:
-- **No photos uploaded** → Show all 6 decorative placeholder frames (dashed border, subtle fill, small inner shape — no person icon)
-- **Any photos uploaded** → Show only slots that have a real photo; empty slots are hidden entirely
+- **Pure frontend / no backend**: all auth, pricing, and requests stored in localStorage via Zustand persist
+- **Admin credentials hardcoded**: username=`احمد`, password=`123456789`; session persists via `admin-auth` key
+- **Password reset**: generates 6-digit code shown on screen (no email service); valid 15 min in-memory
+- **Payment requests**: saved to `useRequestStore` + sent to n8n webhook (non-blocking); admin approves/rejects in dashboard
+- **Pricing**: `usePricingStore` drives both HomePage pricing section and AdminDashboard editor; reset-to-default available
 
-## Development
+## Product
 
-- Dev server runs on port 5000 at `0.0.0.0`
-- `allowedHosts: true` in Vite config for Replit proxy compatibility
+- Browse template categories → open editor → customize text/images/colors → export PNG
+- **Free tier**: 2 editable fields (title + subtitle); rest locked behind payment
+- **Auth**: register, login, forgot/reset password (all localStorage)
+- **Payment flow**: user uploads receipt image → saved to request store → admin approves → plan activated
+- **Subscription flow**: user picks a plan → fills name+phone → request saved → admin approves
+- **Admin dashboard** (`/admin`): manage pricing plans, approve/reject activation & subscription requests, view users
 
-## Deployment
+## User preferences
 
-- Deployment type: **static**
-- Build command: `npm run build`
-- Output directory: `dist/public`
+- All UI in Arabic (RTL), font Cairo
+- Admin login at `/admin/login` — credentials: احمد / 123456789
+- n8n webhook: `https://ahmedaaasss.app.n8n.cloud/webhook-test/060b55ea-bd8e-4d32-9968-d37bff3b7be5`
+
+## Gotchas
+
+- Template registration requires 3 steps: create file, add lazy import in TemplateRenderer, add entry in categories.ts
+- Mass-wedding photo grid: no photos → show all placeholder frames; any photo uploaded → hide empty slots
+- `allowedHosts: true` in vite.config.ts required for Replit proxy
