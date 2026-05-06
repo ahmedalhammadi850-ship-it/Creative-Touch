@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { useAuthStore } from '../store/useAuthStore';
-import { Eye, EyeOff, UserPlus, LayoutTemplate, Mail, RefreshCw } from 'lucide-react';
+import { Eye, EyeOff, UserPlus, LayoutTemplate, Mail, RefreshCw, CheckCircle } from 'lucide-react';
 import {
   auth,
   createUserWithEmailAndPassword,
@@ -13,7 +13,7 @@ import {
 
 export default function RegisterPage() {
   const [, setLocation] = useLocation();
-  const { addUser } = useAuthStore();
+  const { addUser, setCurrentUser, getUserByEmail } = useAuthStore();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,6 +24,8 @@ export default function RegisterPage() {
   const [verificationSent, setVerificationSent] = useState(false);
   const [resending, setResending] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
+  const [checking, setChecking] = useState(false);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const startCooldown = () => {
     setResendCooldown(60);
@@ -34,6 +36,42 @@ export default function RegisterPage() {
       });
     }, 1000);
   };
+
+  const startPolling = () => {
+    if (pollRef.current) clearInterval(pollRef.current);
+    pollRef.current = setInterval(async () => {
+      try {
+        const user = auth.currentUser;
+        if (!user) return;
+        await user.reload();
+        if (user.emailVerified) {
+          if (pollRef.current) clearInterval(pollRef.current);
+          const localUser = getUserByEmail(user.email || '');
+          if (localUser) {
+            setCurrentUser(localUser);
+          } else {
+            setCurrentUser({
+              id: user.uid,
+              name: user.displayName || user.email?.split('@')[0] || '',
+              email: (user.email || '').toLowerCase(),
+              plan: 'free',
+              planStatus: null,
+              createdAt: new Date().toISOString(),
+            });
+          }
+          await signOut(auth);
+          setLocation('/dashboard');
+        }
+      } catch {
+      }
+    }, 3000);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,9 +92,9 @@ export default function RegisterPage() {
         planStatus: null,
         createdAt: new Date().toISOString(),
       });
-      await signOut(auth);
       setVerificationSent(true);
       startCooldown();
+      startPolling();
     } catch (err: unknown) {
       const code = (err as { code?: string }).code || '';
       setError(getFirebaseErrorMessage(code));
@@ -69,20 +107,47 @@ export default function RegisterPage() {
     if (resendCooldown > 0) return;
     setResending(true);
     try {
-      const credential = await createUserWithEmailAndPassword(auth, email.trim(), password).catch(() => null);
-      if (credential) {
-        await sendEmailVerification(credential.user);
-        await signOut(auth);
-      } else {
-        const { signInWithEmailAndPassword } = await import('../lib/firebase');
-        const cred = await signInWithEmailAndPassword(auth, email.trim(), password);
-        if (!cred.user.emailVerified) await sendEmailVerification(cred.user);
-        await signOut(auth);
+      const user = auth.currentUser;
+      if (user && !user.emailVerified) {
+        await sendEmailVerification(user);
+        startCooldown();
       }
-      startCooldown();
     } catch {
     } finally {
       setResending(false);
+    }
+  };
+
+  const handleManualCheck = async () => {
+    setChecking(true);
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+      await user.reload();
+      if (user.emailVerified) {
+        if (pollRef.current) clearInterval(pollRef.current);
+        const localUser = getUserByEmail(user.email || '');
+        if (localUser) {
+          setCurrentUser(localUser);
+        } else {
+          setCurrentUser({
+            id: user.uid,
+            name: user.displayName || user.email?.split('@')[0] || '',
+            email: (user.email || '').toLowerCase(),
+            plan: 'free',
+            planStatus: null,
+            createdAt: new Date().toISOString(),
+          });
+        }
+        await signOut(auth);
+        setLocation('/dashboard');
+      } else {
+        setError('لم يتم التحقق من البريد الإلكتروني بعد. يرجى التحقق من بريدك والمحاولة مجدداً.');
+      }
+    } catch {
+      setError('حدث خطأ أثناء التحقق. يرجى المحاولة مرة أخرى.');
+    } finally {
+      setChecking(false);
     }
   };
 
@@ -104,17 +169,31 @@ export default function RegisterPage() {
             <p style={{ color: '#64748b', fontSize: 14, lineHeight: 1.8, margin: '0 0 8px' }}>
               أرسلنا رسالة تحقق إلى
             </p>
-            <p style={{ color: '#6366f1', fontSize: 15, fontWeight: 800, margin: '0 0 20px', direction: 'ltr' }}>{email}</p>
-            <p style={{ color: '#64748b', fontSize: 13, lineHeight: 1.8, margin: '0 0 28px' }}>
-              افتح بريدك الإلكتروني وانقر على رابط التحقق، ثم قم بتسجيل الدخول.
-              <br />
-              <span style={{ color: '#94a3b8', fontSize: 12 }}>تأكد من مراجعة مجلد Spam إذا لم تجد الرسالة.</span>
+            <p style={{ color: '#6366f1', fontSize: 15, fontWeight: 800, margin: '0 0 8px', direction: 'ltr' }}>{email}</p>
+            <p style={{ color: '#64748b', fontSize: 13, lineHeight: 1.8, margin: '0 0 4px' }}>
+              انقر على رابط التحقق في بريدك وسيتم توجيهك للداشبورد تلقائياً.
+            </p>
+            <p style={{ color: '#94a3b8', fontSize: 12, margin: '0 0 28px' }}>
+              نراقب البريد تلقائياً... تأكد من مراجعة مجلد Spam إذا لم تجد الرسالة.
             </p>
 
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 20, color: '#6366f1', fontSize: 13, fontWeight: 600 }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#6366f1', display: 'inline-block', animation: 'pulse 1.5s infinite' }} />
+              جاري المراقبة التلقائية...
+            </div>
+
+            {error && (
+              <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '10px 14px', color: '#dc2626', fontSize: 13, fontWeight: 600, marginBottom: 16 }}>
+                {error}
+              </div>
+            )}
+
             <button
-              onClick={() => setLocation('/login')}
-              style={{ width: '100%', padding: '13px', borderRadius: 14, background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 15, fontWeight: 800, fontFamily: "'Cairo',sans-serif", boxShadow: '0 6px 20px rgba(99,102,241,0.35)', marginBottom: 14 }}>
-              الذهاب لتسجيل الدخول
+              onClick={handleManualCheck}
+              disabled={checking}
+              style={{ width: '100%', padding: '13px', borderRadius: 14, background: checking ? '#e2e8f0' : 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: checking ? 'not-allowed' : 'pointer', color: checking ? '#94a3b8' : '#fff', fontSize: 15, fontWeight: 800, fontFamily: "'Cairo',sans-serif", boxShadow: checking ? 'none' : '0 6px 20px rgba(99,102,241,0.35)', marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <CheckCircle size={17} />
+              {checking ? 'جاري التحقق...' : 'لقد تحققت من بريدي — دخول للداشبورد'}
             </button>
 
             <button
@@ -126,6 +205,7 @@ export default function RegisterPage() {
             </button>
           </div>
         </div>
+        <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }`}</style>
       </div>
     );
   }
