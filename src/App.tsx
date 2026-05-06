@@ -9,6 +9,7 @@ import HomePage from "@/pages/HomePage";
 import CategoryPage from "@/pages/CategoryPage";
 import EditorPage from "@/pages/EditorPage";
 import AboutPage from "@/pages/AboutPage";
+import OrderPage from "@/pages/OrderPage";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ function Router() {
     <Switch>
       <Route path="/category/:id" component={CategoryPage} />
       <Route path="/editor/:categoryId/:templateId" component={EditorPage} />
+      <Route path="/order/:categoryId/:templateId" component={OrderPage} />
       <Route path="/about" component={AboutPage} />
       <Route path="/" component={HomePage} />
       <Route component={NotFound} />
