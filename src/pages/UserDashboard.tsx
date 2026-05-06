@@ -7,6 +7,15 @@ import {
   User, Zap, Star, ChevronLeft, Bell, RefreshCw
 } from 'lucide-react';
 
+const ALL_CATEGORIES = [
+  { id: 'congrats',      name: 'بطاقات التهنئة',  desc: 'بطاقات للأفراح والمناسبات',       emoji: '🎊', color: '#f59e0b', bg: '#fffbeb', border: '#fde68a', count: 23 },
+  { id: 'wedding',       name: 'دعوات الزفاف',    desc: 'دعوات زفاف أنيقة وكلاسيكية',      emoji: '💍', color: '#d946ef', bg: '#fdf4ff', border: '#f0abfc', count: 14 },
+  { id: 'business-card', name: 'بطاقات الأعمال',  desc: 'بطاقات احترافية لهويتك المهنية',   emoji: '🪪', color: '#6366f1', bg: '#eef2ff', border: '#c7d2fe', count: 11 },
+  { id: 'mass-wedding',  name: 'عرس جماعي',       desc: 'دعوات عرس جماعي مع صور العرسان',  emoji: '👰', color: '#ec4899', bg: '#fdf2f8', border: '#f9a8d4', count: 8  },
+  { id: 'ads',           name: 'إعلانات التواصل', desc: 'تصاميم جذابة لحملاتك الإعلانية',   emoji: '📣', color: '#ef4444', bg: '#fef2f2', border: '#fecaca', count: 7  },
+  { id: 'specialized',   name: 'عيادات ومراكز',   desc: 'قوالب للعيادات والمراكز التعليمية', emoji: '🏥', color: '#10b981', bg: '#ecfdf5', border: '#a7f3d0', count: 7  },
+];
+
 const PLAN_LABELS: Record<string, string> = {
   free: 'مجاني',
   starter: 'باقة 7 قوالب',
@@ -231,6 +240,40 @@ export default function UserDashboard() {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Browse Templates */}
+        <div style={{ background: '#fff', borderRadius: 20, padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+            <div>
+              <h3 style={{ color: '#1e1b4b', fontSize: 18, fontWeight: 900, margin: '0 0 4px' }}>تصفح القوالب</h3>
+              <p style={{ color: '#94a3b8', fontSize: 13, margin: 0 }}>اختر التصنيف الذي يناسبك وابدأ التصميم</p>
+            </div>
+            <button onClick={() => setLocation('/')}
+              style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#f8fafc', border: '1px solid #e2e8f0', cursor: 'pointer', color: '#6366f1', fontSize: 13, fontWeight: 800, padding: '8px 16px', borderRadius: 12, ...inp }}>
+              عرض الكل <ChevronLeft size={14} />
+            </button>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 14 }}>
+            {ALL_CATEGORIES.map(cat => (
+              <button key={cat.id} onClick={() => setLocation(`/category/${cat.id}`)}
+                style={{ background: cat.bg, border: `1.5px solid ${cat.border}`, borderRadius: 16, padding: '18px 16px', cursor: 'pointer', textAlign: 'right', transition: 'all 0.18s', display: 'flex', flexDirection: 'column', gap: 10, ...inp }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = `0 8px 24px ${cat.color}30`; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: 32 }}>{cat.emoji}</span>
+                  <span style={{ background: cat.color, color: '#fff', fontSize: 10, fontWeight: 800, padding: '3px 8px', borderRadius: 20 }}>{cat.count} قالب</span>
+                </div>
+                <div>
+                  <p style={{ color: '#1e1b4b', fontSize: 14, fontWeight: 900, margin: '0 0 4px' }}>{cat.name}</p>
+                  <p style={{ color: '#64748b', fontSize: 11, margin: 0, lineHeight: 1.5 }}>{cat.desc}</p>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: cat.color, fontSize: 12, fontWeight: 700 }}>
+                  استكشف <ChevronLeft size={13} />
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Request history */}
