@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { useAuthStore } from '../store/useAuthStore';
 import { useRequestStore } from '../store/useRequestStore';
@@ -41,11 +42,14 @@ const REQUEST_STATUS: Record<string, { label: string; color: string; bg: string;
   rejected: { label: 'مرفوض',       color: '#dc2626', bg: '#fef2f2', icon: XCircle },
 };
 
+type ActiveView = 'home' | 'explore' | 'requests';
+
 export default function UserDashboard() {
   const [, setLocation] = useLocation();
   const { user, logout } = useAuthStore();
   const { requests } = useRequestStore();
   const { plans } = usePricingStore();
+  const [activeView, setActiveView] = useState<ActiveView>('home');
 
   if (!user) {
     setLocation('/login');
@@ -100,13 +104,13 @@ export default function UserDashboard() {
 
         {/* Nav */}
         <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
-          {[
-            { icon: User, label: 'لوحتي', active: true },
-            { icon: LayoutTemplate, label: 'استكشف القوالب', onClick: () => setLocation('/category/congrats') },
-            { icon: Bell, label: 'طلباتي', onClick: () => {}, badge: pendingCount || undefined },
-          ].map(({ icon: Icon, label, active, onClick, badge }) => (
-            <button key={label} onClick={onClick}
-              style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 14px', borderRadius: 12, border: 'none', cursor: 'pointer', background: active ? 'rgba(99,102,241,0.25)' : 'transparent', color: active ? '#a5b4fc' : 'rgba(255,255,255,0.5)', fontSize: 13, fontWeight: 700, ...inp, textAlign: 'right', transition: 'all 0.2s', position: 'relative' }}>
+          {([
+            { icon: User,           label: 'لوحتي',          view: 'home'     as ActiveView },
+            { icon: LayoutTemplate, label: 'استكشف القوالب', view: 'explore'  as ActiveView },
+            { icon: Bell,           label: 'طلباتي',         view: 'requests' as ActiveView, badge: pendingCount || undefined },
+          ] as { icon: typeof User; label: string; view: ActiveView; badge?: number }[]).map(({ icon: Icon, label, view, badge }) => (
+            <button key={view} onClick={() => setActiveView(view)}
+              style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 14px', borderRadius: 12, border: 'none', cursor: 'pointer', background: activeView === view ? 'rgba(99,102,241,0.25)' : 'transparent', color: activeView === view ? '#a5b4fc' : 'rgba(255,255,255,0.5)', fontSize: 13, fontWeight: 700, ...inp, textAlign: 'right', transition: 'all 0.2s', position: 'relative' }}>
               <Icon size={17} />
               {label}
               {!!badge && <span style={{ marginRight: 'auto', background: '#ef4444', color: '#fff', borderRadius: 20, padding: '2px 7px', fontSize: 10, fontWeight: 800 }}>{badge}</span>}
@@ -123,201 +127,244 @@ export default function UserDashboard() {
       {/* ── Main Content ── */}
       <div style={{ marginRight: 240, padding: '32px 28px', minHeight: '100vh' }}>
 
-        {/* Welcome banner */}
-        <div style={{ background: 'linear-gradient(135deg,#6366f1 0%,#a855f7 50%,#ec4899 100%)', borderRadius: 24, padding: '28px 32px', marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20, boxShadow: '0 8px 30px rgba(99,102,241,0.35)', position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: -40, left: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.07)' }} />
-          <div style={{ position: 'absolute', bottom: -30, right: 100, width: 140, height: 140, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
-          <div style={{ position: 'relative' }}>
-            <h1 style={{ color: '#fff', fontSize: 24, fontWeight: 900, margin: '0 0 6px' }}>أهلاً، {user.name.split(' ')[0]} 👋</h1>
-            <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, margin: 0 }}>
-              {user.plan === 'free'
-                ? 'أنت على الخطة المجانية — قم بالترقية للوصول لجميع القوالب'
-                : user.planStatus === 'active'
-                  ? `اشتراكك نشط — استمتع بكامل مميزات ${PLAN_LABELS[user.plan]}`
-                  : user.planStatus === 'pending'
-                    ? 'طلب ترقيتك قيد المراجعة من الإدارة'
-                    : 'اشتراكك غير نشط — تواصل مع الدعم'}
-            </p>
-          </div>
-          <button onClick={() => setLocation('/category/congrats')}
-            style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 800, padding: '11px 22px', borderRadius: 14, backdropFilter: 'blur(8px)', ...inp, whiteSpace: 'nowrap' }}>
-            <Zap size={16} />استكشف القوالب
-          </button>
-        </div>
+        {/* ── VIEW: لوحتي ── */}
+        {activeView === 'home' && <>
 
-        {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 16, marginBottom: 28 }}>
-          {[
-            { label: 'خطة الاشتراك',  value: PLAN_LABELS[user.plan], color: planColor.from, bg: planColor.bg, icon: Crown },
-            { label: 'طلبات مُرسلة',  value: myRequests.length,     color: '#6366f1', bg: '#eef2ff', icon: Bell },
-            { label: 'طلبات موافق عليها', value: approvedCount,     color: '#10b981', bg: '#ecfdf5', icon: CheckCircle },
-            { label: 'قيد المراجعة',  value: pendingCount,          color: '#d97706', bg: '#fef9ee', icon: Clock },
-          ].map(({ label, value, color, bg, icon: Icon }) => (
-            <div key={label} style={{ background: '#fff', borderRadius: 18, padding: '20px 22px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: `1px solid ${color}20` }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Icon size={17} color={color} />
-                </div>
-                <p style={{ color: '#94a3b8', fontSize: 12, fontWeight: 600, margin: 0 }}>{label}</p>
-              </div>
-              <p style={{ color: '#1e1b4b', fontSize: 24, fontWeight: 900, margin: 0 }}>{value}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Plan card + upgrade */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 28 }}>
-
-          {/* Current plan */}
-          <div style={{ background: '#fff', borderRadius: 20, padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: `2px solid ${planColor.border}` }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <h3 style={{ color: '#1e1b4b', fontSize: 16, fontWeight: 900, margin: 0 }}>خطتك الحالية</h3>
-              <div style={{ background: `linear-gradient(135deg,${planColor.from},${planColor.to})`, borderRadius: 20, padding: '4px 12px', display: 'flex', alignItems: 'center', gap: 5 }}>
-                <Crown size={12} color="#fff" />
-                <span style={{ color: '#fff', fontSize: 12, fontWeight: 800 }}>{PLAN_LABELS[user.plan]}</span>
-              </div>
-            </div>
-            {user.planStatus && (
-              <div style={{ background: REQUEST_STATUS[user.planStatus]?.bg || '#f1f5f9', borderRadius: 10, padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 7, marginBottom: 14 }}>
-                <RefreshCw size={14} color={REQUEST_STATUS[user.planStatus]?.color || '#94a3b8'} />
-                <span style={{ color: REQUEST_STATUS[user.planStatus]?.color || '#94a3b8', fontSize: 13, fontWeight: 700 }}>
-                  {REQUEST_STATUS[user.planStatus]?.label}
-                </span>
-              </div>
-            )}
-            {activePlan && user.plan !== 'free' && (
-              <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {activePlan.features.slice(0, 4).map((f, i) => (
-                  <li key={i} style={{ display: 'flex', alignItems: 'center', gap: 7, color: '#475569', fontSize: 13 }}>
-                    <CheckCircle size={14} color="#10b981" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {user.plan === 'free' && (
-              <p style={{ color: '#94a3b8', fontSize: 13, margin: 0, lineHeight: 1.7 }}>
-                حقلين قابلين للتعديل (العنوان والعنوان الفرعي) مجاناً.
-                <br />قم بالترقية للوصول الكامل.
+          {/* Welcome banner */}
+          <div style={{ background: 'linear-gradient(135deg,#6366f1 0%,#a855f7 50%,#ec4899 100%)', borderRadius: 24, padding: '28px 32px', marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20, boxShadow: '0 8px 30px rgba(99,102,241,0.35)', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: -40, left: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,0.07)' }} />
+            <div style={{ position: 'absolute', bottom: -30, right: 100, width: 140, height: 140, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+            <div style={{ position: 'relative' }}>
+              <h1 style={{ color: '#fff', fontSize: 24, fontWeight: 900, margin: '0 0 6px' }}>أهلاً، {user.name.split(' ')[0]} 👋</h1>
+              <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, margin: 0 }}>
+                {user.plan === 'free'
+                  ? 'أنت على الخطة المجانية — قم بالترقية للوصول لجميع القوالب'
+                  : user.planStatus === 'active'
+                    ? `اشتراكك نشط — استمتع بكامل مميزات ${PLAN_LABELS[user.plan]}`
+                    : user.planStatus === 'pending'
+                      ? 'طلب ترقيتك قيد المراجعة من الإدارة'
+                      : 'اشتراكك غير نشط — تواصل مع الدعم'}
               </p>
-            )}
-          </div>
-
-          {/* Upgrade prompt */}
-          {user.plan === 'free' ? (
-            <div style={{ background: 'linear-gradient(135deg,#fdf4ff,#eef2ff)', borderRadius: 20, padding: '24px', border: '2px dashed #c7d2fe', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: 12 }}>
-              <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Star size={24} color="#fff" fill="#fff" />
-              </div>
-              <div>
-                <h3 style={{ color: '#1e1b4b', fontSize: 16, fontWeight: 900, margin: '0 0 6px' }}>ترقية حسابك</h3>
-                <p style={{ color: '#64748b', fontSize: 13, margin: 0, lineHeight: 1.7 }}>احصل على وصول كامل لجميع القوالب وميزات التخصيص</p>
-              </div>
-              <button onClick={() => { setLocation('/'); setTimeout(() => document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' }), 100); }}
-                style={{ background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 800, padding: '11px 24px', borderRadius: 14, ...inp, boxShadow: '0 4px 14px rgba(99,102,241,0.35)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                <Zap size={15} />عرض الباقات
-              </button>
             </div>
-          ) : (
-            <div style={{ background: '#fff', borderRadius: 20, padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9' }}>
-              <h3 style={{ color: '#1e1b4b', fontSize: 16, fontWeight: 900, margin: '0 0 14px' }}>الوصول السريع</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {[
-                  { label: 'بطاقات أعمال', path: '/category/business-card', emoji: '🪪' },
-                  { label: 'دعوات زفاف',   path: '/category/wedding',        emoji: '💍' },
-                  { label: 'تهاني',        path: '/category/congrats',       emoji: '🎊' },
-                  { label: 'إعلانات',      path: '/category/ads',            emoji: '📣' },
-                ].map(({ label, path, emoji }) => (
-                  <button key={path} onClick={() => setLocation(path)}
-                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 12, border: '1px solid #f1f5f9', cursor: 'pointer', background: '#f8fafc', color: '#374151', fontSize: 13, fontWeight: 700, ...inp, textAlign: 'right', transition: 'all 0.15s' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = '#eef2ff'; e.currentTarget.style.borderColor = '#c7d2fe'; }}
-                    onMouseLeave={e => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#f1f5f9'; }}>
-                    <span style={{ fontSize: 18 }}>{emoji}</span>
-                    {label}
-                    <ChevronLeft size={14} color="#94a3b8" style={{ marginRight: 'auto' }} />
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Browse Templates */}
-        <div style={{ background: '#fff', borderRadius: 20, padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', marginBottom: 24 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-            <div>
-              <h3 style={{ color: '#1e1b4b', fontSize: 18, fontWeight: 900, margin: '0 0 4px' }}>تصفح القوالب</h3>
-              <p style={{ color: '#94a3b8', fontSize: 13, margin: 0 }}>اختر التصنيف الذي يناسبك وابدأ التصميم</p>
-            </div>
-            <button onClick={() => setLocation('/')}
-              style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#f8fafc', border: '1px solid #e2e8f0', cursor: 'pointer', color: '#6366f1', fontSize: 13, fontWeight: 800, padding: '8px 16px', borderRadius: 12, ...inp }}>
-              عرض الكل <ChevronLeft size={14} />
+            <button onClick={() => setActiveView('explore')}
+              style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 800, padding: '11px 22px', borderRadius: 14, backdropFilter: 'blur(8px)', ...inp, whiteSpace: 'nowrap' }}>
+              <Zap size={16} />استكشف القوالب
             </button>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 14 }}>
-            {ALL_CATEGORIES.map(cat => (
-              <button key={cat.id} onClick={() => setLocation(`/category/${cat.id}`)}
-                style={{ background: cat.bg, border: `1.5px solid ${cat.border}`, borderRadius: 16, padding: '18px 16px', cursor: 'pointer', textAlign: 'right', transition: 'all 0.18s', display: 'flex', flexDirection: 'column', gap: 10, ...inp }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = `0 8px 24px ${cat.color}30`; }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: 32 }}>{cat.emoji}</span>
-                  <span style={{ background: cat.color, color: '#fff', fontSize: 10, fontWeight: 800, padding: '3px 8px', borderRadius: 20 }}>{cat.count} قالب</span>
+
+          {/* Stats */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: 16, marginBottom: 28 }}>
+            {[
+              { label: 'خطة الاشتراك',      value: PLAN_LABELS[user.plan], color: planColor.from, bg: planColor.bg, icon: Crown },
+              { label: 'طلبات مُرسلة',      value: myRequests.length,      color: '#6366f1', bg: '#eef2ff', icon: Bell },
+              { label: 'طلبات موافق عليها', value: approvedCount,           color: '#10b981', bg: '#ecfdf5', icon: CheckCircle },
+              { label: 'قيد المراجعة',      value: pendingCount,            color: '#d97706', bg: '#fef9ee', icon: Clock },
+            ].map(({ label, value, color, bg, icon: Icon }) => (
+              <div key={label} style={{ background: '#fff', borderRadius: 18, padding: '20px 22px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: `1px solid ${color}20` }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Icon size={17} color={color} />
+                  </div>
+                  <p style={{ color: '#94a3b8', fontSize: 12, fontWeight: 600, margin: 0 }}>{label}</p>
+                </div>
+                <p style={{ color: '#1e1b4b', fontSize: 24, fontWeight: 900, margin: 0 }}>{value}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Plan card + upgrade */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 28 }}>
+            <div style={{ background: '#fff', borderRadius: 20, padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: `2px solid ${planColor.border}` }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                <h3 style={{ color: '#1e1b4b', fontSize: 16, fontWeight: 900, margin: 0 }}>خطتك الحالية</h3>
+                <div style={{ background: `linear-gradient(135deg,${planColor.from},${planColor.to})`, borderRadius: 20, padding: '4px 12px', display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <Crown size={12} color="#fff" />
+                  <span style={{ color: '#fff', fontSize: 12, fontWeight: 800 }}>{PLAN_LABELS[user.plan]}</span>
+                </div>
+              </div>
+              {user.planStatus && (
+                <div style={{ background: REQUEST_STATUS[user.planStatus]?.bg || '#f1f5f9', borderRadius: 10, padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 7, marginBottom: 14 }}>
+                  <RefreshCw size={14} color={REQUEST_STATUS[user.planStatus]?.color || '#94a3b8'} />
+                  <span style={{ color: REQUEST_STATUS[user.planStatus]?.color || '#94a3b8', fontSize: 13, fontWeight: 700 }}>{REQUEST_STATUS[user.planStatus]?.label}</span>
+                </div>
+              )}
+              {activePlan && user.plan !== 'free' && (
+                <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {activePlan.features.slice(0, 4).map((f, i) => (
+                    <li key={i} style={{ display: 'flex', alignItems: 'center', gap: 7, color: '#475569', fontSize: 13 }}>
+                      <CheckCircle size={14} color="#10b981" />{f}
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {user.plan === 'free' && (
+                <p style={{ color: '#94a3b8', fontSize: 13, margin: 0, lineHeight: 1.7 }}>
+                  حقلين قابلين للتعديل (العنوان والعنوان الفرعي) مجاناً.<br />قم بالترقية للوصول الكامل.
+                </p>
+              )}
+            </div>
+
+            {user.plan === 'free' ? (
+              <div style={{ background: 'linear-gradient(135deg,#fdf4ff,#eef2ff)', borderRadius: 20, padding: '24px', border: '2px dashed #c7d2fe', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: 12 }}>
+                <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Star size={24} color="#fff" fill="#fff" />
                 </div>
                 <div>
-                  <p style={{ color: '#1e1b4b', fontSize: 14, fontWeight: 900, margin: '0 0 4px' }}>{cat.name}</p>
-                  <p style={{ color: '#64748b', fontSize: 11, margin: 0, lineHeight: 1.5 }}>{cat.desc}</p>
+                  <h3 style={{ color: '#1e1b4b', fontSize: 16, fontWeight: 900, margin: '0 0 6px' }}>ترقية حسابك</h3>
+                  <p style={{ color: '#64748b', fontSize: 13, margin: 0, lineHeight: 1.7 }}>احصل على وصول كامل لجميع القوالب وميزات التخصيص</p>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: cat.color, fontSize: 12, fontWeight: 700 }}>
-                  استكشف <ChevronLeft size={13} />
+                <button onClick={() => { setLocation('/'); setTimeout(() => document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' }), 100); }}
+                  style={{ background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 800, padding: '11px 24px', borderRadius: 14, ...inp, boxShadow: '0 4px 14px rgba(99,102,241,0.35)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Zap size={15} />عرض الباقات
+                </button>
+              </div>
+            ) : (
+              <div style={{ background: '#fff', borderRadius: 20, padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9' }}>
+                <h3 style={{ color: '#1e1b4b', fontSize: 16, fontWeight: 900, margin: '0 0 14px' }}>الوصول السريع</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {[
+                    { label: 'بطاقات أعمال', path: '/category/business-card', emoji: '🪪' },
+                    { label: 'دعوات زفاف',   path: '/category/wedding',        emoji: '💍' },
+                    { label: 'تهاني',        path: '/category/congrats',       emoji: '🎊' },
+                    { label: 'إعلانات',      path: '/category/ads',            emoji: '📣' },
+                  ].map(({ label, path, emoji }) => (
+                    <button key={path} onClick={() => setLocation(path)}
+                      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 12, border: '1px solid #f1f5f9', cursor: 'pointer', background: '#f8fafc', color: '#374151', fontSize: 13, fontWeight: 700, ...inp, textAlign: 'right', transition: 'all 0.15s' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = '#eef2ff'; e.currentTarget.style.borderColor = '#c7d2fe'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#f1f5f9'; }}>
+                      <span style={{ fontSize: 18 }}>{emoji}</span>{label}
+                      <ChevronLeft size={14} color="#94a3b8" style={{ marginRight: 'auto' }} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Requests summary */}
+          <div style={{ background: '#fff', borderRadius: 20, padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+              <h3 style={{ color: '#1e1b4b', fontSize: 18, fontWeight: 900, margin: 0 }}>آخر الطلبات</h3>
+              {myRequests.length > 0 && (
+                <button onClick={() => setActiveView('requests')}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6366f1', fontSize: 13, fontWeight: 800, ...inp, display: 'flex', alignItems: 'center', gap: 4 }}>
+                  عرض الكل <ChevronLeft size={14} />
+                </button>
+              )}
+            </div>
+            {myRequests.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '32px 20px' }}>
+                <div style={{ fontSize: 44, marginBottom: 12 }}>📋</div>
+                <p style={{ color: '#94a3b8', fontSize: 14, fontWeight: 600, margin: '0 0 6px' }}>لا توجد طلبات بعد</p>
+                <p style={{ color: '#cbd5e1', fontSize: 13, margin: '0 0 18px' }}>يمكنك طلب تفعيل قالب من صفحة المحرر</p>
+                <button onClick={() => setActiveView('explore')}
+                  style={{ background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 800, padding: '11px 24px', borderRadius: 14, ...inp }}>
+                  استكشف القوالب
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {myRequests.slice(0, 3).map(req => {
+                  const st = REQUEST_STATUS[req.status];
+                  const StatusIcon = st.icon;
+                  return (
+                    <div key={req.id} style={{ background: '#f8fafc', borderRadius: 14, padding: '14px 16px', border: `1px solid ${st.color}20`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 10, background: st.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <StatusIcon size={16} color={st.color} />
+                        </div>
+                        <div>
+                          <p style={{ color: '#475569', fontSize: 13, margin: 0, fontWeight: 700 }}>
+                            {req.templateName && req.templateName !== 'غير محدد' ? req.templateName : REQUEST_TYPE[req.type]}
+                          </p>
+                          <p style={{ color: '#94a3b8', fontSize: 11, margin: 0 }}>{new Date(req.createdAt).toLocaleDateString('ar-YE')}</p>
+                        </div>
+                      </div>
+                      <span style={{ background: st.bg, color: st.color, fontSize: 11, fontWeight: 800, padding: '4px 10px', borderRadius: 20, border: `1px solid ${st.color}30`, whiteSpace: 'nowrap' }}>{st.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </>}
+
+        {/* ── VIEW: استكشف القوالب ── */}
+        {activeView === 'explore' && <>
+          <div style={{ marginBottom: 28 }}>
+            <h2 style={{ color: '#1e1b4b', fontSize: 22, fontWeight: 900, margin: '0 0 6px' }}>استكشف القوالب</h2>
+            <p style={{ color: '#94a3b8', fontSize: 14, margin: 0 }}>اختر التصنيف الذي يناسبك وابدأ التصميم الآن</p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16 }}>
+            {ALL_CATEGORIES.map(cat => (
+              <button key={cat.id} onClick={() => setLocation(`/category/${cat.id}`)}
+                style={{ background: cat.bg, border: `1.5px solid ${cat.border}`, borderRadius: 18, padding: '22px 20px', cursor: 'pointer', textAlign: 'right', transition: 'all 0.18s', display: 'flex', flexDirection: 'column', gap: 12, ...inp }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = `0 12px 30px ${cat.color}28`; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: 38 }}>{cat.emoji}</span>
+                  <span style={{ background: cat.color, color: '#fff', fontSize: 11, fontWeight: 800, padding: '4px 10px', borderRadius: 20 }}>{cat.count} قالب</span>
+                </div>
+                <div>
+                  <p style={{ color: '#1e1b4b', fontSize: 15, fontWeight: 900, margin: '0 0 5px' }}>{cat.name}</p>
+                  <p style={{ color: '#64748b', fontSize: 12, margin: 0, lineHeight: 1.6 }}>{cat.desc}</p>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: cat.color, fontSize: 13, fontWeight: 800 }}>
+                  استكشف الآن <ChevronLeft size={14} />
                 </div>
               </button>
             ))}
           </div>
-        </div>
+        </>}
 
-        {/* Request history */}
-        <div style={{ background: '#fff', borderRadius: 20, padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
-          <h3 style={{ color: '#1e1b4b', fontSize: 18, fontWeight: 900, margin: '0 0 20px' }}>سجل الطلبات</h3>
-          {myRequests.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px 20px' }}>
-              <div style={{ fontSize: 48, marginBottom: 14 }}>📋</div>
-              <p style={{ color: '#94a3b8', fontSize: 15, fontWeight: 600, margin: '0 0 8px' }}>لا توجد طلبات بعد</p>
-              <p style={{ color: '#cbd5e1', fontSize: 13, margin: '0 0 20px' }}>يمكنك طلب تفعيل قالب من صفحة المحرر</p>
-              <button onClick={() => setLocation('/category/congrats')}
-                style={{ background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 800, padding: '11px 24px', borderRadius: 14, ...inp }}>
-                استكشف القوالب
-              </button>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              {myRequests.map(req => {
-                const st = REQUEST_STATUS[req.status];
-                const StatusIcon = st.icon;
-                return (
-                  <div key={req.id} style={{ background: '#f8fafc', borderRadius: 14, padding: '16px 18px', border: `1px solid ${st.color}20`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-                    <div style={{ display: 'flex', align: 'center', gap: 12 }}>
-                      <div style={{ width: 40, height: 40, borderRadius: 12, background: st.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        <StatusIcon size={18} color={st.color} />
-                      </div>
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                          <span style={{ background: '#eef2ff', color: '#6366f1', fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 20 }}>{REQUEST_TYPE[req.type] || req.type}</span>
-                          {req.plan && <span style={{ background: '#fdf4ff', color: '#a855f7', fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 20 }}>{req.plan}</span>}
+        {/* ── VIEW: طلباتي ── */}
+        {activeView === 'requests' && <>
+          <div style={{ marginBottom: 28 }}>
+            <h2 style={{ color: '#1e1b4b', fontSize: 22, fontWeight: 900, margin: '0 0 6px' }}>طلباتي</h2>
+            <p style={{ color: '#94a3b8', fontSize: 14, margin: 0 }}>سجل جميع طلبات التفعيل والاشتراك</p>
+          </div>
+          <div style={{ background: '#fff', borderRadius: 20, padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+            {myRequests.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '48px 20px' }}>
+                <div style={{ fontSize: 52, marginBottom: 16 }}>📋</div>
+                <p style={{ color: '#94a3b8', fontSize: 15, fontWeight: 600, margin: '0 0 8px' }}>لا توجد طلبات بعد</p>
+                <p style={{ color: '#cbd5e1', fontSize: 13, margin: '0 0 20px' }}>يمكنك طلب تفعيل قالب من صفحة المحرر</p>
+                <button onClick={() => setActiveView('explore')}
+                  style={{ background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 14, fontWeight: 800, padding: '11px 24px', borderRadius: 14, ...inp }}>
+                  استكشف القوالب
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {myRequests.map(req => {
+                  const st = REQUEST_STATUS[req.status];
+                  const StatusIcon = st.icon;
+                  return (
+                    <div key={req.id} style={{ background: '#f8fafc', borderRadius: 14, padding: '16px 18px', border: `1px solid ${st.color}20`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <div style={{ width: 40, height: 40, borderRadius: 12, background: st.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <StatusIcon size={18} color={st.color} />
                         </div>
-                        <p style={{ color: '#475569', fontSize: 13, margin: 0 }}>
-                          {req.templateName && req.templateName !== 'غير محدد' ? req.templateName : REQUEST_TYPE[req.type]}
-                        </p>
-                        <p style={{ color: '#94a3b8', fontSize: 11, margin: '2px 0 0' }}>{new Date(req.createdAt).toLocaleDateString('ar-YE')}</p>
+                        <div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                            <span style={{ background: '#eef2ff', color: '#6366f1', fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 20 }}>{REQUEST_TYPE[req.type] || req.type}</span>
+                            {req.plan && <span style={{ background: '#fdf4ff', color: '#a855f7', fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 20 }}>{req.plan}</span>}
+                          </div>
+                          <p style={{ color: '#475569', fontSize: 13, margin: 0 }}>
+                            {req.templateName && req.templateName !== 'غير محدد' ? req.templateName : REQUEST_TYPE[req.type]}
+                          </p>
+                          <p style={{ color: '#94a3b8', fontSize: 11, margin: '2px 0 0' }}>{new Date(req.createdAt).toLocaleDateString('ar-YE')}</p>
+                        </div>
                       </div>
+                      <span style={{ background: st.bg, color: st.color, fontSize: 12, fontWeight: 800, padding: '5px 12px', borderRadius: 20, border: `1px solid ${st.color}30`, whiteSpace: 'nowrap' }}>{st.label}</span>
                     </div>
-                    <span style={{ background: st.bg, color: st.color, fontSize: 12, fontWeight: 800, padding: '5px 12px', borderRadius: 20, border: `1px solid ${st.color}30`, whiteSpace: 'nowrap' }}>{st.label}</span>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </>}
+
       </div>
     </div>
   );
