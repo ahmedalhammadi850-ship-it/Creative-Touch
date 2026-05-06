@@ -122,19 +122,30 @@ export function useExport() {
       const pngDataUrl = canvas.toDataURL('image/png');
 
       // Build PDF page sized exactly to the card dimensions in mm.
-      // Do NOT pass orientation — with a custom format array jsPDF uses
-      // the dimensions as-is, and passing orientation can swap width/height
-      // in some versions when they don't match the named orientation.
+      // jsPDF v4 treats the format array as [portrait-width, portrait-height]
+      // and then rotates for the given orientation.  Always put the shorter
+      // dimension first so the orientation flag correctly produces the right
+      // page size (landscape cards need orientation:'landscape' to avoid jsPDF
+      // auto-normalising them to portrait and creating a blank strip at the
+      // bottom of the exported file).
       const widthMm = pxToMm(elementWidth);
       const heightMm = pxToMm(elementHeight);
+      const isLandscape = widthMm >= heightMm;
+      const orientation = isLandscape ? 'landscape' : 'portrait';
+      // format: [shorter, longer] — jsPDF portrait base, then rotated by orientation
+      const formatArr: [number, number] = [
+        Math.min(widthMm, heightMm),
+        Math.max(widthMm, heightMm),
+      ];
 
       const pdf = new jsPDF({
         unit: 'mm',
-        format: [widthMm, heightMm],
-        compress: false, // no additional compression — preserve image data exactly
+        format: formatArr,
+        orientation,
+        compress: false,
       });
 
-      // Embed with 'NONE' compression: lossless, no zlib overhead on the image data
+      // Place image to fill the entire page exactly
       pdf.addImage(pngDataUrl, 'PNG', 0, 0, widthMm, heightMm, undefined, 'NONE');
 
       pdf.save(`creative-touch-${Date.now()}.pdf`);
