@@ -1,10 +1,75 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Upload, X, ImagePlus, Plus, Lock, Send } from 'lucide-react';
+import { Upload, X, ImagePlus, Plus, Lock, Send, Minus, RotateCcw } from 'lucide-react';
 import type { TemplateData } from '../types/template';
+
+const DEFAULT_FS = 16;
+const MIN_FS = 8;
+const MAX_FS = 36;
+
+function FontSizeControl({ fontSize, onChange }: { fontSize: number; onChange: (v: number) => void }) {
+  const isDefault = fontSize === DEFAULT_FS;
+  const btn = (active: boolean): React.CSSProperties => ({
+    width: 36, height: 36, borderRadius: 10,
+    border: '1.5px solid #e2e8f0',
+    background: active ? '#fff' : '#f1f5f9',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    cursor: active ? 'pointer' : 'not-allowed',
+    color: active ? '#374151' : '#cbd5e1',
+    flexShrink: 0,
+  });
+  return (
+    <div className="space-y-2">
+      <h3 className="text-lg font-bold">حجم الخط</h3>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <button style={btn(fontSize > MIN_FS)} disabled={fontSize <= MIN_FS}
+          onClick={() => onChange(Math.max(MIN_FS, fontSize - 1))}>
+          <Minus size={14} />
+        </button>
+        <div style={{
+          flex: 1, height: 36, borderRadius: 10,
+          border: '1.5px solid #e2e8f0', background: '#f8f7ff',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2,
+        }}>
+          <input
+            type="number" min={MIN_FS} max={MAX_FS} value={fontSize}
+            onChange={e => {
+              const v = parseInt(e.target.value, 10);
+              if (!isNaN(v)) onChange(Math.min(MAX_FS, Math.max(MIN_FS, v)));
+            }}
+            style={{
+              width: 38, background: 'transparent', border: 'none', outline: 'none',
+              textAlign: 'center', fontFamily: "'Cairo', sans-serif",
+              fontWeight: 700, fontSize: 15, color: '#3730a3',
+            }}
+          />
+          <span style={{ color: '#6366f1', fontSize: 12, fontWeight: 600 }}>px</span>
+        </div>
+        <button style={btn(fontSize < MAX_FS)} disabled={fontSize >= MAX_FS}
+          onClick={() => onChange(Math.min(MAX_FS, fontSize + 1))}>
+          <Plus size={14} />
+        </button>
+        {!isDefault && (
+          <button onClick={() => onChange(DEFAULT_FS)} title="إعادة للافتراضي"
+            style={{
+              width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+              border: '1.5px solid #fecaca', background: '#fef2f2',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: '#dc2626',
+            }}>
+            <RotateCcw size={13} />
+          </button>
+        )}
+      </div>
+      <p style={{ color: '#94a3b8', fontSize: 12, margin: 0, fontFamily: "'Cairo', sans-serif" }}>
+        افتراضي {DEFAULT_FS}px — يغيّر الخط فقط بدون تأثير على حجم الكارت
+      </p>
+    </div>
+  );
+}
 
 interface InlineEditorProps {
   categoryId: string;
@@ -232,6 +297,8 @@ export function InlineEditor({ categoryId, data, onChange, backCardMode = false,
             </div>
           </div>
 
+          <FontSizeControl fontSize={data.fontSize ?? DEFAULT_FS} onChange={fs => onChange({ fontSize: fs })} />
+
         </>
       )}
 
@@ -374,6 +441,8 @@ export function InlineEditor({ categoryId, data, onChange, backCardMode = false,
               ))}
             </div>
           </div>
+
+          <FontSizeControl fontSize={data.fontSize ?? DEFAULT_FS} onChange={fs => onChange({ fontSize: fs })} />
 
         </>
       )}
