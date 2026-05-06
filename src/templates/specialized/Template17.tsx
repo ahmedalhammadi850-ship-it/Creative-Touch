@@ -50,8 +50,7 @@ export default function SpecializedTemplate17({ data }: Props) {
         <div style={{
           position: 'absolute', top: 14, right: 14,
           width: 56, height: 56, borderRadius: 16,
-          background: 'rgba(255,255,255,0.15)',
-          backdropFilter: 'blur(8px)',
+          background: 'rgba(255,255,255,0.25)',
           border: '2px solid rgba(255,255,255,0.4)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: 26,

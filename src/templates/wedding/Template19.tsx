@@ -11,9 +11,9 @@ export default function Template19({ data }: { data: TemplateData }) {
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
     }}>
       {/* Watercolor-like blobs */}
-      <div style={{ position: 'absolute', top: -30, right: -20, width: 160, height: 160, borderRadius: '40% 60% 55% 45%', background: `${data.colors.primary}28`, filter: 'blur(8px)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: -20, left: -20, width: 140, height: 140, borderRadius: '55% 45% 40% 60%', background: `${data.colors.accent}22`, filter: 'blur(10px)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', top: '40%', right: -10, width: 100, height: 100, borderRadius: '50%', background: `${data.colors.secondary}15`, filter: 'blur(12px)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: -30, right: -20, width: 180, height: 180, borderRadius: '40% 60% 55% 45%', background: `radial-gradient(circle, ${data.colors.primary}33 0%, ${data.colors.primary}12 55%, transparent 75%)`, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: -20, left: -20, width: 160, height: 160, borderRadius: '55% 45% 40% 60%', background: `radial-gradient(circle, ${data.colors.accent}28 0%, ${data.colors.accent}0d 55%, transparent 75%)`, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: '40%', right: -10, width: 120, height: 120, borderRadius: '50%', background: `radial-gradient(circle, ${data.colors.secondary}1a 0%, transparent 70%)`, pointerEvents: 'none' }} />
 
       {/* Thin frame */}
       <div style={{ position: 'absolute', inset: '10px', border: `0.5px solid ${data.colors.primary}33`, pointerEvents: 'none' }} />

@@ -42,8 +42,8 @@ export default function CongratsTemplate18({ data }: Props) {
       </svg>
 
       {/* Neon glow blobs */}
-      <div style={{ position: 'absolute', top: 60, right: 40, width: 120, height: 120, borderRadius: '50%', background: `${colors.primary}33`, filter: 'blur(40px)', zIndex: 0 }} />
-      <div style={{ position: 'absolute', bottom: 80, left: 30, width: 100, height: 100, borderRadius: '50%', background: `${colors.secondary}44`, filter: 'blur(35px)', zIndex: 0 }} />
+      <div style={{ position: 'absolute', top: 60, right: 40, width: 140, height: 140, borderRadius: '50%', background: `radial-gradient(circle, ${colors.primary}44 0%, ${colors.primary}18 55%, transparent 75%)`, zIndex: 0 }} />
+      <div style={{ position: 'absolute', bottom: 80, left: 30, width: 120, height: 120, borderRadius: '50%', background: `radial-gradient(circle, ${colors.secondary}55 0%, ${colors.secondary}22 55%, transparent 75%)`, zIndex: 0 }} />
 
       {/* Photo circle with neon ring */}
       <div style={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'center', marginTop: 28 }}>

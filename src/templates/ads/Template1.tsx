@@ -17,7 +17,7 @@ export default function Template1({ data }: { data: TemplateData }) {
         style={{ background: `linear-gradient(135deg, transparent 50%, ${data.colors.secondary} 50%)` }}
       />
       
-      <div className="z-10 bg-black/10 backdrop-blur-sm p-6 w-full shadow-lg border border-white/20">
+      <div className="z-10 p-6 w-full shadow-lg border border-white/20" style={{ background: 'rgba(0,0,0,0.12)' }}>
         <h2 className="text-3xl font-black mb-3 drop-shadow-md">{data.title}</h2>
         <div className="w-16 h-1 mx-auto mb-4" style={{ backgroundColor: data.colors.accent }} />
         <p className="text-lg font-bold mb-4 drop-shadow-sm">{data.subtitle}</p>

@@ -84,11 +84,10 @@ export default function SpecializedTemplate3({ data }: Props) {
           <div style={{
             width: 110, height: 110,
             borderRadius: '50%',
-            background: '#ffffff22',
-            border: '3px solid #ffffff55',
+            background: '#ffffff30',
+            border: '3px solid #ffffff66',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 44,
-            backdropFilter: 'blur(4px)',
           }}>👨‍🎓</div>
 
           {/* Small bottom circle */}
@@ -112,11 +111,10 @@ export default function SpecializedTemplate3({ data }: Props) {
       }}>
         {['الرياضيات', 'العلوم', 'الإنجليزي', 'الفيزياء'].map((s, i) => (
           <div key={i} style={{
-            background: '#ffffff22',
+            background: '#ffffff30',
             borderRadius: 8,
             padding: '4px 8px',
             display: 'flex', alignItems: 'center', gap: 4,
-            backdropFilter: 'blur(4px)',
           }}>
             <span style={{ fontSize: 10, color: colors.accent }}>📚</span>
             <span style={{ color: '#fff', fontSize: 10, fontWeight: 700 }}>{s}</span>
@@ -126,12 +124,11 @@ export default function SpecializedTemplate3({ data }: Props) {
 
       {/* Bottom bar */}
       <div style={{
-        background: '#00000044',
+        background: '#00000055',
         padding: '8px 16px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backdropFilter: 'blur(6px)',
       }}>
         <span style={{ color: colors.accent, fontSize: 12, fontWeight: 700 }}>{phone || '07826560604'}</span>
         <button style={{

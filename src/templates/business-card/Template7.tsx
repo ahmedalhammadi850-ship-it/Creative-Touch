@@ -9,9 +9,9 @@ export default function BusinessCardTemplate7({ data }: Props) {
       fontFamily: 'Cairo, sans-serif', direction: 'rtl',
       background: `linear-gradient(135deg, ${colors.bg || '#1a0533'} 0%, ${colors.secondary} 100%)`,
     }}>
-      {/* Gradient mesh blobs — filter:blur IS supported by html2canvas */}
-      <div style={{ position: 'absolute', top: -30, right: -30, width: 140, height: 140, borderRadius: '50%', background: `${colors.primary}55`, filter: 'blur(30px)', zIndex: 0 }} />
-      <div style={{ position: 'absolute', bottom: -20, left: -20, width: 110, height: 110, borderRadius: '50%', background: `${colors.accent}33`, filter: 'blur(25px)', zIndex: 0 }} />
+      {/* Gradient mesh blobs */}
+      <div style={{ position: 'absolute', top: -30, right: -30, width: 160, height: 160, borderRadius: '50%', background: `radial-gradient(circle, ${colors.primary}66 0%, ${colors.primary}22 55%, transparent 75%)`, zIndex: 0 }} />
+      <div style={{ position: 'absolute', bottom: -20, left: -20, width: 130, height: 130, borderRadius: '50%', background: `radial-gradient(circle, ${colors.accent}44 0%, ${colors.accent}18 55%, transparent 75%)`, zIndex: 0 }} />
 
       {/* SVG grid overlay */}
       <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 0, opacity: 0.12, pointerEvents: 'none' }} viewBox="0 0 340 220">

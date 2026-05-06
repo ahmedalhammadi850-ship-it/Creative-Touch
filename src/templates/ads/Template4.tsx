@@ -18,7 +18,7 @@ export default function Template4({ data }: { data: TemplateData }) {
         style={{ borderColor: data.colors.accent }}
       />
       
-      <div className="z-10 text-center w-full max-w-[280px] p-6 bg-white/40 backdrop-blur-md rounded-full aspect-square flex flex-col justify-center items-center shadow-lg border border-white/50">
+      <div className="z-10 text-center w-full max-w-[280px] p-6 rounded-full aspect-square flex flex-col justify-center items-center shadow-lg border border-white/50" style={{ background: 'rgba(255,255,255,0.55)' }}>
         <h2 className="text-3xl font-bold mb-2 font-serif" style={{ color: data.colors.primary }}>{data.title}</h2>
         <div className="w-8 h-0.5 mx-auto mb-3" style={{ backgroundColor: data.colors.accent }} />
         <p className="text-sm font-medium mb-3 uppercase tracking-wider" style={{ color: data.colors.primary }}>{data.subtitle}</p>

@@ -65,14 +65,13 @@ export default function SpecializedTemplate1({ data }: Props) {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {(services.length > 0 ? services : ['تنظيف وتلميع', 'تبييض', 'حشوات']).map((s, i) => (
             <span key={i} style={{
-              background: '#ffffff22',
+              background: '#ffffff30',
               color: '#ffffff',
-              border: '1px solid #ffffff44',
+              border: '1px solid #ffffff55',
               borderRadius: 20,
               padding: '3px 12px',
               fontSize: 11,
               fontWeight: 600,
-              backdropFilter: 'blur(4px)',
             }}>{s}</span>
           ))}
         </div>

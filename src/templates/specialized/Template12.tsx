@@ -18,8 +18,8 @@ export default function SpecializedTemplate12({ data }: Props) {
       <div style={{ height: '4px', background: `linear-gradient(to left, ${colors.accent}, ${colors.primary}, ${colors.secondary})`, boxShadow: `0 2px 12px ${colors.primary}88` }} />
 
       {/* Glow effects */}
-      <div style={{ position: 'absolute', top: -30, right: '30%', width: 160, height: 160, borderRadius: '50%', background: `radial-gradient(circle, ${colors.primary}55 0%, transparent 65%)`, filter: 'blur(6px)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: -20, left: '20%', width: 120, height: 120, borderRadius: '50%', background: `radial-gradient(circle, ${colors.accent}33 0%, transparent 65%)`, filter: 'blur(4px)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: -30, right: '30%', width: 180, height: 180, borderRadius: '50%', background: `radial-gradient(circle, ${colors.primary}55 0%, ${colors.primary}22 50%, transparent 70%)`, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: -20, left: '20%', width: 140, height: 140, borderRadius: '50%', background: `radial-gradient(circle, ${colors.accent}44 0%, ${colors.accent}18 50%, transparent 70%)`, pointerEvents: 'none' }} />
 
       <div style={{ flex: 1, padding: '16px 22px 14px', position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{ color: colors.accent, fontSize: '8px', letterSpacing: '0.2em', fontWeight: 700, marginBottom: '6px', textShadow: `0 0 10px ${colors.accent}` }}>

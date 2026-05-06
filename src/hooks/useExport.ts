@@ -1,17 +1,44 @@
 import html2canvas from 'html2canvas';
 
-async function loadCairoFont() {
-  const font = new FontFace(
-    'Cairo',
-    "url('https://fonts.gstatic.com/s/cairo/v28/SLXgc1nY6HkvalIhTp2mxdt0UX8.woff2') format('woff2')",
-    { weight: '400 900', style: 'normal', display: 'swap' }
-  );
+let cairoFontFaceCSS: string | null = null;
+
+async function ensureCairoFont(): Promise<string> {
+  if (cairoFontFaceCSS) return cairoFontFaceCSS;
   try {
-    const loaded = await font.load();
-    document.fonts.add(loaded);
+    const urls = [
+      'https://fonts.gstatic.com/s/cairo/v28/SLXgc1nY6HkvalIhTp2mxdt0UX8.woff2',
+    ];
+    const fetchedFaces: string[] = [];
+    for (const url of urls) {
+      try {
+        const resp = await fetch(url, { mode: 'cors' });
+        if (!resp.ok) continue;
+        const blob = await resp.blob();
+        const dataUri: string = await new Promise((res) => {
+          const r = new FileReader();
+          r.onload = () => res(r.result as string);
+          r.readAsDataURL(blob);
+        });
+        fetchedFaces.push(`
+          @font-face {
+            font-family: 'Cairo';
+            src: url('${dataUri}') format('woff2');
+            font-weight: 100 900;
+            font-style: normal;
+          }
+        `);
+        break;
+      } catch {}
+    }
+    if (fetchedFaces.length > 0) {
+      cairoFontFaceCSS = fetchedFaces.join('\n');
+    } else {
+      cairoFontFaceCSS = "/* cairo font fetch failed */";
+    }
   } catch {
-    // font already loaded via stylesheet
+    cairoFontFaceCSS = "/* cairo font fetch failed */";
   }
+  return cairoFontFaceCSS;
 }
 
 export function useExport() {
@@ -20,16 +47,17 @@ export function useExport() {
     if (!el) return;
 
     try {
-      // 1. Ensure Cairo font is loaded
-      await loadCairoFont();
+      // 1. Wait for fonts already in page to load
       await document.fonts.ready;
 
-      // 2. Small delay to let any async rendering finish
-      await new Promise(resolve => setTimeout(resolve, 200));
+      // 2. Fetch Cairo as base64 so html2canvas can use it
+      const fontFaceCSS = await ensureCairoFont();
+
+      // 3. Small delay for any pending renders
+      await new Promise(resolve => setTimeout(resolve, 300));
 
       const rect = el.getBoundingClientRect();
 
-      // 3. Capture with optimal settings
       const canvas = await html2canvas(el, {
         useCORS: true,
         allowTaint: true,
@@ -40,30 +68,49 @@ export function useExport() {
         removeContainer: false,
         windowWidth: Math.ceil(rect.width),
         windowHeight: Math.ceil(rect.height),
-        x: 0,
-        y: 0,
         scrollX: 0,
         scrollY: 0,
         foreignObjectRendering: false,
-        onclone: (clonedDoc) => {
-          // Ensure Cairo font is applied to all text in cloned document
-          const style = clonedDoc.createElement('style');
-          style.textContent = `
-            @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
-            * { font-family: 'Cairo', 'Arial', sans-serif !important; }
-          `;
-          clonedDoc.head.appendChild(style);
+        onclone: (_clonedDoc, clonedEl) => {
+          const doc = clonedEl.ownerDocument;
 
-          // Replace blur filters with compatible alternatives
-          clonedDoc.querySelectorAll<HTMLElement>('[style*="blur"]').forEach(el => {
-            el.style.filter = el.style.filter.replace(/blur\([^)]+\)/g, 'blur(0px)');
-            el.style.opacity = '0';
+          // Inject Cairo font-face + fix all Arabic rendering issues
+          const style = doc.createElement('style');
+          style.textContent = `
+            ${fontFaceCSS}
+            * {
+              font-family: 'Cairo', 'Tahoma', 'Arial', sans-serif !important;
+              letter-spacing: 0 !important;
+              word-spacing: 0 !important;
+              -webkit-font-smoothing: antialiased !important;
+              text-rendering: optimizeLegibility !important;
+            }
+          `;
+          doc.head.appendChild(style);
+
+          // Strip backdrop-filter from all elements (not supported by html2canvas)
+          doc.querySelectorAll<HTMLElement>('*').forEach(el => {
+            const s = el.style;
+            if (s.backdropFilter || (s as any).webkitBackdropFilter) {
+              s.backdropFilter = 'none';
+              (s as any).webkitBackdropFilter = 'none';
+              // If the element was semi-transparent glass, give it a solid-ish bg
+              if (!s.backgroundColor || s.backgroundColor === 'transparent') {
+                s.backgroundColor = 'rgba(255,255,255,0.12)';
+              }
+            }
+            // Strip filter:blur() from decorative elements, keep other filters (e.g. drop-shadow if any)
+            if (s.filter && s.filter.includes('blur')) {
+              s.filter = 'none';
+              // Hide purely decorative blur orbs
+              if (s.opacity !== '0') s.opacity = '0.35';
+            }
           });
 
-          // Replace backdrop-filter (not supported)
-          clonedDoc.querySelectorAll<HTMLElement>('[style*="backdrop"]').forEach(el => {
+          // Also strip Tailwind backdrop-blur classes by computed style
+          doc.querySelectorAll<HTMLElement>('[class*="backdrop"]').forEach(el => {
             el.style.backdropFilter = 'none';
-            el.style.webkitBackdropFilter = 'none';
+            (el.style as any).webkitBackdropFilter = 'none';
           });
         },
       });

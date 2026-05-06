@@ -9,26 +9,23 @@ export default function SpecializedTemplate11({ data }: Props) {
   return (
     <div id="template-preview" style={{
       width: 360, height: 360,
-      background: `rgba(255,255,255,0.04)`,
-      backdropFilter: 'blur(12px)',
       backgroundColor: colors.bg,
       position: 'relative', overflow: 'hidden',
       fontFamily: "'Cairo', sans-serif", direction: 'rtl',
       display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
     }}>
-      {/* Glassmorphism blobs */}
-      <div style={{ position: 'absolute', top: -40, right: -40, width: 200, height: 200, borderRadius: '50%', background: `${colors.primary}44`, filter: 'blur(30px)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: -30, left: -30, width: 170, height: 170, borderRadius: '50%', background: `${colors.accent}33`, filter: 'blur(28px)', pointerEvents: 'none' }} />
+      {/* Decorative blobs — radial-gradient instead of filter:blur */}
+      <div style={{ position: 'absolute', top: -40, right: -40, width: 240, height: 240, borderRadius: '50%', background: `radial-gradient(circle, ${colors.primary}55 0%, ${colors.primary}22 50%, transparent 70%)`, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: -30, left: -30, width: 200, height: 200, borderRadius: '50%', background: `radial-gradient(circle, ${colors.accent}44 0%, ${colors.accent}18 50%, transparent 70%)`, pointerEvents: 'none' }} />
 
       {/* Glass card */}
       <div style={{
         position: 'relative', zIndex: 1,
-        background: 'rgba(255,255,255,0.08)',
-        border: `1px solid rgba(255,255,255,0.18)`,
+        background: 'rgba(255,255,255,0.12)',
+        border: `1px solid rgba(255,255,255,0.22)`,
         borderRadius: '16px',
         padding: '22px 24px',
         width: '300px',
-        backdropFilter: 'blur(8px)',
         boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
       }}>
         <div style={{ color: colors.accent, fontSize: '7.5px', letterSpacing: '0.22em', fontWeight: 700, marginBottom: '7px', opacity: 0.9 }}>✦ خدمات متميزة ✦</div>

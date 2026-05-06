@@ -23,21 +23,18 @@ export default function CongratsTemplate17({ data }: Props) {
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         <div style={{
           position: 'absolute', top: -60, right: -60,
-          width: 280, height: 280, borderRadius: '50%',
-          background: `radial-gradient(circle, ${colors.primary}88 0%, transparent 70%)`,
-          filter: 'blur(40px)',
+          width: 300, height: 300, borderRadius: '50%',
+          background: `radial-gradient(circle, ${colors.primary}77 0%, ${colors.primary}33 45%, transparent 70%)`,
         }} />
         <div style={{
           position: 'absolute', bottom: -40, left: -40,
-          width: 240, height: 240, borderRadius: '50%',
-          background: `radial-gradient(circle, ${colors.secondary}77 0%, transparent 70%)`,
-          filter: 'blur(50px)',
+          width: 260, height: 260, borderRadius: '50%',
+          background: `radial-gradient(circle, ${colors.secondary}66 0%, ${colors.secondary}22 45%, transparent 70%)`,
         }} />
         <div style={{
           position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
-          width: 200, height: 200, borderRadius: '50%',
+          width: 220, height: 220, borderRadius: '50%',
           background: `radial-gradient(circle, ${colors.accent}22 0%, transparent 70%)`,
-          filter: 'blur(30px)',
         }} />
       </div>
 
@@ -67,9 +64,8 @@ export default function CongratsTemplate17({ data }: Props) {
         transform: 'translate(-50%, -50%)',
         width: 300,
         zIndex: 3,
-        background: 'rgba(255,255,255,0.06)',
-        backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255,255,255,0.12)',
+        background: 'rgba(255,255,255,0.10)',
+        border: '1px solid rgba(255,255,255,0.16)',
         borderRadius: 16,
         padding: '28px 28px 24px',
         textAlign: 'center',

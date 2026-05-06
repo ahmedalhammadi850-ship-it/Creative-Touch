@@ -28,12 +28,12 @@ export default function SpecializedTemplate6({ data }: { data: TemplateData }) {
         {/* Services */}
         <div style={{ flex: 1, display: 'flex', flexWrap: 'wrap', gap: '7px', alignContent: 'flex-start' }}>
           {(services.length > 0 ? services : ['بيع وشراء', 'إيجار', 'تقييم عقاري', 'استشارات']).map((s, i) => (
-            <div key={i} style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '20px', padding: '4px 12px', color: '#ffffff', fontSize: '11px', fontWeight: '600', backdropFilter: 'blur(4px)' }}>{s}</div>
+            <div key={i} style={{ background: 'rgba(255,255,255,0.20)', border: '1px solid rgba(255,255,255,0.28)', borderRadius: '20px', padding: '4px 12px', color: '#ffffff', fontSize: '11px', fontWeight: '600' }}>{s}</div>
           ))}
         </div>
 
         {/* CTA bar */}
-        <div style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(6px)', borderRadius: '8px', padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid rgba(255,255,255,0.18)' }}>
+        <div style={{ background: 'rgba(255,255,255,0.18)', borderRadius: '8px', padding: '10px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid rgba(255,255,255,0.28)' }}>
           <div>
             <div style={{ color: data.colors.accent, fontSize: '9px', fontWeight: '700' }}>تواصل معنا الآن</div>
             {data.phone && <div style={{ color: '#ffffff', fontSize: '14px', fontWeight: '800' }} dir="ltr">{data.phone}</div>}

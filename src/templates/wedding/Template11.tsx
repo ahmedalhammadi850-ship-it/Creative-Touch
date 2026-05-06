@@ -108,8 +108,7 @@ export default function Template11({ data }: { data: TemplateData }) {
         <div
           className="text-center mb-1 px-3 py-2 rounded"
           style={{
-            background: 'rgba(255,255,255,0.82)',
-            backdropFilter: 'blur(4px)',
+            background: 'rgba(255,255,255,0.92)',
             border: `1px solid ${data.colors.primary}55`,
           }}
         >
@@ -153,8 +152,7 @@ export default function Template11({ data }: { data: TemplateData }) {
         <div
           className="w-full rounded p-3 mb-2"
           style={{
-            background: 'rgba(255,255,255,0.85)',
-            backdropFilter: 'blur(6px)',
+            background: 'rgba(255,255,255,0.92)',
             border: `1px solid ${data.colors.primary}33`,
             boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
           }}
