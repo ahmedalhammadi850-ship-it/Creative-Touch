@@ -18,12 +18,6 @@ export default function Template21({ data }: { data: TemplateData }) {
           <div className="w-1 h-1 rounded-full opacity-30" style={{ backgroundColor: data.colors.accent }} />
         </div>
 
-        <div
-          className="text-[6px] tracking-[0.15em] rotate-180"
-          style={{ writingMode: 'vertical-rl', color: data.colors.accent, opacity: 0.7 }}
-        >
-          PROFESSIONAL
-        </div>
       </div>
 
       <div className="flex-1 flex flex-col justify-between p-5">

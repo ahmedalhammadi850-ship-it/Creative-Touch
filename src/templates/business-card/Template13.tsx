@@ -20,7 +20,6 @@ export default function Template13({ data }: { data: TemplateData }) {
         <div style={{ position: 'absolute', bottom: -15, left: -15, width: 60, height: 60, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
         <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 10px' }}>
           <div style={{ width: '28px', height: '1.5px', background: `${data.colors.accent}`, margin: '0 auto 6px' }} />
-          <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: '7px', letterSpacing: '0.1em' }}>محترف</div>
         </div>
       </div>
 
