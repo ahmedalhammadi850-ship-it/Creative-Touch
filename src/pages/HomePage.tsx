@@ -365,7 +365,66 @@ export default function HomePage() {
               <p style={{ color: '#94a3b8', fontSize: 16 }}>اختر الخطة المناسبة لك وابدأ التصميم فوراً</p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
+
+              {/* Single template plan */}
+              <div style={{
+                background: '#fff',
+                borderRadius: 28,
+                padding: '40px 36px',
+                border: '2px solid #d1fae5',
+                boxShadow: '0 4px 30px rgba(16,185,129,0.08)',
+                display: 'flex', flexDirection: 'column', gap: 0,
+                transition: 'transform 0.25s, box-shadow 0.25s',
+              }}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-4px)'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 16px 50px rgba(16,185,129,0.18)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLDivElement).style.boxShadow = '0 4px 30px rgba(16,185,129,0.08)'; }}
+              >
+                <div style={{ marginBottom: 28 }}>
+                  <div style={{
+                    width: 48, height: 48, borderRadius: 16,
+                    background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    marginBottom: 20,
+                  }}>
+                    <Star size={24} color="#10b981" fill="#10b981" />
+                  </div>
+                  <h3 style={{ color: '#1e1b4b', fontSize: 22, fontWeight: 900, marginBottom: 8 }}>قالب واحد فقط</h3>
+                  <p style={{ color: '#94a3b8', fontSize: 14, lineHeight: 1.75 }}>مثالية لمن يريد تصميماً واحداً محدداً</p>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 32 }}>
+                  <span style={{ color: '#1e1b4b', fontSize: 52, fontWeight: 900, lineHeight: 1 }}>1000</span>
+                  <div>
+                    <div style={{ color: '#10b981', fontSize: 16, fontWeight: 800 }}>ريال</div>
+                    <div style={{ color: '#94a3b8', fontSize: 12, fontWeight: 600 }}>/ مرة واحدة</div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 36 }}>
+                  {['تصميم قالب واحد تختاره', 'تصدير PNG بجودة عالية', 'تخصيص ألوان ونصوص وصور', 'صالح للاستخدام الدائم'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#ecfdf5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <Check size={13} color="#10b981" strokeWidth={2.5} />
+                      </div>
+                      <span style={{ color: '#475569', fontSize: 14, fontWeight: 600 }}>{f}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setLocation('/category/congrats')}
+                  style={{
+                    width: '100%', padding: '14px', borderRadius: 14,
+                    background: '#ecfdf5', border: '2px solid #a7f3d0',
+                    color: '#059669', fontSize: 15, fontWeight: 800, cursor: 'pointer',
+                    transition: 'all 0.2s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#10b981'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = '#10b981'; }}
+                  onMouseLeave={e => { e.currentTarget.style.background = '#ecfdf5'; e.currentTarget.style.color = '#059669'; e.currentTarget.style.borderColor = '#a7f3d0'; }}
+                >
+                  اختر قالباً الآن
+                </button>
+              </div>
 
               {/* Weekly plan */}
               <div style={{
