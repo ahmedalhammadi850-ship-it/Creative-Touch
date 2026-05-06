@@ -50,7 +50,6 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
   const [, setLocation] = useLocation();
 
   const [name, setName] = useState(user?.name || '');
-  const [phone, setPhone] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
@@ -85,7 +84,7 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !phone.trim()) { setError('يرجى ملء جميع الحقول'); return; }
+    if (!name.trim()) { setError('يرجى إدخال الاسم الكامل'); return; }
     if (!image) { setError('يرجى رفع صورة إيصال الدفع'); return; }
 
     setSending(true);
@@ -104,7 +103,7 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
         type: 'subscription',
         userId: user.id,
         userName: name.trim(),
-        userPhone: phone.trim(),
+        userPhone: 'غير مزود',
         userEmail: user.email,
         plan,
         planId,
@@ -144,15 +143,9 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
             </div>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>الاسم الكامل</label>
-                  <input value={name} onChange={e => setName(e.target.value)} style={inp} placeholder="أدخل اسمك" onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>رقم الهاتف</label>
-                  <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} dir="ltr" style={{ ...inp, textAlign: 'right' }} placeholder="07xxxxxxxx" onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
-                </div>
+              <div>
+                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>الاسم الكامل</label>
+                <input value={name} onChange={e => setName(e.target.value)} style={inp} placeholder="أدخل اسمك" onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
               </div>
 
               <div>
