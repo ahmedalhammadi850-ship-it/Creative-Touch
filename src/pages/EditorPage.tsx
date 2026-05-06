@@ -4,8 +4,9 @@ import { categories } from '../data/categories';
 import { useTemplateStore } from '../store/useTemplateStore';
 import { TemplateRenderer } from '../components/TemplateRenderer';
 import { InlineEditor } from '../components/InlineEditor';
+import { PaymentRequestModal } from '../components/PaymentRequestModal';
 import { Button } from '@/components/ui/button';
-import { Download, ChevronRight, RotateCcw, Copy, CreditCard, FlipHorizontal } from 'lucide-react';
+import { Download, ChevronRight, RotateCcw, Copy, CreditCard, FlipHorizontal, Send } from 'lucide-react';
 import { useExport } from '../hooks/useExport';
 import { useToast } from '@/hooks/use-toast';
 import type { TemplateData } from '../types/template';
@@ -40,6 +41,7 @@ export default function EditorPage() {
   const { toast } = useToast();
   const [cardSide, setCardSide] = useState<'front' | 'back'>('front');
   const [backStyleId, setBackStyleId] = useState('41');
+  const [showPayment, setShowPayment] = useState(false);
 
   const { setTemplate, templateData, updateData, resetData, duplicateTemplate } = useTemplateStore();
   const { exportAsPng } = useExport();
@@ -145,12 +147,26 @@ export default function EditorPage() {
             <RotateCcw className="w-4 h-4 ml-2" />
             إعادة تعيين
           </Button>
+          <Button
+            onClick={() => setShowPayment(true)}
+            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-md"
+          >
+            <Send className="w-4 h-4 ml-2" />
+            طلب تفعيل
+          </Button>
           <Button onClick={handleExport} className="bg-primary hover:bg-primary/90 text-white shadow-md">
             <Download className="w-4 h-4 ml-2" />
             تصدير PNG
           </Button>
         </div>
       </header>
+
+      {showPayment && (
+        <PaymentRequestModal
+          templateName={templateConfig.name}
+          onClose={() => setShowPayment(false)}
+        />
+      )}
 
       <div className="flex flex-1 overflow-hidden flex-col md:flex-row">
         <main className="flex-1 overflow-auto bg-[#e5e7eb] flex flex-col items-center justify-center p-8 relative">
