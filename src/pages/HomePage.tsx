@@ -5,9 +5,9 @@ import { usePricingStore } from '../store/usePricingStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { useRequestStore } from '../store/useRequestStore';
 import {
-  Sparkles, Zap, Download, Palette, Star, ArrowLeft,
-  LayoutTemplate, Users, Award, ChevronLeft, Check, Crown,
-  LogIn, UserPlus, LogOut, User, X, Send, CheckCircle
+  Sparkles, Zap, Download, Palette, Star,
+  LayoutTemplate, Users, Award, ChevronLeft, ArrowLeft, Check, Crown,
+  LogIn, UserPlus, LogOut, LayoutDashboard, X, Send, CheckCircle
 } from 'lucide-react';
 
 const categoryIcons: Record<string, string> = {
@@ -44,7 +44,7 @@ const steps = [
 ];
 
 // ── Subscription Modal ──────────────────────────────────────────────────────
-function SubModal({ plan, onClose }: { plan: string; onClose: () => void }) {
+function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onClose: () => void }) {
   const { user } = useAuthStore();
   const { addRequest } = useRequestStore();
   const [, setLocation] = useLocation();
@@ -74,7 +74,7 @@ function SubModal({ plan, onClose }: { plan: string; onClose: () => void }) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) { setError('يرجى ملء جميع الحقول'); return; }
-    addRequest({ type: 'subscription', userId: user.id, userName: name.trim(), userPhone: phone.trim(), userEmail: user.email, plan });
+    addRequest({ type: 'subscription', userId: user.id, userName: name.trim(), userPhone: phone.trim(), userEmail: user.email, plan, planId });
     setDone(true);
   };
 
@@ -128,7 +128,7 @@ export default function HomePage() {
   const [, setLocation] = useLocation();
   const { plans } = usePricingStore();
   const { user, logout } = useAuthStore();
-  const [subModal, setSubModal] = useState<string | null>(null);
+  const [subModal, setSubModal] = useState<{ name: string; id: string } | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   return (
@@ -174,6 +174,10 @@ export default function HomePage() {
                       <p style={{ color: '#1e1b4b', fontSize: 13, fontWeight: 800, margin: 0 }}>{user.name}</p>
                       <p style={{ color: '#94a3b8', fontSize: 11, margin: '2px 0 0' }}>{user.email}</p>
                     </div>
+                    <button onClick={() => { setShowUserMenu(false); setLocation('/dashboard'); }}
+                      style={{ width: '100%', padding: '9px 14px', borderRadius: 10, border: 'none', cursor: 'pointer', background: 'none', color: '#6366f1', fontSize: 13, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8, fontFamily: "'Cairo',sans-serif" }}>
+                      <LayoutDashboard size={14} />لوحتي
+                    </button>
                     <button onClick={() => { logout(); setShowUserMenu(false); }}
                       style={{ width: '100%', padding: '9px 14px', borderRadius: 10, border: 'none', cursor: 'pointer', background: 'none', color: '#dc2626', fontSize: 13, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8, fontFamily: "'Cairo',sans-serif" }}>
                       <LogOut size={14} />تسجيل الخروج
@@ -387,7 +391,7 @@ export default function HomePage() {
                       ))}
                     </div>
 
-                    <button onClick={() => setSubModal(plan.name)}
+                    <button onClick={() => setSubModal({ name: plan.name, id: plan.id })}
                       style={{ position: 'relative', width: '100%', padding: '14px', borderRadius: 14, background: pc.btnBg, border: `2px solid ${pc.btnBorder}`, color: pc.btnColor, fontSize: 15, fontWeight: 800, cursor: 'pointer', fontFamily: "'Cairo',sans-serif", transition: 'all 0.2s', boxShadow: isMonthly ? '0 4px 20px rgba(0,0,0,0.15)' : 'none' }}>
                       {plan.id === 'monthly' ? 'اشترك شهرياً' : plan.id === 'weekly' ? 'اشترك أسبوعياً' : 'اختر قوالبك الآن'}
                     </button>
@@ -441,7 +445,7 @@ export default function HomePage() {
         </footer>
       </div>
 
-      {subModal && <SubModal plan={subModal} onClose={() => setSubModal(null)} />}
+      {subModal && <SubModal plan={subModal.name} planId={subModal.id} onClose={() => setSubModal(null)} />}
     </div>
   );
 }

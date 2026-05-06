@@ -18,7 +18,7 @@
 
 ## Where things live
 
-- `src/pages/` — HomePage, CategoryPage, EditorPage, AboutPage, LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, AdminLoginPage, AdminDashboard
+- `src/pages/` — HomePage, CategoryPage, EditorPage, AboutPage, LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage, AdminLoginPage, AdminDashboard, UserDashboard
 - `src/components/` — InlineEditor, TemplateRenderer, PaymentRequestModal
 - `src/store/` — useTemplateStore, useAuthStore, useAdminStore, usePricingStore, useRequestStore
 - `src/templates/{category}/` — Template components (congrats 1–23, wedding 1–14, business-card 1–11, ads 1–7, mass-wedding 1–8, specialized 1–7)

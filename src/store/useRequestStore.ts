@@ -13,6 +13,7 @@ export interface AppRequest {
   userEmail?: string;
   templateName?: string;
   plan?: string;
+  planId?: string;
   imageBase64?: string;
   imageName?: string;
   status: RequestStatus;

@@ -14,15 +14,23 @@ import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/ResetPasswordPage";
 import AdminLoginPage from "@/pages/AdminLoginPage";
 import AdminDashboard from "@/pages/AdminDashboard";
+import UserDashboard from "@/pages/UserDashboard";
 import NotFound from "@/pages/not-found";
 
 import { useAdminStore } from "@/store/useAdminStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const queryClient = new QueryClient();
 
 function AdminRoute({ component: Component }: { component: React.ComponentType }) {
   const { isLoggedIn } = useAdminStore();
   if (!isLoggedIn) return <Redirect to="/admin/login" />;
+  return <Component />;
+}
+
+function UserRoute({ component: Component }: { component: React.ComponentType }) {
+  const { user } = useAuthStore();
+  if (!user) return <Redirect to="/login" />;
   return <Component />;
 }
 
@@ -37,6 +45,7 @@ function Router() {
       <Route path="/register" component={RegisterPage} />
       <Route path="/forgot-password" component={ForgotPasswordPage} />
       <Route path="/reset-password" component={ResetPasswordPage} />
+      <Route path="/dashboard">{() => <UserRoute component={UserDashboard} />}</Route>
       <Route path="/admin/login" component={AdminLoginPage} />
       <Route path="/admin">{() => <AdminRoute component={AdminDashboard} />}</Route>
       <Route component={NotFound} />

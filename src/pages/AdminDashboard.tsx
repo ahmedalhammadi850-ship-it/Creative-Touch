@@ -4,9 +4,10 @@ import { useAdminStore } from '../store/useAdminStore';
 import { usePricingStore } from '../store/usePricingStore';
 import { useRequestStore } from '../store/useRequestStore';
 import { useAuthStore } from '../store/useAuthStore';
+import type { User } from '../store/useAuthStore';
 import {
   ShieldCheck, LogOut, DollarSign, Users, Clock, CheckCircle, XCircle,
-  Edit3, Save, X, Plus, Trash2, LayoutTemplate, Bell, RotateCcw
+  Edit3, Save, X, Plus, Trash2, LayoutTemplate, Bell, RotateCcw, ChevronDown
 } from 'lucide-react';
 import type { AppRequest } from '../store/useRequestStore';
 import type { PricingPlan } from '../store/usePricingStore';
@@ -24,6 +25,31 @@ const TYPE_LABEL: Record<string, string> = {
   subscription: 'اشتراك',
 };
 
+const PLAN_ID_MAP: Record<string, User['plan']> = {
+  starter:        'starter',
+  weekly:         'weekly',
+  monthly:        'monthly',
+  'باقة 7 قوالب':   'starter',
+  'الخطة الأسبوعية': 'weekly',
+  'الخطة الشهرية':   'monthly',
+  'اشتراك شهري':   'monthly',
+  'اشتراك أسبوعي': 'weekly',
+};
+
+const PLAN_LABELS: Record<string, string> = {
+  free:    'مجاني',
+  starter: 'باقة 7 قوالب',
+  weekly:  'أسبوعي',
+  monthly: 'شهري',
+};
+
+const PLAN_COLORS: Record<string, string> = {
+  free:    '#94a3b8',
+  starter: '#10b981',
+  weekly:  '#6366f1',
+  monthly: '#a855f7',
+};
+
 export default function AdminDashboard() {
   const [, setLocation] = useLocation();
   const { logout } = useAdminStore();
@@ -36,6 +62,7 @@ export default function AdminDashboard() {
   const [editBuf, setEditBuf] = useState<Partial<PricingPlan>>({});
   const [previewImg, setPreviewImg] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
+  const [changingPlan, setChangingPlan] = useState<string | null>(null);
 
   const pendingCount = requests.filter(r => r.status === 'pending').length;
 
@@ -49,7 +76,23 @@ export default function AdminDashboard() {
 
   const filtered = filterStatus === 'all' ? requests : requests.filter(r => r.status === filterStatus);
 
-  const nav = (t: Tab) => ({ onClick: () => setTab(t), style: { padding: '10px 20px', borderRadius: 12, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, fontFamily: "'Cairo',sans-serif", background: tab === t ? 'linear-gradient(135deg,#6366f1,#a855f7)' : 'transparent', color: tab === t ? '#fff' : '#64748b', boxShadow: tab === t ? '0 4px 14px rgba(99,102,241,0.3)' : 'none', position: 'relative' as const, transition: 'all 0.2s' } });
+  const resolvePlanId = (req: AppRequest): User['plan'] => {
+    if (req.planId && PLAN_ID_MAP[req.planId]) return PLAN_ID_MAP[req.planId];
+    if (req.plan && PLAN_ID_MAP[req.plan]) return PLAN_ID_MAP[req.plan];
+    return 'starter';
+  };
+
+  const handleApprove = (req: AppRequest) => {
+    updateStatus(req.id, 'approved');
+    if (req.userId) {
+      updateUserPlan(req.userId, resolvePlanId(req), 'active');
+    }
+  };
+
+  const handleDirectPlanChange = (userId: string, plan: User['plan']) => {
+    updateUserPlan(userId, plan, plan === 'free' ? null : 'active');
+    setChangingPlan(null);
+  };
 
   return (
     <div dir="rtl" style={{ minHeight: '100vh', background: '#f1f5f9', fontFamily: "'Cairo',sans-serif" }}>
@@ -68,15 +111,15 @@ export default function AdminDashboard() {
 
         <nav style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
           {([
-            { id: 'requests', icon: Bell, label: 'الطلبات', badge: pendingCount },
-            { id: 'pricing', icon: DollarSign, label: 'إدارة الأسعار' },
-            { id: 'users', icon: Users, label: 'المستخدمون' },
+            { id: 'requests', icon: Bell,         label: 'الطلبات',        badge: pendingCount },
+            { id: 'pricing',  icon: DollarSign,   label: 'إدارة الأسعار' },
+            { id: 'users',    icon: Users,         label: 'المستخدمون',    badge: users.length },
           ] as Array<{ id: Tab; icon: any; label: string; badge?: number }>).map(({ id, icon: Icon, label, badge }) => (
             <button key={id} onClick={() => setTab(id)}
               style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 14px', borderRadius: 12, border: 'none', cursor: 'pointer', background: tab === id ? 'rgba(99,102,241,0.25)' : 'transparent', color: tab === id ? '#a5b4fc' : 'rgba(255,255,255,0.5)', fontSize: 14, fontWeight: 700, fontFamily: "'Cairo',sans-serif", textAlign: 'right', transition: 'all 0.2s', position: 'relative' }}>
               <Icon size={18} />
               {label}
-              {!!badge && <span style={{ marginRight: 'auto', background: '#ef4444', color: '#fff', borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 800 }}>{badge}</span>}
+              {!!badge && <span style={{ marginRight: 'auto', background: id === 'requests' ? '#ef4444' : 'rgba(255,255,255,0.15)', color: '#fff', borderRadius: 20, padding: '2px 8px', fontSize: 11, fontWeight: 800 }}>{badge}</span>}
             </button>
           ))}
         </nav>
@@ -102,7 +145,7 @@ export default function AdminDashboard() {
             {/* Stats */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginBottom: 28 }}>
               {[
-                { label: 'إجمالي الطلبات', value: requests.length, color: '#6366f1', bg: '#eef2ff' },
+                { label: 'إجمالي الطلبات', value: requests.length,                                       color: '#6366f1', bg: '#eef2ff' },
                 { label: 'قيد الانتظار',   value: requests.filter(r => r.status === 'pending').length,  color: '#d97706', bg: '#fef9ee' },
                 { label: 'تمت الموافقة',   value: requests.filter(r => r.status === 'approved').length, color: '#059669', bg: '#ecfdf5' },
               ].map(({ label, value, color, bg }) => (
@@ -132,25 +175,26 @@ export default function AdminDashboard() {
               )}
               {filtered.map((req: AppRequest) => {
                 const st = STATUS_LABEL[req.status];
+                const resolvedPlan = resolvePlanId(req);
                 return (
                   <div key={req.id} style={{ background: '#fff', borderRadius: 18, padding: '20px 24px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9' }}>
                     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
                       <div style={{ flex: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10, flexWrap: 'wrap' }}>
                           <span style={{ background: '#eef2ff', color: '#6366f1', fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 20 }}>{TYPE_LABEL[req.type] || req.type}</span>
                           <span style={{ background: st.bg, color: st.color, fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 20 }}>{st.label}</span>
                           {req.plan && <span style={{ background: '#fdf4ff', color: '#a855f7', fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 20 }}>{req.plan}</span>}
+                          {req.type === 'subscription' && <span style={{ background: `${PLAN_COLORS[resolvedPlan]}18`, color: PLAN_COLORS[resolvedPlan], fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 20 }}>← {PLAN_LABELS[resolvedPlan]}</span>}
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '6px 20px' }}>
                           <p style={{ margin: 0, fontSize: 14 }}><strong>الاسم:</strong> {req.userName}</p>
                           <p style={{ margin: 0, fontSize: 14 }}><strong>الهاتف:</strong> {req.userPhone}</p>
                           {req.userEmail && <p style={{ margin: 0, fontSize: 14 }}><strong>البريد:</strong> {req.userEmail}</p>}
-                          {req.templateName && <p style={{ margin: 0, fontSize: 14 }}><strong>القالب:</strong> {req.templateName}</p>}
+                          {req.templateName && req.templateName !== 'غير محدد' && <p style={{ margin: 0, fontSize: 14 }}><strong>القالب:</strong> {req.templateName}</p>}
                           <p style={{ margin: 0, fontSize: 12, color: '#94a3b8' }}><strong>التاريخ:</strong> {new Date(req.createdAt).toLocaleDateString('ar-YE')}</p>
                         </div>
                       </div>
 
-                      {/* Image thumbnail */}
                       {req.imageBase64 && (
                         <img
                           src={`data:image/jpeg;base64,${req.imageBase64}`}
@@ -163,17 +207,21 @@ export default function AdminDashboard() {
 
                     {req.status === 'pending' && (
                       <div style={{ display: 'flex', gap: 10, marginTop: 16, paddingTop: 14, borderTop: '1px solid #f1f5f9' }}>
-                        <button onClick={() => {
-                          updateStatus(req.id, 'approved');
-                          if (req.userId) updateUserPlan(req.userId, req.plan === 'اشتراك شهري' ? 'monthly' : 'starter', 'active');
-                        }}
+                        <button onClick={() => handleApprove(req)}
                           style={{ flex: 1, padding: '10px', borderRadius: 12, border: 'none', cursor: 'pointer', background: '#ecfdf5', color: '#059669', fontSize: 14, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, fontFamily: "'Cairo',sans-serif" }}>
-                          <CheckCircle size={16} />موافقة
+                          <CheckCircle size={16} />موافقة وتفعيل {req.type === 'subscription' ? PLAN_LABELS[resolvedPlan] : ''}
                         </button>
                         <button onClick={() => updateStatus(req.id, 'rejected')}
                           style={{ flex: 1, padding: '10px', borderRadius: 12, border: 'none', cursor: 'pointer', background: '#fef2f2', color: '#dc2626', fontSize: 14, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, fontFamily: "'Cairo',sans-serif" }}>
                           <XCircle size={16} />رفض
                         </button>
+                      </div>
+                    )}
+
+                    {req.status === 'approved' && (
+                      <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid #f1f5f9', display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <CheckCircle size={14} color="#059669" />
+                        <span style={{ color: '#059669', fontSize: 13, fontWeight: 700 }}>تمت الموافقة {req.respondedAt ? `في ${new Date(req.respondedAt).toLocaleDateString('ar-YE')}` : ''}</span>
                       </div>
                     )}
                   </div>
@@ -217,7 +265,6 @@ export default function AdminDashboard() {
                       }
                     </div>
 
-                    {/* Description */}
                     <div style={{ marginBottom: 14 }}>
                       <label style={{ fontSize: 11, color: '#94a3b8', fontWeight: 700, display: 'block', marginBottom: 4 }}>الوصف</label>
                       {isEditing
@@ -226,7 +273,6 @@ export default function AdminDashboard() {
                       }
                     </div>
 
-                    {/* Prices */}
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 16 }}>
                       {[
                         { key: 'priceYER', label: 'ريال يمني' },
@@ -248,7 +294,6 @@ export default function AdminDashboard() {
                       ))}
                     </div>
 
-                    {/* Badge */}
                     {isEditing && (
                       <div style={{ marginBottom: 14 }}>
                         <label style={{ fontSize: 11, color: '#94a3b8', fontWeight: 700, display: 'block', marginBottom: 4 }}>شارة (اختياري)</label>
@@ -257,7 +302,6 @@ export default function AdminDashboard() {
                       </div>
                     )}
 
-                    {/* Features */}
                     <div>
                       <label style={{ fontSize: 11, color: '#94a3b8', fontWeight: 700, display: 'block', marginBottom: 8 }}>المميزات</label>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
@@ -295,37 +339,65 @@ export default function AdminDashboard() {
           <div>
             <div style={{ marginBottom: 28 }}>
               <h1 style={{ color: '#1e1b4b', fontSize: 26, fontWeight: 900, margin: '0 0 6px' }}>المستخدمون</h1>
-              <p style={{ color: '#64748b', fontSize: 14, margin: 0 }}>إدارة حسابات المستخدمين وحالة اشتراكاتهم</p>
+              <p style={{ color: '#64748b', fontSize: 14, margin: 0 }}>إدارة حسابات المستخدمين وتغيير خططهم مباشرة</p>
             </div>
 
-            <div style={{ background: '#fff', borderRadius: 20, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
+            {/* Quick stats */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(160px,1fr))', gap: 14, marginBottom: 24 }}>
+              {(['free','starter','weekly','monthly'] as User['plan'][]).map(p => (
+                <div key={p} style={{ background: '#fff', borderRadius: 16, padding: '16px 18px', border: `1px solid ${PLAN_COLORS[p]}20`, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                  <p style={{ color: '#94a3b8', fontSize: 11, fontWeight: 600, margin: '0 0 6px' }}>{PLAN_LABELS[p]}</p>
+                  <p style={{ color: PLAN_COLORS[p], fontSize: 26, fontWeight: 900, margin: 0 }}>{users.filter(u => u.plan === p).length}</p>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ background: '#fff', borderRadius: 20, overflow: 'visible', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
               {users.length === 0 && (
                 <div style={{ padding: '48px', textAlign: 'center', color: '#94a3b8', fontSize: 15 }}>لا يوجد مستخدمون مسجلون بعد</div>
               )}
-              {users.map((u, i) => {
-                const planLabels: Record<string, string> = { free: 'مجاني', starter: 'باقة 7', weekly: 'أسبوعي', monthly: 'شهري' };
-                const planColors: Record<string, string> = { free: '#94a3b8', starter: '#10b981', weekly: '#6366f1', monthly: '#a855f7' };
-                return (
-                  <div key={u.id} style={{ padding: '18px 24px', borderBottom: i < users.length - 1 ? '1px solid #f1f5f9' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                      <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 16, fontWeight: 900, flexShrink: 0 }}>
-                        {u.name.charAt(0)}
-                      </div>
-                      <div>
-                        <p style={{ color: '#1e1b4b', fontSize: 14, fontWeight: 800, margin: '0 0 2px' }}>{u.name}</p>
-                        <p style={{ color: '#94a3b8', fontSize: 12, margin: 0 }}>{u.email}</p>
-                      </div>
+              {users.map((u, i) => (
+                <div key={u.id} style={{ padding: '18px 24px', borderBottom: i < users.length - 1 ? '1px solid #f1f5f9' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 16, fontWeight: 900, flexShrink: 0 }}>
+                      {u.name.charAt(0)}
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <span style={{ background: `${planColors[u.plan]}18`, color: planColors[u.plan], fontSize: 12, fontWeight: 800, padding: '4px 12px', borderRadius: 20 }}>{planLabels[u.plan]}</span>
-                      {u.planStatus && (
-                        <span style={{ background: STATUS_LABEL[u.planStatus]?.bg, color: STATUS_LABEL[u.planStatus]?.color, fontSize: 12, fontWeight: 800, padding: '4px 12px', borderRadius: 20 }}>{STATUS_LABEL[u.planStatus]?.label}</span>
-                      )}
-                      <span style={{ color: '#94a3b8', fontSize: 11 }}>{new Date(u.createdAt).toLocaleDateString('ar-YE')}</span>
+                    <div>
+                      <p style={{ color: '#1e1b4b', fontSize: 14, fontWeight: 800, margin: '0 0 2px' }}>{u.name}</p>
+                      <p style={{ color: '#94a3b8', fontSize: 12, margin: 0 }}>{u.email}</p>
                     </div>
                   </div>
-                );
-              })}
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                    <span style={{ background: `${PLAN_COLORS[u.plan]}18`, color: PLAN_COLORS[u.plan], fontSize: 12, fontWeight: 800, padding: '4px 12px', borderRadius: 20 }}>{PLAN_LABELS[u.plan]}</span>
+                    {u.planStatus && (
+                      <span style={{ background: STATUS_LABEL[u.planStatus]?.bg, color: STATUS_LABEL[u.planStatus]?.color, fontSize: 12, fontWeight: 800, padding: '4px 12px', borderRadius: 20 }}>{STATUS_LABEL[u.planStatus]?.label}</span>
+                    )}
+                    <span style={{ color: '#94a3b8', fontSize: 11 }}>{new Date(u.createdAt).toLocaleDateString('ar-YE')}</span>
+
+                    {/* Direct plan change */}
+                    <div style={{ position: 'relative' }}>
+                      <button
+                        onClick={() => setChangingPlan(changingPlan === u.id ? null : u.id)}
+                        style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '7px 12px', borderRadius: 10, border: '1.5px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer', color: '#374151', fontSize: 12, fontWeight: 700, fontFamily: "'Cairo',sans-serif" }}>
+                        <Edit3 size={12} />تغيير الخطة <ChevronDown size={12} />
+                      </button>
+                      {changingPlan === u.id && (
+                        <div style={{ position: 'absolute', top: '110%', left: 0, background: '#fff', borderRadius: 14, boxShadow: '0 12px 40px rgba(0,0,0,0.15)', border: '1px solid #f1f5f9', minWidth: 180, padding: 8, zIndex: 100 }}>
+                          {(['free','starter','weekly','monthly'] as User['plan'][]).map(plan => (
+                            <button key={plan} onClick={() => handleDirectPlanChange(u.id, plan)}
+                              style={{ width: '100%', padding: '9px 14px', borderRadius: 10, border: 'none', cursor: 'pointer', background: u.plan === plan ? `${PLAN_COLORS[plan]}15` : 'transparent', color: u.plan === plan ? PLAN_COLORS[plan] : '#374151', fontSize: 13, fontWeight: u.plan === plan ? 800 : 600, display: 'flex', alignItems: 'center', gap: 8, fontFamily: "'Cairo',sans-serif" }}>
+                              <span style={{ width: 8, height: 8, borderRadius: '50%', background: PLAN_COLORS[plan], display: 'inline-block', flexShrink: 0 }} />
+                              {PLAN_LABELS[plan]}
+                              {u.plan === plan && <span style={{ marginRight: 'auto', fontSize: 11 }}>✓</span>}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -337,6 +409,9 @@ export default function AdminDashboard() {
           <img src={`data:image/jpeg;base64,${previewImg}`} alt="preview" style={{ maxWidth: '90vw', maxHeight: '85vh', borderRadius: 16, objectFit: 'contain', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }} />
         </div>
       )}
+
+      {/* Click-away for plan dropdowns */}
+      {changingPlan && <div style={{ position: 'fixed', inset: 0, zIndex: 50 }} onClick={() => setChangingPlan(null)} />}
     </div>
   );
 }

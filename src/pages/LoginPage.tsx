@@ -49,7 +49,7 @@ export default function LoginPage() {
         });
       }
       await signOut(auth);
-      setLocation('/');
+      setLocation('/dashboard');
     } catch (err: unknown) {
       const code = (err as { code?: string }).code || '';
       setError(getFirebaseErrorMessage(code));

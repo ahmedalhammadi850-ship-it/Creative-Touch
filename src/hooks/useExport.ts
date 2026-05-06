@@ -8,18 +8,21 @@ export function useExport() {
       await document.fonts.ready;
       const canvas = await html2canvas(el, {
         useCORS: true,
-        scale: 2,
+        scale: 4,
         allowTaint: false,
         logging: false,
+        backgroundColor: null,
+        imageTimeout: 15000,
+        removeContainer: true,
       });
       const link = document.createElement('a');
-      link.download = 'template.png';
-      link.href = canvas.toDataURL('image/png');
+      link.download = 'template-hq.png';
+      link.href = canvas.toDataURL('image/png', 1.0);
       link.click();
     } catch (e) {
       console.error('Export failed', e);
     }
   };
-  
+
   return { exportAsPng };
 }
