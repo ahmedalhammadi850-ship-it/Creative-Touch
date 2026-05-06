@@ -143,5 +143,34 @@ export function useExport() {
     }
   };
 
-  return { exportAsPdf };
+  const capturePreview = async (): Promise<string | null> => {
+    const original = document.getElementById('export-target');
+    if (!original) return null;
+    try {
+      await document.fonts.ready;
+      const fontEmbedCSS = await buildFontEmbedCSS();
+      const rect = original.getBoundingClientRect();
+      const elementWidth = Math.round(rect.width);
+      const elementHeight = Math.round(rect.height);
+      const pixelRatio = 3;
+      const canvasWidth = elementWidth * pixelRatio;
+      const canvasHeight = elementHeight * pixelRatio;
+      const options = { pixelRatio, cacheBust: true, width: elementWidth, height: elementHeight, fontEmbedCSS: fontEmbedCSS || undefined };
+      await toPng(original, options).catch(() => null);
+      await toPng(original, options).catch(() => null);
+      const rawDataUrl = await toPng(original, options);
+      const img = new Image();
+      img.src = rawDataUrl;
+      await new Promise<void>((resolve, reject) => { img.onload = () => resolve(); img.onerror = reject; });
+      const canvas = document.createElement('canvas');
+      canvas.width = canvasWidth; canvas.height = canvasHeight;
+      const ctx = canvas.getContext('2d')!;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+      ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
+      return canvas.toDataURL('image/png');
+    } catch { return null; }
+  };
+
+  return { exportAsPdf, capturePreview };
 }

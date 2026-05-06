@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRoute, Link } from 'wouter';
 import { categories } from '../data/categories';
 import { useTemplateStore } from '../store/useTemplateStore';
@@ -44,7 +44,8 @@ export default function EditorPage() {
   const [showPayment, setShowPayment] = useState(false);
 
   const { setTemplate, templateData, updateData, resetData, duplicateTemplate } = useTemplateStore();
-  const { exportAsPdf } = useExport();
+  const [verifyImg, setVerifyImg] = useState<string | null>(null);
+  const { exportAsPdf, capturePreview } = useExport();
 
   const isBusinessCard = categoryId === 'business-card';
   const isFrontCard = isBusinessCard && !BACK_CARD_IDS.includes(templateId || '');
@@ -94,6 +95,12 @@ export default function EditorPage() {
   const handleExport = async () => {
     toast({ title: 'جاري التصدير...', description: 'يرجى الانتظار بينما يتم تحضير الملف.' });
     await exportAsPdf();
+  };
+
+  const handleVerify = async () => {
+    toast({ title: 'جاري الالتقاط...', description: 'يتم تصوير القالب كما سيظهر في الـ PDF' });
+    const dataUrl = await capturePreview();
+    if (dataUrl) setVerifyImg(dataUrl);
   };
 
   const handleResetBack = () => {
@@ -154,12 +161,44 @@ export default function EditorPage() {
             <Send className="w-4 h-4 ml-2" />
             طلب تفعيل
           </Button>
+          <Button onClick={handleVerify} variant="outline" size="sm" className="border-green-500 text-green-700 hover:bg-green-50">
+            🔍 تحقق
+          </Button>
           <Button onClick={handleExport} className="bg-primary hover:bg-primary/90 text-white shadow-md">
             <Download className="w-4 h-4 ml-2" />
             تصدير PDF
           </Button>
         </div>
       </header>
+
+      {verifyImg && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setVerifyImg(null)}
+        >
+          <div className="bg-white rounded-xl p-4 max-w-5xl w-full" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-bold text-lg">مقارنة: المعاينة ← الصورة المُصدَّرة في الـ PDF</h2>
+              <button onClick={() => setVerifyImg(null)} className="text-gray-400 hover:text-gray-700 text-xl font-bold">✕</button>
+            </div>
+            <div className="flex gap-6 items-start justify-center flex-wrap">
+              <div className="text-center">
+                <p className="text-sm font-bold text-blue-600 mb-2">📱 المعاينة على الشاشة</p>
+                <div className="border-2 border-blue-300 rounded inline-block">
+                  <TemplateRenderer categoryId={categoryId} templateId={displayTemplateId} data={activeData} />
+                </div>
+              </div>
+              <div className="text-center">
+                <p className="text-sm font-bold text-green-600 mb-2">📄 الصورة المُلتقطة للـ PDF</p>
+                <div className="border-2 border-green-300 rounded inline-block">
+                  <img src={verifyImg} alt="captured" style={{ display: 'block', maxWidth: '100%' }} />
+                </div>
+              </div>
+            </div>
+            <p className="text-center text-sm text-gray-500 mt-3">الصورتان يجب أن تكونا متطابقتان تماماً — انقر خارج النافذة للإغلاق</p>
+          </div>
+        </div>
+      )}
 
       {showPayment && (
         <PaymentRequestModal
