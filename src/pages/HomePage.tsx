@@ -48,10 +48,15 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
   const { user } = useAuthStore();
   const { addRequest } = useRequestStore();
   const [, setLocation] = useLocation();
+
   const [name, setName] = useState(user?.name || '');
-  const [email, setEmail] = useState(user?.email || '');
+  const [phone, setPhone] = useState('');
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [done, setDone] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   if (!user) {
     return (
@@ -71,11 +76,47 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
     );
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleImageChange = (file: File) => {
+    setImage(file);
+    const reader = new FileReader();
+    reader.onload = (e) => setImagePreview(e.target?.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !email.trim()) { setError('يرجى ملء جميع الحقول'); return; }
-    addRequest({ type: 'subscription', userId: user.id, userName: name.trim(), userPhone: 'عبر البريد', userEmail: email.trim(), plan, planId });
-    setDone(true);
+    if (!name.trim() || !phone.trim()) { setError('يرجى ملء جميع الحقول'); return; }
+    if (!image) { setError('يرجى رفع صورة إيصال الدفع'); return; }
+
+    setSending(true);
+    try {
+      const toBase64 = (f: File): Promise<string> =>
+        new Promise((res, rej) => {
+          const r = new FileReader();
+          r.onload = () => res((r.result as string).split(',')[1]);
+          r.onerror = rej;
+          r.readAsDataURL(f);
+        });
+
+      const imageBase64 = await toBase64(image);
+
+      addRequest({
+        type: 'subscription',
+        userId: user.id,
+        userName: name.trim(),
+        userPhone: phone.trim(),
+        userEmail: user.email,
+        plan,
+        planId,
+        imageBase64,
+        imageName: image.name
+      });
+      setDone(true);
+    } catch {
+      setError('حدث خطأ أثناء المعالجة');
+    } finally {
+      setSending(false);
+    }
   };
 
   const inp: React.CSSProperties = { width: '100%', padding: '11px 14px', borderRadius: 12, border: '2px solid #e2e8f0', fontSize: 14, fontFamily: "'Cairo',sans-serif", outline: 'none', boxSizing: 'border-box' };
@@ -103,23 +144,47 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
             </div>
           ) : (
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>الاسم الكامل</label>
-                <input value={name} onChange={e => setName(e.target.value)} style={inp} placeholder="أدخل اسمك الكامل" onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>الاسم الكامل</label>
+                  <input value={name} onChange={e => setName(e.target.value)} style={inp} placeholder="أدخل اسمك" onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>رقم الهاتف</label>
+                  <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} dir="ltr" style={{ ...inp, textAlign: 'right' }} placeholder="07xxxxxxxx" onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
+                </div>
               </div>
+
               <div>
-                <label style={{ display: 'block', fontSize: 13, fontWeight: 700, color: '#374151', marginBottom: 6 }}>البريد الإلكتروني</label>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} dir="ltr" style={{ ...inp, textAlign: 'right' }} placeholder="example@mail.com" onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
+                <label style={{ display: 'block', color: '#374151', fontSize: 13, fontWeight: 700, marginBottom: 8 }}>صورة إيصال الدفع <span style={{ color: '#ef4444' }}>*</span></label>
+                <div onClick={() => fileRef.current?.click()}
+                  style={{ border: `2px dashed ${imagePreview ? '#10b981' : '#c7d2fe'}`, borderRadius: 16, padding: imagePreview ? 10 : '24px 16px', textAlign: 'center', cursor: 'pointer', background: imagePreview ? '#f0fdf4' : '#f8f7ff', transition: 'all 0.2s' }}>
+                  {imagePreview ? (
+                    <div>
+                      <img src={imagePreview} alt="preview" style={{ maxHeight: 110, borderRadius: 10, objectFit: 'contain' }} />
+                      <p style={{ color: '#10b981', fontSize: 11, fontWeight: 700, marginTop: 8, marginBottom: 0 }}>✓ تم رفع الإيصال</p>
+                    </div>
+                  ) : (
+                    <>
+                      <ImageIcon size={24} color="#6366f1" style={{ marginBottom: 8 }} />
+                      <p style={{ color: '#374151', fontSize: 13, fontWeight: 700, margin: '0 0 2px' }}>انقر لرفع صورة الإيصال</p>
+                      <p style={{ color: '#94a3b8', fontSize: 11, margin: 0 }}>PNG، JPG</p>
+                    </>
+                  )}
+                </div>
+                <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) handleImageChange(f); }} />
               </div>
+
               {error && <p style={{ color: '#dc2626', fontSize: 13, fontWeight: 600, margin: 0 }}>{error}</p>}
-              <button type="submit" style={{ padding: '13px', borderRadius: 14, background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 15, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: "'Cairo',sans-serif", marginTop: 4 }}>
-                <Send size={16} />إرسال طلب الاشتراك
+              <button type="submit" disabled={sending} style={{ padding: '13px', borderRadius: 14, background: sending ? '#e2e8f0' : 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: sending ? 'not-allowed' : 'pointer', color: sending ? '#94a3b8' : '#fff', fontSize: 15, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, fontFamily: "'Cairo',sans-serif", marginTop: 4 }}>
+                {sending ? 'جاري الإرسال...' : <><Send size={16} />إرسال طلب الاشتراك</>}
               </button>
             </form>
           )}
         </div>
       </div>
     </div>
+
 
   );
 }

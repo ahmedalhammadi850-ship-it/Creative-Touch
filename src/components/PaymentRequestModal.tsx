@@ -17,7 +17,7 @@ export function PaymentRequestModal({ onClose, templateName }: PaymentRequestMod
   const { user } = useAuthStore();
 
   const [name, setName] = useState(user?.name || '');
-  const [email, setEmail] = useState(user?.email || '');
+  const [phone, setPhone] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
@@ -62,7 +62,7 @@ export function PaymentRequestModal({ onClose, templateName }: PaymentRequestMod
     setError('');
     const remaining = getRemainingCooldown();
     if (remaining > 0) { startCooldownTimer(remaining); return; }
-    if (!name.trim() || !email.trim()) { setError('يرجى ملء جميع الحقول المطلوبة'); return; }
+    if (!name.trim() || !phone.trim()) { setError('يرجى ملء جميع الحقول المطلوبة'); return; }
     if (!image) { setError('يرجى رفع صورة إيصال الدفع'); return; }
 
     setSending(true);
@@ -82,8 +82,8 @@ export function PaymentRequestModal({ onClose, templateName }: PaymentRequestMod
         type: 'activation',
         userId: user?.id,
         userName: name.trim(),
-        userPhone: 'عبر البريد',
-        userEmail: email.trim(),
+        userPhone: phone.trim(),
+        userEmail: user?.email,
         templateName: templateName || 'غير محدد',
         imageBase64,
         imageName: image.name,
@@ -94,7 +94,7 @@ export function PaymentRequestModal({ onClose, templateName }: PaymentRequestMod
         await fetch(N8N_WEBHOOK, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: name.trim(), email: email.trim(), template: templateName, imageName: image.name, imageBase64, sentAt: new Date().toISOString() }),
+          body: JSON.stringify({ name: name.trim(), phone: phone.trim(), template: templateName, imageName: image.name, imageBase64, sentAt: new Date().toISOString() }),
         });
       } catch { /* n8n failure is non-blocking */ }
 
@@ -111,7 +111,7 @@ export function PaymentRequestModal({ onClose, templateName }: PaymentRequestMod
   const handleTryAgain = () => {
     const remaining = getRemainingCooldown();
     if (remaining > 0) { startCooldownTimer(remaining); return; }
-    setSent(false); setName(user?.name || ''); setEmail(user?.email || ''); setImage(null); setImagePreview(null); setError('');
+    setSent(false); setName(user?.name || ''); setPhone(''); setImage(null); setImagePreview(null); setError('');
   };
 
   const inp: React.CSSProperties = { width: '100%', padding: '11px 14px', borderRadius: 12, border: '2px solid #e2e8f0', fontSize: 14, fontFamily: "'Cairo',sans-serif", outline: 'none', boxSizing: 'border-box', transition: 'border-color 0.2s' };
@@ -163,8 +163,8 @@ export function PaymentRequestModal({ onClose, templateName }: PaymentRequestMod
                     onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', color: '#374151', fontSize: 13, fontWeight: 700, marginBottom: 6 }}>البريد الإلكتروني <span style={{ color: '#ef4444' }}>*</span></label>
-                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="example@mail.com" dir="ltr" style={{ ...inp, textAlign: 'right' }}
+                  <label style={{ display: 'block', color: '#374151', fontSize: 13, fontWeight: 700, marginBottom: 6 }}>رقم الهاتف <span style={{ color: '#ef4444' }}>*</span></label>
+                  <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="07xxxxxxxx" dir="ltr" style={{ ...inp, textAlign: 'right' }}
                     onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
                 </div>
               </div>
