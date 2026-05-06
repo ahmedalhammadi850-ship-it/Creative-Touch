@@ -2,7 +2,7 @@ import type { TemplateData } from '../../types/template';
 
 export default function Template10({ data }: { data: TemplateData }) {
   const ffs = data.fieldFontSizes ?? {};
-  const _d = (data.fontSize ?? 16) - 16;
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{ width: '340px', height: '220px', position: 'relative', overflow: 'hidden', fontFamily: "'Helvetica Neue', Arial, sans-serif", direction: 'rtl', backgroundColor: data.colors.bg, border: `1px solid ${data.colors.primary}22` }}>
       <div style={{ height: '6px', background: `linear-gradient(to left, ${data.colors.primary}, ${data.colors.accent})` }} />

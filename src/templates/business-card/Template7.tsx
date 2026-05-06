@@ -4,7 +4,7 @@ interface Props { data: TemplateData; }
 export default function BusinessCardTemplate7({ data }: Props) {
   const { title, subtitle, phone, email, website, colors, image } = data;
   const ffs = data.fieldFontSizes ?? {};
-  const _d = (data.fontSize ?? 16) - 16;
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 340, height: 220, position: 'relative', overflow: 'hidden',

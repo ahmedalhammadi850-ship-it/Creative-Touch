@@ -2,7 +2,7 @@ import type { TemplateData } from '../../types/template';
 
 export default function Template12({ data }: { data: TemplateData }) {
   const ffs = data.fieldFontSizes ?? {};
-  const _d = (data.fontSize ?? 16) - 16;
+  const _d = (data.fontSize ?? 21) - 21;
   const cornerStyle = (pos: React.CSSProperties): React.CSSProperties => ({
     position: 'absolute', width: '16px', height: '16px', ...pos,
   });

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Upload, X, ImagePlus, Lock, Send, RotateCcw } from 'lucide-react';
 import type { TemplateData } from '../types/template';
 
-const DEFAULT_FS = 16;
+const DEFAULT_FS = 21;
 const MIN_FS = 8;
 const MAX_FS = 36;
 

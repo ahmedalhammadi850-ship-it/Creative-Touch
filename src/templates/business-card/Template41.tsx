@@ -1,7 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template41({ data }: { data: TemplateData }) {
-  const _d = (data.fontSize ?? 16) - 16;
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"

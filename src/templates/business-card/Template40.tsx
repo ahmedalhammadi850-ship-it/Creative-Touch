@@ -22,7 +22,7 @@ function LogoLayer({ data }: { data: TemplateData }) {
 }
 
 export default function Template40({ data }: { data: TemplateData }) {
-  const _d = (data.fontSize ?? 16) - 16;
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
