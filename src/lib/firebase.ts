@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -12,16 +12,16 @@ import {
 } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBnjeJQ_PFW94Iu8ApFkgpQSu0qb4OhztA",
-  authDomain: "projectcard-6a6dd.firebaseapp.com",
-  projectId: "projectcard-6a6dd",
-  storageBucket: "projectcard-6a6dd.firebasestorage.app",
-  messagingSenderId: "185997930117",
-  appId: "1:185997930117:web:5b9dc4108ab857aefa03ec",
-  measurementId: "G-9SW9B6RCZ5",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = initializeApp(firebaseConfig);
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
 export {

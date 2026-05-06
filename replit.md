@@ -6,7 +6,7 @@
 
 - Dev: `npm run dev` (port 5000)
 - Build: `npm run build` → `dist/public`
-- No env vars required (all state in localStorage)
+- Required env vars (see `.env.example`): `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`, `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_STORAGE_BUCKET`, `VITE_FIREBASE_MESSAGING_SENDER_ID`, `VITE_FIREBASE_APP_ID`, `VITE_FIREBASE_MEASUREMENT_ID`
 
 ## Stack
 
@@ -36,7 +36,7 @@
 
 ## Product
 
-- Browse template categories → open editor → customize text/images/colors → export PNG
+- Browse template categories → open editor → customize text/images/colors → export PDF
 - **Free tier**: 2 editable fields (title + subtitle); rest locked behind payment
 - **Auth**: register, login, forgot/reset password (all localStorage)
 - **Payment flow**: user uploads receipt image → saved to request store → admin approves → plan activated
