@@ -199,13 +199,6 @@ export default function CategoryPage() {
                     </div>
                   )}
 
-                  {/* Free-user partial badge on non-free categories */}
-                  {isFreeUser && !isFreeCategory && !starterLocked && (
-                    <div style={{ position: 'absolute', top: 10, right: 10, background: '#f59e0b', color: '#fff', fontSize: 10, fontWeight: 800, padding: '3px 9px', borderRadius: 20, fontFamily: "'Cairo',sans-serif" }}>
-                      ✏ حقلان فقط
-                    </div>
-                  )}
-
                   {/* Already selected badge */}
                   {alreadySelected && !starterLocked && (
                     <div style={{ position: 'absolute', top: 10, left: 10, background: '#10b981', color: '#fff', fontSize: 10, fontWeight: 800, padding: '3px 9px', borderRadius: 20, fontFamily: "'Cairo',sans-serif" }}>
@@ -217,11 +210,6 @@ export default function CategoryPage() {
                 <div style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <p style={{ color: '#1e1b4b', fontSize: 14, fontWeight: 800, margin: 0 }}>{template.name}</p>
                   {starterLocked && <div style={{ background: '#fee2e2', borderRadius: 8, padding: '3px 8px' }}><LockIcon size={12} color="#dc2626" /></div>}
-                  {isFreeUser && !isFreeCategory && !starterLocked && (
-                    <div style={{ background: '#fef3c7', borderRadius: 8, padding: '3px 8px' }}>
-                      <LockIcon size={12} color="#d97706" />
-                    </div>
-                  )}
                 </div>
               </div>
             );
