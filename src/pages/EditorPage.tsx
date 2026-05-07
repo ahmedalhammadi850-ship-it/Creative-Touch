@@ -50,7 +50,7 @@ export default function EditorPage() {
   const { setTemplate, templateData, updateData, resetData, duplicateTemplate } = useTemplateStore();
   const [verifyImg, setVerifyImg] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
-  const { exportAsPdf, exportAsPng, capturePreview, isMobileDevice } = useExport();
+  const { exportAsPdf, exportAsPng, capturePreview, isMobileDevice, isIOSDevice } = useExport();
 
   const isBusinessCard = categoryId === 'business-card';
   const isFrontCard = isBusinessCard && !BACK_CARD_IDS.includes(templateId || '');
@@ -124,8 +124,10 @@ export default function EditorPage() {
     setExporting(false);
     if (!result.ok) {
       toast({ title: 'فشل التصدير', description: 'حدث خطأ أثناء التصدير. جرّب تحميل الصورة بدلاً من ذلك.', variant: 'destructive' });
+    } else if (isIOSDevice) {
+      toast({ title: '✓ تم فتح الملف', description: 'اضغط على زر المشاركة ← "حفظ في الملفات" لحفظ الـ PDF.' });
     } else if (isMobileDevice) {
-      toast({ title: '✓ جاهز', description: 'انتظر قليلاً — سيفتح الملف تلقائياً أو تحقق من التنزيلات.' });
+      toast({ title: '✓ جاهز', description: 'تحقق من مجلد التنزيلات.' });
     }
   };
 
