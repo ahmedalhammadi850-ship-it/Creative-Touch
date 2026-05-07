@@ -49,8 +49,8 @@ export default function Template34({ data }: { data: TemplateData }) {
         </svg>
       </div>
 
-      {/* White right panel — all text on white = max contrast */}
-      <div className="flex-1 flex flex-col justify-between p-4 pl-5">
+      {/* White right panel — vertically centered */}
+      <div className="flex-1 flex flex-col justify-center p-4 pl-5 gap-3">
         <div>
           <h2 className="font-extrabold leading-tight" style={{ color: '#111111', fontSize: 17 + _d }}>{data.title}</h2>
           <p className="font-semibold mt-1 uppercase tracking-wider" style={{ color: data.colors.primary, fontSize: 9 + _d }}>{data.subtitle}</p>
