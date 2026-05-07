@@ -21,6 +21,7 @@ interface AuthState {
   getUserByEmail: (email: string) => User | undefined;
   logout: () => void;
   updateUserPlan: (userId: string, plan: User['plan'], status: User['planStatus'], expiresAt?: string) => void;
+  cancelSubscription: (userId: string) => void;
   addActivatedTemplate: (userId: string, templateKey: string) => void;
   addActivatedTemplates: (userId: string, templateKeys: string[]) => void;
   addSelectedTemplate: (userId: string, templateKey: string) => void;
