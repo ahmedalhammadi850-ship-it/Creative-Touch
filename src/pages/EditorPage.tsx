@@ -290,6 +290,7 @@ export default function EditorPage() {
             ) : (
               <InlineEditor
                 categoryId={categoryId}
+                templateId={templateId}
                 data={frontData}
                 onChange={updateFrontData}
                 onRequestPayment={() => setShowPayment(true)}

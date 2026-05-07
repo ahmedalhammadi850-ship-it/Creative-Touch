@@ -66,6 +66,7 @@ export default function AdminDashboard() {
   const [filterStatus, setFilterStatus] = useState<RequestFilter>('all');
   const [filterPlan, setFilterPlan] = useState<PlanFilter>('all');
   const [changingPlan, setChangingPlan] = useState<string | null>(null);
+  const [approvingReq, setApprovingReq] = useState<AppRequest | null>(null);
 
   const pendingCount = requests.filter(r => r.status === 'pending').length;
 
@@ -92,15 +93,40 @@ export default function AdminDashboard() {
     return true;
   });
 
-  const handleApprove = (req: AppRequest) => {
+  const handleApprove = (req: AppRequest, overridePlan?: User['plan'], expiresAt?: string) => {
     updateStatus(req.id, 'approved');
     if (req.userId) {
       if (req.type === 'activation' && req.categoryId && req.templateId) {
         addActivatedTemplate(req.userId, `${req.categoryId}/${req.templateId}`);
       } else {
-        updateUserPlan(req.userId, resolvePlanId(req), 'active');
+        const plan = overridePlan ?? resolvePlanId(req);
+        updateUserPlan(req.userId, plan, 'active', expiresAt);
       }
     }
+    setApprovingReq(null);
+  };
+
+  const handleApproveClick = (req: AppRequest) => {
+    if (req.type === 'activation') {
+      handleApprove(req);
+    } else {
+      setApprovingReq(req);
+    }
+  };
+
+  const handlePlanSelect = (plan: User['plan']) => {
+    if (!approvingReq) return;
+    let expiresAt: string | undefined;
+    if (plan === 'weekly') {
+      const d = new Date();
+      d.setDate(d.getDate() + 7);
+      expiresAt = d.toISOString();
+    } else if (plan === 'monthly') {
+      const d = new Date();
+      d.setMonth(d.getMonth() + 1);
+      expiresAt = d.toISOString();
+    }
+    handleApprove(approvingReq, plan, expiresAt);
   };
 
   const handleDirectPlanChange = (userId: string, plan: User['plan']) => {
@@ -252,9 +278,9 @@ export default function AdminDashboard() {
 
                     {req.status === 'pending' && (
                       <div style={{ display: 'flex', gap: 10, marginTop: 16, paddingTop: 14, borderTop: '1px solid #f1f5f9' }}>
-                        <button onClick={() => handleApprove(req)}
+                        <button onClick={() => handleApproveClick(req)}
                           style={{ flex: 1, padding: '10px', borderRadius: 12, border: 'none', cursor: 'pointer', background: '#ecfdf5', color: '#059669', fontSize: 14, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, fontFamily: "'Cairo',sans-serif" }}>
-                          <CheckCircle size={16} />موافقة وتفعيل {req.type === 'subscription' ? PLAN_LABELS[resolvedPlan] : ''}
+                          <CheckCircle size={16} />{req.type === 'activation' ? 'موافقة وتفعيل' : 'موافقة — اختر الخطة'}
                         </button>
                         <button onClick={() => updateStatus(req.id, 'rejected')}
                           style={{ flex: 1, padding: '10px', borderRadius: 12, border: 'none', cursor: 'pointer', background: '#fef2f2', color: '#dc2626', fontSize: 14, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, fontFamily: "'Cairo',sans-serif" }}>
@@ -452,6 +478,81 @@ export default function AdminDashboard() {
       {previewImg && (
         <div onClick={() => setPreviewImg(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, cursor: 'zoom-out' }}>
           <img src={`data:image/jpeg;base64,${previewImg}`} alt="preview" style={{ maxWidth: '90vw', maxHeight: '85vh', borderRadius: 16, objectFit: 'contain', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }} />
+        </div>
+      )}
+
+      {/* Plan Selector Modal */}
+      {approvingReq && (
+        <div
+          onClick={() => setApprovingReq(null)}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,0.7)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}
+        >
+          <div
+            onClick={e => e.stopPropagation()}
+            dir="rtl"
+            style={{ background: '#fff', borderRadius: 24, padding: '32px 28px', width: '100%', maxWidth: 480, boxShadow: '0 24px 60px rgba(0,0,0,0.25)', fontFamily: "'Cairo',sans-serif" }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+              <h2 style={{ color: '#1e1b4b', fontSize: 20, fontWeight: 900, margin: 0 }}>اختر الخطة للمستخدم</h2>
+              <button onClick={() => setApprovingReq(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: 4 }}><X size={20} /></button>
+            </div>
+            <p style={{ color: '#64748b', fontSize: 13, margin: '0 0 24px' }}>
+              المستخدم: <strong style={{ color: '#1e1b4b' }}>{approvingReq.userName}</strong>
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+
+              {/* باقة 7 قوالب */}
+              <button
+                onClick={() => handlePlanSelect('starter')}
+                style={{ width: '100%', padding: '16px 18px', borderRadius: 16, border: '2px solid #6ee7b7', background: 'linear-gradient(135deg,#ecfdf5,#f0fdf4)', cursor: 'pointer', textAlign: 'right', fontFamily: "'Cairo',sans-serif", transition: 'all 0.15s' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div>
+                    <p style={{ color: '#065f46', fontSize: 15, fontWeight: 900, margin: '0 0 4px' }}>📦 باقة 7 قوالب</p>
+                    <p style={{ color: '#059669', fontSize: 12, margin: 0 }}>يختار المستخدم 7 قوالب — صلاحية دائمة</p>
+                  </div>
+                  <span style={{ background: '#059669', color: '#fff', fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 20 }}>دائم</span>
+                </div>
+              </button>
+
+              {/* الخطة الأسبوعية */}
+              <button
+                onClick={() => handlePlanSelect('weekly')}
+                style={{ width: '100%', padding: '16px 18px', borderRadius: 16, border: '2px solid #c7d2fe', background: 'linear-gradient(135deg,#eef2ff,#f8f7ff)', cursor: 'pointer', textAlign: 'right', fontFamily: "'Cairo',sans-serif", transition: 'all 0.15s' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div>
+                    <p style={{ color: '#3730a3', fontSize: 15, fontWeight: 900, margin: '0 0 4px' }}>📅 الخطة الأسبوعية</p>
+                    <p style={{ color: '#6366f1', fontSize: 12, margin: 0 }}>وصول كامل لجميع القوالب — تنتهي بعد 7 أيام</p>
+                  </div>
+                  <span style={{ background: '#6366f1', color: '#fff', fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 20 }}>7 أيام</span>
+                </div>
+              </button>
+
+              {/* الخطة الشهرية */}
+              <button
+                onClick={() => handlePlanSelect('monthly')}
+                style={{ width: '100%', padding: '16px 18px', borderRadius: 16, border: '2px solid #e9d5ff', background: 'linear-gradient(135deg,#fdf4ff,#faf5ff)', cursor: 'pointer', textAlign: 'right', fontFamily: "'Cairo',sans-serif", transition: 'all 0.15s' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div>
+                    <p style={{ color: '#581c87', fontSize: 15, fontWeight: 900, margin: '0 0 4px' }}>⭐ الخطة الشهرية</p>
+                    <p style={{ color: '#a855f7', fontSize: 12, margin: 0 }}>وصول كامل لجميع القوالب — تنتهي بعد 30 يوماً</p>
+                  </div>
+                  <span style={{ background: '#a855f7', color: '#fff', fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 20 }}>30 يوم</span>
+                </div>
+              </button>
+
+            </div>
+
+            <button
+              onClick={() => setApprovingReq(null)}
+              style={{ width: '100%', marginTop: 16, padding: '11px', borderRadius: 12, border: '1.5px solid #e2e8f0', background: 'transparent', cursor: 'pointer', color: '#64748b', fontSize: 14, fontWeight: 700, fontFamily: "'Cairo',sans-serif" }}
+            >
+              إلغاء
+            </button>
+          </div>
         </div>
       )}
 

@@ -15,6 +15,11 @@ export interface TemplateData {
   fontSize?: number;
   fieldFontSizes?: FieldFontSizes;
   eventLabel?: string;
+  senderName?: string;
+  congratsText?: string;
+  dedicationText?: string;
+  date?: string;
+  location?: string;
   colors: {
     primary: string;
     secondary: string;

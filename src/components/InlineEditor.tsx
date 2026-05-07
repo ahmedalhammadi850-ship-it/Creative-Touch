@@ -3,8 +3,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Upload, X, ImagePlus, Lock, Send, RotateCcw } from 'lucide-react';
+import { Upload, X, ImagePlus, Lock, Send, RotateCcw, Clock } from 'lucide-react';
 import type { TemplateData } from '../types/template';
+import { useAuthStore, isPlanActive } from '../store/useAuthStore';
 
 const DEFAULT_FS = 21;
 const MIN_FS = 8;
@@ -112,6 +113,7 @@ function FontSizeControl({ fontSize, onChange }: { fontSize: number; onChange: (
 
 interface InlineEditorProps {
   categoryId: string;
+  templateId?: string;
   data: TemplateData;
   onChange: (data: Partial<TemplateData>) => void;
   backCardMode?: boolean;
@@ -194,7 +196,7 @@ function LockedImageSlot({ label }: { label: string }) {
   );
 }
 
-export function InlineEditor({ categoryId, data, onChange, backCardMode = false, onRequestPayment }: InlineEditorProps) {
+export function InlineEditor({ categoryId, templateId, data, onChange, backCardMode = false, onRequestPayment }: InlineEditorProps) {
   const isBusinessCard = categoryId === 'business-card';
   const isWedding = categoryId === 'wedding';
   const isCongrats = categoryId === 'congrats';
@@ -202,6 +204,17 @@ export function InlineEditor({ categoryId, data, onChange, backCardMode = false,
   const isMassWedding = categoryId === 'mass-wedding';
   const isAds = categoryId === 'ads';
   const showFontSize = isMassWedding || isAds || isCongrats || isSpecialized || isWedding;
+
+  const { user } = useAuthStore();
+  const templateKey = templateId ? `${categoryId}/${templateId}` : '';
+  const hasPlanAccess = isPlanActive(user) && (user?.plan === 'weekly' || user?.plan === 'monthly');
+  const hasTemplateActivation = !!(user?.activatedTemplates?.includes(templateKey));
+  const isUnlocked = isBusinessCard || hasPlanAccess || hasTemplateActivation;
+
+  const planExpiresAt = user?.planExpiresAt ? new Date(user.planExpiresAt) : null;
+  const daysLeft = planExpiresAt
+    ? Math.ceil((planExpiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+    : null;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const multiImageInputRef = useRef<HTMLInputElement>(null);
@@ -491,6 +504,34 @@ export function InlineEditor({ categoryId, data, onChange, backCardMode = false,
       {/* =================== FRONT / NORMAL MODE (non-business-card) =================== */}
       {!backCardMode && !isBusinessCard && (
         <>
+          {/* Plan status banner */}
+          {isUnlocked && daysLeft !== null && (
+            <div style={{
+              background: daysLeft <= 2 ? 'linear-gradient(135deg,#fef2f2,#fff1f2)' : 'linear-gradient(135deg,#ecfdf5,#f0fdf4)',
+              border: `2px solid ${daysLeft <= 2 ? '#fecaca' : '#6ee7b7'}`,
+              borderRadius: 12, padding: '10px 14px',
+              display: 'flex', alignItems: 'center', gap: 8,
+            }}>
+              <Clock size={15} color={daysLeft <= 2 ? '#dc2626' : '#059669'} />
+              <span style={{ color: daysLeft <= 2 ? '#dc2626' : '#065f46', fontSize: 13, fontWeight: 800, fontFamily: "'Cairo',sans-serif" }}>
+                {daysLeft <= 0 ? 'انتهت صلاحية خطتك' : `متبقي ${daysLeft} ${daysLeft === 1 ? 'يوم' : 'أيام'} من خطتك`}
+              </span>
+            </div>
+          )}
+          {isUnlocked && hasTemplateActivation && !hasPlanAccess && (
+            <div style={{
+              background: 'linear-gradient(135deg,#ecfdf5,#f0fdf4)',
+              border: '2px solid #6ee7b7',
+              borderRadius: 12, padding: '10px 14px',
+              display: 'flex', alignItems: 'center', gap: 8,
+            }}>
+              <span style={{ fontSize: 16 }}>✅</span>
+              <span style={{ color: '#065f46', fontSize: 13, fontWeight: 800, fontFamily: "'Cairo',sans-serif" }}>
+                هذا القالب مفعّل — جميع الحقول متاحة
+              </span>
+            </div>
+          )}
+
           <div className="space-y-4">
             <h3 className="text-lg font-bold">المحتوى</h3>
 
@@ -538,162 +579,332 @@ export function InlineEditor({ categoryId, data, onChange, backCardMode = false,
             />
           )}
 
-          {/* ── PAYMENT BANNER ── */}
-          <div
-            onClick={onRequestPayment}
-            style={{
-              background: 'linear-gradient(135deg, #eef2ff, #fdf4ff)',
-              border: '2px solid #c7d2fe',
-              borderRadius: 14,
-              padding: '14px 16px',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              cursor: 'pointer', gap: 12,
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{
-                width: 36, height: 36, borderRadius: '50%',
-                background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-              }}>
-                <Lock size={16} color="#fff" />
-              </div>
-              <div>
-                <p style={{ color: '#3730a3', fontSize: 13, fontWeight: 800, margin: 0, fontFamily: "'Cairo', sans-serif" }}>
-                  باقي الحقول تتطلب الدفع
-                </p>
-                <p style={{ color: '#6366f1', fontSize: 12, margin: 0, fontFamily: "'Cairo', sans-serif" }}>
-                  1000 ريال يمني ≈ 2$ • 7 قوالب
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={e => { e.stopPropagation(); onRequestPayment?.(); }}
+          {/* ── PAYMENT BANNER — only shown when locked ── */}
+          {!isUnlocked && (
+            <div
+              onClick={onRequestPayment}
               style={{
-                display: 'flex', alignItems: 'center', gap: 5,
-                background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-                border: 'none', cursor: 'pointer',
-                color: '#fff', fontSize: 12, fontWeight: 800,
-                padding: '8px 14px', borderRadius: 9,
-                fontFamily: "'Cairo', sans-serif",
-                whiteSpace: 'nowrap', flexShrink: 0,
+                background: 'linear-gradient(135deg, #eef2ff, #fdf4ff)',
+                border: '2px solid #c7d2fe',
+                borderRadius: 14,
+                padding: '14px 16px',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                cursor: 'pointer', gap: 12,
               }}
             >
-              <Send size={12} />
-              فعّل الآن
-            </button>
-          </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{
+                  width: 36, height: 36, borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                }}>
+                  <Lock size={16} color="#fff" />
+                </div>
+                <div>
+                  <p style={{ color: '#3730a3', fontSize: 13, fontWeight: 800, margin: 0, fontFamily: "'Cairo', sans-serif" }}>
+                    باقي الحقول تتطلب الدفع
+                  </p>
+                  <p style={{ color: '#6366f1', fontSize: 12, margin: 0, fontFamily: "'Cairo', sans-serif" }}>
+                    1000 ريال يمني ≈ 2$ • 7 قوالب
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={e => { e.stopPropagation(); onRequestPayment?.(); }}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 5,
+                  background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+                  border: 'none', cursor: 'pointer',
+                  color: '#fff', fontSize: 12, fontWeight: 800,
+                  padding: '8px 14px', borderRadius: 9,
+                  fontFamily: "'Cairo', sans-serif",
+                  whiteSpace: 'nowrap', flexShrink: 0,
+                }}
+              >
+                <Send size={12} />
+                فعّل الآن
+              </button>
+            </div>
+          )}
 
-          {/* ── LOCKED FIELDS — visible but disabled ── */}
-          <div className="space-y-4">
+          {/* ── UNLOCKED FIELDS ── */}
+          {isUnlocked && (
+            <div className="space-y-4">
 
-            {/* Image upload — locked */}
-            {showImage && !isMassWedding && (
-              <LockedImageSlot label="الصورة الشخصية" />
-            )}
+              {/* Image upload */}
+              {showImage && !isMassWedding && (
+                <div className="space-y-3">
+                  <h3 className="text-lg font-bold">الصورة الشخصية</h3>
+                  <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                  {data.image ? (
+                    <div style={{ position: 'relative', display: 'inline-block' }}>
+                      <img src={data.image} alt="uploaded" style={{ height: 100, maxWidth: '100%', borderRadius: 10, objectFit: 'cover', border: '1.5px solid #e2e8f0' }} />
+                      <button onClick={removeImage} style={{ position: 'absolute', top: -8, left: -8, background: '#ef4444', border: 'none', borderRadius: '50%', width: 22, height: 22, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                        <X size={12} color="#fff" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      style={{ width: '100%', height: 80, border: '2px dashed #c7d2fe', borderRadius: 12, background: '#f8f7ff', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, cursor: 'pointer' }}>
+                      <ImagePlus size={20} color="#6366f1" />
+                      <span style={{ color: '#6366f1', fontSize: 13, fontFamily: "'Cairo',sans-serif", fontWeight: 700 }}>رفع صورة</span>
+                    </button>
+                  )}
+                </div>
+              )}
 
-            {isMassWedding && (
+              {/* Mass wedding images */}
+              {isMassWedding && (
+                <div className="space-y-2">
+                  <Label>صور العرسان</Label>
+                  <input ref={multiImageInputRef} type="file" accept="image/*" onChange={handleMultiImageUpload} className="hidden" />
+                  <div className="grid grid-cols-3 gap-2">
+                    {Array.from({ length: 6 }, (_, i) => {
+                      const img = data.images?.[i];
+                      return img ? (
+                        <div key={i} style={{ position: 'relative' }}>
+                          <img src={img} alt={`عريس ${i + 1}`} style={{ width: '100%', height: 72, objectFit: 'cover', borderRadius: 8, border: '1.5px solid #e2e8f0' }} />
+                          <button onClick={() => removeSlotImage(i)} style={{ position: 'absolute', top: -6, left: -6, background: '#ef4444', border: 'none', borderRadius: '50%', width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                            <X size={10} color="#fff" />
+                          </button>
+                        </div>
+                      ) : (
+                        <button key={i} onClick={() => handleSlotClick(i)} style={{ height: 72, border: '1.5px dashed #c7d2fe', borderRadius: 8, background: '#f8f7ff', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3, cursor: 'pointer' }}>
+                          <ImagePlus size={14} color="#6366f1" />
+                          <span style={{ color: '#94a3b8', fontSize: 10 }}>عريس {i + 1}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Description */}
               <div className="space-y-2">
-                <Label className="text-muted-foreground/70">صور العرسان</Label>
-                <div className="grid grid-cols-3 gap-2">
-                  {Array.from({ length: 6 }, (_, i) => (
-                    <div key={i} style={{
-                      height: 72, border: '1.5px dashed #c7d2fe',
-                      borderRadius: 10, background: '#f8f7ff',
-                      display: 'flex', flexDirection: 'column',
-                      alignItems: 'center', justifyContent: 'center', gap: 4,
-                    }}>
-                      <Lock size={14} color="#a5b4fc" />
-                      <span style={{ color: '#94a3b8', fontSize: 11 }}>عريس {i + 1}</span>
+                <Label>
+                  {isMassWedding ? 'أسماء العرسان (اسم في كل سطر)' :
+                   isWedding || isCongrats ? 'التفاصيل (التاريخ والمكان...)' :
+                   isSpecialized ? 'الخدمات' : 'الوصف'}
+                </Label>
+                <Textarea
+                  value={data.description || ''}
+                  onChange={e => onChange({ description: e.target.value })}
+                  placeholder={isMassWedding ? 'أحمد ونور\nمحمد وسارة' : 'أدخل التفاصيل هنا...'}
+                  rows={isMassWedding ? 5 : 3}
+                />
+              </div>
+
+              {/* Congrats / wedding extra */}
+              {(isCongrats || isWedding) && !isMassWedding && (
+                <div className="space-y-2">
+                  <Label>اسم المهنئ / النص الختامي</Label>
+                  <Input value={data.senderName || ''} onChange={e => onChange({ senderName: e.target.value })} placeholder="أسرة الحاج محمد" />
+                </div>
+              )}
+
+              {isCongrats && (
+                <>
+                  <div className="space-y-2">
+                    <Label>نص التهنئة الرئيسي</Label>
+                    <Input value={data.congratsText || ''} onChange={e => onChange({ congratsText: e.target.value })} placeholder="ألف مبروك" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>نص الإهداء</Label>
+                    <Input value={data.dedicationText || ''} onChange={e => onChange({ dedicationText: e.target.value })} placeholder="بمناسبة..." />
+                  </div>
+                </>
+              )}
+
+              {isMassWedding && (
+                <>
+                  <div className="space-y-2">
+                    <Label>التاريخ</Label>
+                    <Input value={data.date || ''} onChange={e => onChange({ date: e.target.value })} placeholder="15 - 8 - 2025" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>المكان</Label>
+                    <Input value={data.location || ''} onChange={e => onChange({ location: e.target.value })} placeholder="قاعة الأفراح" />
+                  </div>
+                </>
+              )}
+
+              {showPhone && !isMassWedding && !isCongrats && (
+                <div className="space-y-2">
+                  <Label>رقم الهاتف</Label>
+                  <Input value={data.phone || ''} onChange={e => onChange({ phone: e.target.value })} placeholder="+967 71 000 0000" dir="ltr" className="text-right" />
+                </div>
+              )}
+
+              {showEmail && (
+                <div className="space-y-2">
+                  <Label>البريد الإلكتروني</Label>
+                  <Input value={data.email || ''} onChange={e => onChange({ email: e.target.value })} placeholder="info@example.com" dir="ltr" className="text-right" />
+                </div>
+              )}
+
+              {showWebsite && (
+                <div className="space-y-2">
+                  <Label>الموقع الإلكتروني</Label>
+                  <Input value={data.website || ''} onChange={e => onChange({ website: e.target.value })} placeholder="www.example.com" dir="ltr" className="text-right" />
+                </div>
+              )}
+
+              {/* Extra lines — congrats */}
+              {isCongrats && (
+                <div className="space-y-2">
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Label>سطور إضافية</Label>
+                    {extraLines.length < 5 && (
+                      <button onClick={addExtraLine} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6366f1', fontSize: 12, fontWeight: 700, fontFamily: "'Cairo',sans-serif" }}>+ إضافة سطر</button>
+                    )}
+                  </div>
+                  {extraLines.map((line, i) => (
+                    <div key={i} style={{ display: 'flex', gap: 6 }}>
+                      <Input value={line} onChange={e => updateExtraLine(i, e.target.value)} placeholder={`سطر ${i + 1}`} style={{ flex: 1 }} />
+                      <button onClick={() => removeExtraLine(i)} style={{ background: '#fef2f2', border: 'none', borderRadius: 8, padding: '0 10px', cursor: 'pointer', color: '#dc2626' }}>
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Colors — unlocked */}
+              <div className="space-y-3">
+                <h3 className="text-lg font-bold">الألوان</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {([
+                    { key: 'primary', label: 'الأساسي' },
+                    { key: 'secondary', label: 'الثانوي' },
+                    { key: 'accent', label: 'التمييز' },
+                    { key: 'bg', label: 'الخلفية' },
+                  ] as { key: keyof TemplateData['colors']; label: string }[]).map(({ key, label }) => (
+                    <div key={key} className="space-y-2">
+                      <Label>{label}</Label>
+                      <div className="flex items-center gap-2">
+                        <input type="color" value={data.colors[key]} onChange={e => handleColorChange(key, e.target.value)} className="h-8 w-8 rounded cursor-pointer border-0 p-0" />
+                        <span className="text-xs text-muted-foreground uppercase">{data.colors[key]}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Description */}
-            <LockedTextarea
-              label={
-                isMassWedding ? 'أسماء العرسان (اسم في كل سطر)' :
-                isWedding || isCongrats ? 'التفاصيل (التاريخ والمكان...)' :
-                isSpecialized ? 'الخدمات' : 'الوصف'
-              }
-              placeholder="محجوب — يتطلب التفعيل"
-              rows={isMassWedding ? 5 : 3}
-            />
+          {/* ── LOCKED FIELDS — only shown when NOT unlocked ── */}
+          {!isUnlocked && (
+            <div className="space-y-4">
 
-            {/* Congrats / wedding extra */}
-            {(isCongrats || isWedding) && !isMassWedding && (
-              <LockedField label="اسم المهنئ / النص الختامي" placeholder="محجوب — يتطلب التفعيل" />
-            )}
+              {/* Image upload — locked */}
+              {showImage && !isMassWedding && (
+                <LockedImageSlot label="الصورة الشخصية" />
+              )}
 
-            {isCongrats && (
-              <>
-                <LockedField label="نص التهنئة الرئيسي" placeholder="محجوب — يتطلب التفعيل" />
-                <LockedField label="نص الإهداء" placeholder="محجوب — يتطلب التفعيل" />
-              </>
-            )}
+              {isMassWedding && (
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground/70">صور العرسان</Label>
+                  <div className="grid grid-cols-3 gap-2">
+                    {Array.from({ length: 6 }, (_, i) => (
+                      <div key={i} style={{
+                        height: 72, border: '1.5px dashed #c7d2fe',
+                        borderRadius: 10, background: '#f8f7ff',
+                        display: 'flex', flexDirection: 'column',
+                        alignItems: 'center', justifyContent: 'center', gap: 4,
+                      }}>
+                        <Lock size={14} color="#a5b4fc" />
+                        <span style={{ color: '#94a3b8', fontSize: 11 }}>عريس {i + 1}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-            {isMassWedding && (
-              <>
-                <LockedField label="التاريخ" placeholder="محجوب — يتطلب التفعيل" />
-                <LockedField label="المكان" placeholder="محجوب — يتطلب التفعيل" />
-              </>
-            )}
+              {/* Description */}
+              <LockedTextarea
+                label={
+                  isMassWedding ? 'أسماء العرسان (اسم في كل سطر)' :
+                  isWedding || isCongrats ? 'التفاصيل (التاريخ والمكان...)' :
+                  isSpecialized ? 'الخدمات' : 'الوصف'
+                }
+                placeholder="محجوب — يتطلب التفعيل"
+                rows={isMassWedding ? 5 : 3}
+              />
 
-            {showPhone && !isMassWedding && !isCongrats && (
-              <LockedField label="رقم الهاتف" placeholder="محجوب — يتطلب التفعيل" />
-            )}
+              {/* Congrats / wedding extra */}
+              {(isCongrats || isWedding) && !isMassWedding && (
+                <LockedField label="اسم المهنئ / النص الختامي" placeholder="محجوب — يتطلب التفعيل" />
+              )}
 
-            {showEmail && (
-              <LockedField label="البريد الإلكتروني" placeholder="محجوب — يتطلب التفعيل" />
-            )}
+              {isCongrats && (
+                <>
+                  <LockedField label="نص التهنئة الرئيسي" placeholder="محجوب — يتطلب التفعيل" />
+                  <LockedField label="نص الإهداء" placeholder="محجوب — يتطلب التفعيل" />
+                </>
+              )}
 
-            {showWebsite && (
-              <LockedField label="الموقع الإلكتروني" placeholder="محجوب — يتطلب التفعيل" />
-            )}
+              {isMassWedding && (
+                <>
+                  <LockedField label="التاريخ" placeholder="محجوب — يتطلب التفعيل" />
+                  <LockedField label="المكان" placeholder="محجوب — يتطلب التفعيل" />
+                </>
+              )}
 
-            {/* Extra lines — locked */}
-            {isCongrats && (
-              <div className="space-y-2">
-                <Label className="text-muted-foreground/70">سطور إضافية</Label>
-                <div style={{
-                  padding: '10px 14px', borderRadius: 10,
-                  border: '1.5px dashed #c7d2fe', background: '#f8f7ff',
-                  display: 'flex', alignItems: 'center', gap: 8,
-                }}>
-                  <Lock size={14} color="#a5b4fc" />
-                  <span style={{ color: '#94a3b8', fontSize: 13, fontFamily: "'Cairo', sans-serif" }}>محجوب — يتطلب التفعيل</span>
+              {showPhone && !isMassWedding && !isCongrats && (
+                <LockedField label="رقم الهاتف" placeholder="محجوب — يتطلب التفعيل" />
+              )}
+
+              {showEmail && (
+                <LockedField label="البريد الإلكتروني" placeholder="محجوب — يتطلب التفعيل" />
+              )}
+
+              {showWebsite && (
+                <LockedField label="الموقع الإلكتروني" placeholder="محجوب — يتطلب التفعيل" />
+              )}
+
+              {/* Extra lines — locked */}
+              {isCongrats && (
+                <div className="space-y-2">
+                  <Label className="text-muted-foreground/70">سطور إضافية</Label>
+                  <div style={{
+                    padding: '10px 14px', borderRadius: 10,
+                    border: '1.5px dashed #c7d2fe', background: '#f8f7ff',
+                    display: 'flex', alignItems: 'center', gap: 8,
+                  }}>
+                    <Lock size={14} color="#a5b4fc" />
+                    <span style={{ color: '#94a3b8', fontSize: 13, fontFamily: "'Cairo', sans-serif" }}>محجوب — يتطلب التفعيل</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Colors — locked */}
+              <div className="space-y-3">
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#94a3b8', margin: 0 }}>الألوان</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { key: 'primary', label: 'الأساسي' },
+                    { key: 'secondary', label: 'الثانوي' },
+                    { key: 'accent', label: 'التمييز' },
+                    { key: 'bg', label: 'الخلفية' },
+                  ].map(({ key, label }) => (
+                    <div key={key} style={{ opacity: 0.5, cursor: 'not-allowed' }}>
+                      <Label className="text-muted-foreground/70">{label}</Label>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
+                        <div style={{
+                          width: 30, height: 30, borderRadius: 6,
+                          background: data.colors[key as keyof typeof data.colors],
+                          border: '1.5px solid #e2e8f0',
+                        }} />
+                        <span style={{ fontSize: 11, color: '#94a3b8' }}>{data.colors[key as keyof typeof data.colors]}</span>
+                        <Lock size={11} color="#a5b4fc" />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            )}
-
-            {/* Colors — locked */}
-            <div className="space-y-3">
-              <h3 style={{ fontSize: 16, fontWeight: 700, color: '#94a3b8', margin: 0 }}>الألوان</h3>
-              <div className="grid grid-cols-2 gap-3">
-                {[
-                  { key: 'primary', label: 'الأساسي' },
-                  { key: 'secondary', label: 'الثانوي' },
-                  { key: 'accent', label: 'التمييز' },
-                  { key: 'bg', label: 'الخلفية' },
-                ].map(({ key, label }) => (
-                  <div key={key} style={{ opacity: 0.5, cursor: 'not-allowed' }}>
-                    <Label className="text-muted-foreground/70">{label}</Label>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
-                      <div style={{
-                        width: 30, height: 30, borderRadius: 6,
-                        background: data.colors[key as keyof typeof data.colors],
-                        border: '1.5px solid #e2e8f0',
-                      }} />
-                      <span style={{ fontSize: 11, color: '#94a3b8' }}>{data.colors[key as keyof typeof data.colors]}</span>
-                      <Lock size={11} color="#a5b4fc" />
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
-          </div>
+          )}
         </>
       )}
     </div>

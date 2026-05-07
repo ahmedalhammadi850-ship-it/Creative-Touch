@@ -7,6 +7,7 @@ export interface User {
   email: string;
   plan: 'free' | 'starter' | 'weekly' | 'monthly';
   planStatus: 'active' | 'pending' | 'rejected' | null;
+  planExpiresAt?: string;
   createdAt: string;
   activatedTemplates?: string[];
 }
@@ -18,8 +19,16 @@ interface AuthState {
   addUser: (user: User) => void;
   getUserByEmail: (email: string) => User | undefined;
   logout: () => void;
-  updateUserPlan: (userId: string, plan: User['plan'], status: User['planStatus']) => void;
+  updateUserPlan: (userId: string, plan: User['plan'], status: User['planStatus'], expiresAt?: string) => void;
   addActivatedTemplate: (userId: string, templateKey: string) => void;
+}
+
+export function isPlanActive(user: User | null): boolean {
+  if (!user || user.plan === 'free' || user.planStatus !== 'active') return false;
+  if (user.planExpiresAt) {
+    return new Date(user.planExpiresAt) > new Date();
+  }
+  return true;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -46,14 +55,14 @@ export const useAuthStore = create<AuthState>()(
 
       logout: () => set({ user: null }),
 
-      updateUserPlan: (userId, plan, status) => {
+      updateUserPlan: (userId, plan, status, expiresAt) => {
         set((state) => ({
           users: state.users.map((u) =>
-            u.id === userId ? { ...u, plan, planStatus: status } : u
+            u.id === userId ? { ...u, plan, planStatus: status, planExpiresAt: expiresAt } : u
           ),
           user:
             state.user?.id === userId
-              ? { ...state.user, plan, planStatus: status }
+              ? { ...state.user, plan, planStatus: status, planExpiresAt: expiresAt }
               : state.user,
         }));
       },
