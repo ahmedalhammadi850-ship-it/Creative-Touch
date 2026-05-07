@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'wouter';
 import { useAuthStore } from '../store/useAuthStore';
-import { Eye, EyeOff, UserPlus, LayoutTemplate, Mail, CheckCircle, RefreshCw } from 'lucide-react';
+import { Eye, EyeOff, UserPlus, LayoutTemplate, Mail, CheckCircle, RefreshCw, Loader2 } from 'lucide-react';
 import {
   auth,
   firebaseReady,
@@ -16,7 +16,7 @@ type Step = 'form' | 'verify';
 
 export default function RegisterPage() {
   const [, setLocation] = useLocation();
-  const { addUser } = useAuthStore();
+  const { addUser, getUserByEmail, setCurrentUser } = useAuthStore();
 
   const [step, setStep] = useState<Step>('form');
   const [verifyEmail, setVerifyEmail] = useState('');
@@ -28,8 +28,66 @@ export default function RegisterPage() {
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const [checking, setChecking] = useState(false);
+  const [verifyError, setVerifyError] = useState('');
   const [resending, setResending] = useState(false);
   const [resent, setResent] = useState(false);
+  const checkingRef = useRef(false);
+
+  const handleVerified = async (silent = false) => {
+    if (checkingRef.current) return;
+    checkingRef.current = true;
+    if (!silent) setChecking(true);
+    setVerifyError('');
+
+    try {
+      const fbUser = auth.currentUser;
+      if (!fbUser) {
+        if (!silent) setVerifyError('انتهت جلسة التسجيل. يرجى تسجيل الدخول.');
+        return;
+      }
+
+      await fbUser.reload();
+
+      if (!auth.currentUser?.emailVerified) {
+        if (!silent) setVerifyError('لم يتم التحقق بعد. راجع بريدك وانقر على الرابط.');
+        return;
+      }
+
+      const fbVerifiedUser = auth.currentUser;
+      const localUser = getUserByEmail(fbVerifiedUser.email!);
+      if (localUser) {
+        setCurrentUser(localUser);
+      } else {
+        const newUser = {
+          id: fbVerifiedUser.uid,
+          name: fbVerifiedUser.displayName || verifyEmail.split('@')[0],
+          email: fbVerifiedUser.email!.toLowerCase(),
+          plan: 'free' as const,
+          planStatus: null as null,
+          createdAt: new Date().toISOString(),
+        };
+        addUser(newUser);
+        setCurrentUser(newUser);
+      }
+
+      await signOut(auth);
+      setLocation('/dashboard');
+    } catch {
+      if (!silent) setVerifyError('حدث خطأ. يرجى المحاولة مرة أخرى.');
+    } finally {
+      checkingRef.current = false;
+      if (!silent) setChecking(false);
+    }
+  };
+
+  useEffect(() => {
+    if (step !== 'verify') return;
+    const onFocus = () => handleVerified(true);
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, [step]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +102,8 @@ export default function RegisterPage() {
       const credential = await createUserWithEmailAndPassword(auth, email.trim(), password);
       await updateProfile(credential.user, { displayName: name.trim() });
 
-      await sendEmailVerification(credential.user);
+      const continueUrl = window.location.origin + '/verify-callback';
+      await sendEmailVerification(credential.user, { url: continueUrl, handleCodeInApp: false });
 
       addUser({
         id: credential.user.uid,
@@ -56,7 +115,6 @@ export default function RegisterPage() {
       });
 
       setVerifyEmail(email.trim());
-      await signOut(auth);
       setStep('verify');
     } catch (err: unknown) {
       const code = (err as { code?: string }).code || '';
@@ -70,11 +128,11 @@ export default function RegisterPage() {
     setResending(true);
     setResent(false);
     try {
-      const { signInWithEmailAndPassword: fbSignIn } = await import('../lib/firebase');
-      const cred = await fbSignIn(auth, verifyEmail, password);
-      await sendEmailVerification(cred.user);
-      await signOut(auth);
-      setResent(true);
+      if (auth.currentUser) {
+        const continueUrl = window.location.origin + '/verify-callback';
+        await sendEmailVerification(auth.currentUser, { url: continueUrl, handleCodeInApp: false });
+        setResent(true);
+      }
     } catch {
     } finally {
       setResending(false);
@@ -91,37 +149,36 @@ export default function RegisterPage() {
   if (step === 'verify') {
     return (
       <div dir="rtl" style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#f8f7ff 0%,#eef2ff 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px 16px', fontFamily: "'Cairo',sans-serif" }}>
-        <div style={{ width: '100%', maxWidth: 440 }}>
-
+        <div style={{ width: '100%', maxWidth: 460 }}>
           <div style={{ background: '#fff', borderRadius: 24, padding: 'clamp(28px,6vw,44px) clamp(20px,6vw,40px)', boxShadow: '0 12px 50px rgba(99,102,241,0.14)', border: '1px solid rgba(99,102,241,0.1)', textAlign: 'center' }}>
 
             <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', boxShadow: '0 10px 30px rgba(99,102,241,0.4)' }}>
               <Mail size={38} color="#fff" />
             </div>
 
-            <h2 style={{ color: '#1e1b4b', fontSize: 22, fontWeight: 900, margin: '0 0 10px' }}>
-              تحقق من بريدك الإلكتروني
-            </h2>
-            <p style={{ color: '#64748b', fontSize: 14, lineHeight: 1.8, margin: '0 0 6px' }}>
-              أرسلنا رابط تفعيل إلى
-            </p>
-            <p style={{ color: '#6366f1', fontSize: 15, fontWeight: 800, margin: '0 0 20px', direction: 'ltr', wordBreak: 'break-all' }}>
-              {verifyEmail}
-            </p>
+            <h2 style={{ color: '#1e1b4b', fontSize: 22, fontWeight: 900, margin: '0 0 10px' }}>تحقق من بريدك الإلكتروني</h2>
+            <p style={{ color: '#64748b', fontSize: 14, lineHeight: 1.8, margin: '0 0 4px' }}>أرسلنا رابط تفعيل إلى</p>
+            <p style={{ color: '#6366f1', fontSize: 15, fontWeight: 800, margin: '0 0 20px', direction: 'ltr', wordBreak: 'break-all' }}>{verifyEmail}</p>
 
-            <div style={{ background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 14, padding: '14px 16px', marginBottom: 24 }}>
+            <div style={{ background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 14, padding: '14px 16px', marginBottom: 24, textAlign: 'right' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                 <CheckCircle size={18} color="#16a34a" style={{ marginTop: 2, flexShrink: 0 }} />
-                <div style={{ textAlign: 'right' }}>
+                <div>
                   <p style={{ color: '#15803d', fontSize: 13, fontWeight: 800, margin: '0 0 4px' }}>الخطوات التالية:</p>
-                  <p style={{ color: '#166534', fontSize: 13, lineHeight: 1.8, margin: 0 }}>
+                  <p style={{ color: '#166534', fontSize: 13, lineHeight: 1.9, margin: 0 }}>
                     ١. افتح بريدك الإلكتروني<br />
                     ٢. انقر على رابط "تحقق من بريدك الإلكتروني"<br />
-                    ٣. ارجع هنا وسجّل دخولك
+                    ٣. ستُحوَّل تلقائياً للحساب
                   </p>
                 </div>
               </div>
             </div>
+
+            {verifyError && (
+              <div style={{ background: '#fef9ee', border: '1px solid #fde68a', borderRadius: 10, padding: '10px 14px', color: '#92400e', fontSize: 13, fontWeight: 600, marginBottom: 16 }}>
+                {verifyError}
+              </div>
+            )}
 
             {resent && (
               <div style={{ background: '#ecfdf5', border: '1px solid #6ee7b7', borderRadius: 10, padding: '10px 14px', color: '#059669', fontSize: 13, fontWeight: 700, marginBottom: 16 }}>
@@ -130,10 +187,14 @@ export default function RegisterPage() {
             )}
 
             <button
-              onClick={() => setLocation('/login')}
-              style={{ width: '100%', padding: '13px', borderRadius: 14, background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 15, fontWeight: 800, fontFamily: "'Cairo',sans-serif", boxShadow: '0 6px 20px rgba(99,102,241,0.35)', marginBottom: 12 }}
+              onClick={() => handleVerified(false)}
+              disabled={checking}
+              style={{ width: '100%', padding: '14px', borderRadius: 14, background: checking ? '#e2e8f0' : 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: checking ? 'not-allowed' : 'pointer', color: checking ? '#94a3b8' : '#fff', fontSize: 15, fontWeight: 800, fontFamily: "'Cairo',sans-serif", boxShadow: checking ? 'none' : '0 6px 20px rgba(99,102,241,0.35)', marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
             >
-              تسجيل الدخول بعد التحقق
+              {checking
+                ? <><Loader2 size={17} style={{ animation: 'spin 1s linear infinite' }} />جاري التحقق...</>
+                : <><CheckCircle size={17} />تحققت من بريدي — دخول للحساب</>
+              }
             </button>
 
             <button
@@ -213,7 +274,7 @@ export default function RegisterPage() {
             )}
 
             <button type="submit" disabled={loading}
-              style={{ width: '100%', padding: '13px', borderRadius: 14, background: loading ? '#e2e8f0' : 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', color: loading ? '#94a3b8' : '#fff', fontSize: 15, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: loading ? 'none' : '0 6px 20px rgba(99,102,241,0.35)', fontFamily: "'Cairo',sans-serif", marginTop: 4, WebkitTapHighlightColor: 'transparent' }}>
+              style={{ width: '100%', padding: '13px', borderRadius: 14, background: loading ? '#e2e8f0' : 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', color: loading ? '#94a3b8' : '#fff', fontSize: 15, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: loading ? 'none' : '0 6px 20px rgba(99,102,241,0.35)', fontFamily: "'Cairo',sans-serif", marginTop: 4 }}>
               {loading ? 'جاري الإنشاء...' : <><UserPlus size={17} /> إنشاء حساب</>}
             </button>
           </form>
