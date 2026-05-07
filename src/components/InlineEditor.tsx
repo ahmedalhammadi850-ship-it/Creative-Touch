@@ -525,6 +525,27 @@ export function InlineEditor({ categoryId, templateId, data, onChange, backCardM
       {/* =================== FRONT / NORMAL MODE (non-business-card) =================== */}
       {!backCardMode && !isBusinessCard && (
         <>
+          {/* Free user preview banner — shown when not unlocked */}
+          {!isUnlocked && (
+            <div style={{
+              background: 'linear-gradient(135deg,#fef9ee,#fff7ed)',
+              border: '2px solid #fde68a',
+              borderRadius: 14, padding: '12px 16px',
+              display: 'flex', alignItems: 'center', gap: 10,
+              marginBottom: 4,
+            }}>
+              <span style={{ fontSize: 22 }}>✏️</span>
+              <div>
+                <p style={{ color: '#92400e', fontSize: 13, fontWeight: 900, margin: 0, fontFamily: "'Cairo',sans-serif" }}>
+                  وضع المعاينة المجانية
+                </p>
+                <p style={{ color: '#b45309', fontSize: 12, margin: 0, fontFamily: "'Cairo',sans-serif" }}>
+                  يمكنك تعديل الاسم والعنوان الفرعي فقط — باقي الحقول تتطلب اشتراكاً
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Plan status banner */}
           {isUnlocked && daysLeft !== null && (
             <div style={{
