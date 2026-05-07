@@ -4,7 +4,7 @@ import html2canvas from 'html2canvas';
 
 /* ─────────────────── platform detection ─────────────────── */
 
-function isIOS(): boolean {
+export function isIOS(): boolean {
   return (
     /iPad|iPhone|iPod/.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
@@ -15,7 +15,7 @@ function isAndroid(): boolean {
   return /Android/i.test(navigator.userAgent);
 }
 
-function isMobile(): boolean {
+export function isMobile(): boolean {
   return isIOS() || isAndroid() || /Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
 }
 
@@ -30,64 +30,103 @@ async function fetchAsBase64(url: string): Promise<string> {
     const blob = await res.blob();
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onloadend = () => { resourceCache.set(url, reader.result as string); resolve(reader.result as string); };
+      reader.onloadend = () => {
+        resourceCache.set(url, reader.result as string);
+        resolve(reader.result as string);
+      };
       reader.onerror = reject;
       reader.readAsDataURL(blob);
     });
-  } catch { return ''; }
+  } catch {
+    return '';
+  }
 }
 
 let cachedFontCSS: string | null = null;
 async function buildFontEmbedCSS(): Promise<string> {
   if (cachedFontCSS !== null) return cachedFontCSS;
   try {
-    const css0 = await (await fetch(
-      'https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=block'
-    )).text();
-    const urls = [...new Set([...css0.matchAll(/url\((https:\/\/fonts\.gstatic\.com[^)]+)\)/g)].map(m => m[1]))];
-    let css = css0;
-    await Promise.all(urls.map(async u => { const b = await fetchAsBase64(u); if (b) css = css.replaceAll(u, b); }));
+    const cssText = await (
+      await fetch('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=block')
+    ).text();
+    const urls = [...new Set(
+      [...cssText.matchAll(/url\((https:\/\/fonts\.gstatic\.com[^)]+)\)/g)].map(m => m[1])
+    )];
+    let css = cssText;
+    await Promise.all(urls.map(async u => {
+      const b = await fetchAsBase64(u);
+      if (b) css = css.replaceAll(u, b);
+    }));
     cachedFontCSS = css;
     return css;
-  } catch { cachedFontCSS = ''; return ''; }
+  } catch {
+    cachedFontCSS = '';
+    return '';
+  }
 }
 
 /* ─────────────────────── px → mm ───────────────────────── */
 
-function pxToMm(px: number): number { return (px / 96) * 25.4; }
+function pxToMm(px: number): number {
+  return (px / 96) * 25.4;
+}
 
 /* ──────────────────── download helpers ─────────────────── */
 
-function triggerDownload(blob: Blob, filename: string) {
+/**
+ * Android / Desktop: standard blob-URL anchor download.
+ */
+function downloadBlob(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);
-  if (isIOS()) {
-    // iOS Safari blocks <a download> — open blob in new tab; user saves via Share → Save to Files
-    const a = document.createElement('a');
-    a.href = url;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 60000);
-  } else {
-    // Android + Desktop
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 10000);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+
+/**
+ * iOS Safari:
+ *  - `window.open()` MUST be called synchronously from a user-gesture handler,
+ *    BEFORE any `await`. The caller is responsible for opening the window and
+ *    passing it here.
+ *  - We then navigate the already-open window to the PDF data URI so iOS can
+ *    display it natively (user can Share → Save to Files / AirDrop).
+ */
+function showPdfInIOSWindow(iosWin: Window, pdfDataUri: string) {
+  try {
+    iosWin.document.open();
+    iosWin.document.write(
+      '<!DOCTYPE html><html><head>' +
+      '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+      '<title>PDF</title>' +
+      '<style>body{margin:0;background:#000;height:100vh;overflow:hidden}' +
+      'iframe{width:100vw;height:100vh;border:none}</style>' +
+      '</head><body>' +
+      `<iframe src="${pdfDataUri}"></iframe>` +
+      '</body></html>'
+    );
+    iosWin.document.close();
+  } catch {
+    // Fallback: navigate directly to data URI
+    iosWin.location.href = pdfDataUri;
   }
 }
 
 /* ──────────────────── capture: MOBILE ──────────────────── */
 /**
- * Clones the element into a position:fixed wrapper appended directly to
- * document.body — completely outside any scaled/transformed ancestor.
- * html2canvas then sees it at its natural size with no transform distortion.
+ * Clones #export-target into a position:fixed wrapper appended to document.body
+ * — completely outside the scaled (.editor-template-preview) container.
+ * html2canvas captures it at its natural size with no transform distortion.
+ *
+ * Key options:
+ *   allowTaint: true  → cross-origin images are drawn (canvas will be "tainted"
+ *                        but modern Android Chrome still allows toDataURL())
+ *   useCORS: true     → attempt CORS fetch first so canvas stays clean if server
+ *                        sends the right headers
  */
 async function captureElementMobile(el: HTMLElement): Promise<string> {
   await document.fonts.ready;
@@ -95,48 +134,35 @@ async function captureElementMobile(el: HTMLElement): Promise<string> {
   const naturalW = el.offsetWidth;
   const naturalH = el.offsetHeight;
 
-  // Wrapper: fixed off-screen so it doesn't affect layout or scroll
+  // Off-screen wrapper — position:fixed keeps it outside any ancestor transforms
   const wrapper = document.createElement('div');
-  wrapper.style.cssText = [
-    'position:fixed',
-    `top:-${naturalH + 200}px`,
-    'left:0',
-    `width:${naturalW}px`,
-    `height:${naturalH}px`,
-    'overflow:hidden',
-    'z-index:-9999',
-    'pointer-events:none',
-    'background:#fff',
-    'transform:none',
-    'transform-origin:top left',
-  ].join(';');
+  wrapper.style.cssText =
+    `position:fixed;top:-${naturalH + 400}px;left:0;` +
+    `width:${naturalW}px;height:${naturalH}px;` +
+    `overflow:hidden;z-index:-9999;pointer-events:none;` +
+    `background:#fff;transform:none;transform-origin:top left;`;
 
-  // Clone without any inline transforms
   const clone = el.cloneNode(true) as HTMLElement;
-  clone.style.cssText = [
-    `width:${naturalW}px`,
-    `height:${naturalH}px`,
-    'transform:none',
-    'transform-origin:top left',
-    'position:relative',
-    'overflow:hidden',
-    'margin:0',
-    'padding:0',
-  ].join(';');
+  clone.style.cssText =
+    `width:${naturalW}px;height:${naturalH}px;` +
+    `transform:none;transform-origin:top left;` +
+    `position:relative;overflow:hidden;margin:0;padding:0;`;
 
   wrapper.appendChild(clone);
   document.body.appendChild(wrapper);
+
+  // Small delay to let the browser paint the clone before capturing
+  await new Promise(r => setTimeout(r, 120));
 
   try {
     const canvas = await html2canvas(clone, {
       scale: 2,
       useCORS: true,
-      allowTaint: false,
+      allowTaint: true,       // include cross-origin images even if canvas gets tainted
       backgroundColor: '#ffffff',
       width: naturalW,
       height: naturalH,
-      windowWidth: naturalW,
-      windowHeight: naturalH,
+      imageTimeout: 15000,   // wait up to 15s for images to load
       logging: false,
     });
     return canvas.toDataURL('image/png');
@@ -169,14 +195,16 @@ async function captureElementDesktop(el: HTMLElement): Promise<string> {
   await toPng(el, opts).catch(() => null);
   const raw = await toPng(el, opts);
 
-  // Stamp onto white canvas for solid background
+  // Stamp onto white canvas for a guaranteed solid background
   const img = new Image();
   img.src = raw;
   await new Promise<void>((res, rej) => { img.onload = () => res(); img.onerror = rej; });
 
-  const cw = naturalW * 3, ch = naturalH * 3;
+  const cw = naturalW * 3;
+  const ch = naturalH * 3;
   const canvas = document.createElement('canvas');
-  canvas.width = cw; canvas.height = ch;
+  canvas.width = cw;
+  canvas.height = ch;
   const ctx = canvas.getContext('2d')!;
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, cw, ch);
@@ -191,15 +219,25 @@ async function captureElement(el: HTMLElement): Promise<string> {
 /* ──────────────────── exported hook ────────────────────── */
 
 export function useExport() {
-  const exportAsPdf = async (): Promise<{ ok: boolean; error?: string }> => {
+  /**
+   * @param iosWindow  A Window reference opened synchronously BEFORE calling
+   *                   this function — required on iOS because window.open()
+   *                   is blocked after an `await` (popup blocker kicks in).
+   *                   Pass null/undefined on Android & Desktop.
+   */
+  const exportAsPdf = async (
+    iosWindow?: Window | null
+  ): Promise<{ ok: boolean; error?: string }> => {
     const el = document.getElementById('export-target');
     if (!el) return { ok: false, error: 'export-target not found' };
 
     try {
       const png = await captureElement(el);
 
-      const w = el.offsetWidth, h = el.offsetHeight;
-      const wMm = pxToMm(w), hMm = pxToMm(h);
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+      const wMm = pxToMm(w);
+      const hMm = pxToMm(h);
 
       const pdf = new jsPDF({
         unit: 'mm',
@@ -212,15 +250,28 @@ export function useExport() {
 
       const filename = `creative-touch-${Date.now()}.pdf`;
 
-      if (isMobile()) {
-        triggerDownload(pdf.output('blob'), filename);
+      if (isIOS()) {
+        const dataUri = pdf.output('datauristring');
+        if (iosWindow && !iosWindow.closed) {
+          showPdfInIOSWindow(iosWindow, dataUri);
+        } else {
+          // Fallback if window was blocked: navigate current tab to data URI
+          // (user presses back to return to app)
+          window.location.href = dataUri;
+        }
+      } else if (isMobile()) {
+        // Android
+        downloadBlob(pdf.output('blob'), filename);
       } else {
+        // Desktop
         pdf.save(filename);
       }
 
       return { ok: true };
     } catch (e) {
       console.error('PDF export failed:', e);
+      // If iOS window was opened but export failed, close it to avoid blank tab
+      if (iosWindow && !iosWindow.closed) iosWindow.close();
       return { ok: false, error: String(e) };
     }
   };
@@ -228,8 +279,11 @@ export function useExport() {
   const capturePreview = async (): Promise<string | null> => {
     const el = document.getElementById('export-target');
     if (!el) return null;
-    try { return await captureElement(el); }
-    catch { return null; }
+    try {
+      return await captureElement(el);
+    } catch {
+      return null;
+    }
   };
 
   return {

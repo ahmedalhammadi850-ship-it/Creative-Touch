@@ -118,9 +118,15 @@ export default function EditorPage() {
   const handleExportPdf = async () => {
     if (exporting) return;
     setExporting(true);
+
+    // iOS Safari: window.open() MUST be called synchronously from a user-gesture
+    // handler, BEFORE any await — otherwise the popup blocker kills it.
+    const iosWin = isIOSDevice ? window.open('', '_blank') : null;
+
     toast({ title: 'جاري تحضير الملف...', description: 'يرجى الانتظار، قد يستغرق بضع ثوانٍ.' });
-    const result = await exportAsPdf();
+    const result = await exportAsPdf(iosWin);
     setExporting(false);
+
     if (!result.ok) {
       toast({
         title: 'فشل التصدير',
@@ -128,7 +134,7 @@ export default function EditorPage() {
         variant: 'destructive',
       });
     } else if (isIOSDevice) {
-      toast({ title: '✓ تم', description: 'سيفتح الـ PDF — اضغط المشاركة ثم "حفظ في الملفات".' });
+      toast({ title: '✓ تم فتح الـ PDF', description: 'اضغط المشاركة ← "حفظ في الملفات" لحفظه.' });
     } else if (isMobileDevice) {
       toast({ title: '✓ تم التحميل', description: 'تحقق من مجلد التنزيلات.' });
     } else {
