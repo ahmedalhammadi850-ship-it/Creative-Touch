@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRoute } from 'wouter';
 import { categories } from '../data/categories';
 import { useTemplateStore } from '../store/useTemplateStore';
@@ -51,6 +51,40 @@ export default function EditorPage() {
   const [verifyImg, setVerifyImg] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const { exportAsPdf, capturePreview, isMobileDevice, isIOSDevice } = useExport();
+
+  // Dynamic scale: measures the template's natural width and shrinks it to fit
+  const previewWrapRef = useRef<HTMLDivElement>(null);
+  const [previewScale, setPreviewScale] = useState(1);
+  const [previewMarginBottom, setPreviewMarginBottom] = useState(0);
+
+  const recalcScale = useCallback(() => {
+    const wrap = previewWrapRef.current;
+    if (!wrap) return;
+    const templateEl = wrap.firstElementChild as HTMLElement | null;
+    if (!templateEl) return;
+    // Temporarily reset transform so we measure the natural size
+    wrap.style.transform = 'none';
+    const naturalW = templateEl.offsetWidth;
+    const naturalH = templateEl.offsetHeight;
+    if (!naturalW || !naturalH) return;
+    const containerW = wrap.parentElement?.clientWidth ?? window.innerWidth;
+    const padding = 32; // 16px each side
+    const available = containerW - padding;
+    const scale = available < naturalW ? Math.min(1, available / naturalW) : 1;
+    // compensate the vertical space that the scaled-down element still occupies
+    const marginBottom = scale < 1 ? -(naturalH * (1 - scale)) : 0;
+    setPreviewScale(scale);
+    setPreviewMarginBottom(marginBottom);
+    wrap.style.transform = scale < 1 ? `scale(${scale})` : 'none';
+  }, []);
+
+  useEffect(() => {
+    // Small delay lets the lazy-loaded template render first
+    const t = setTimeout(recalcScale, 120);
+    window.addEventListener('resize', recalcScale);
+    return () => { clearTimeout(t); window.removeEventListener('resize', recalcScale); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recalcScale, templateId, cardSide, backStyleId]);
 
   const isBusinessCard = categoryId === 'business-card';
   const isFrontCard = isBusinessCard && !BACK_CARD_IDS.includes(templateId || '');
@@ -338,8 +372,16 @@ export default function EditorPage() {
             </div>
           )}
 
-          {/* Template preview — scaled to fit on mobile */}
-          <div className="relative shadow-2xl transition-all duration-300 editor-template-preview">
+          {/* Template preview — scaled dynamically to fit screen width */}
+          <div
+            ref={previewWrapRef}
+            className="relative shadow-2xl transition-transform duration-300"
+            style={{
+              transformOrigin: 'top center',
+              transform: previewScale < 1 ? `scale(${previewScale})` : 'none',
+              marginBottom: previewMarginBottom,
+            }}
+          >
             <TemplateRenderer
               categoryId={categoryId}
               templateId={displayTemplateId}
