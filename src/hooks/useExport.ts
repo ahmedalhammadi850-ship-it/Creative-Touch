@@ -1,7 +1,8 @@
 import { toPng } from 'html-to-image';
 import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
-const resourceCache = new Map<string, string>();
+/* ─────────────────────────── platform helpers ────────────────────────── */
 
 function isIOS(): boolean {
   return (
@@ -15,14 +16,22 @@ function isAndroid(): boolean {
 }
 
 function isMobile(): boolean {
-  return isIOS() || isAndroid() || /Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+  return (
+    isIOS() ||
+    isAndroid() ||
+    /Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent)
+  );
 }
+
+/* ─────────────────────── desktop font-embed helpers ─────────────────── */
+
+const resourceCache = new Map<string, string>();
 
 async function fetchAsBase64(url: string): Promise<string> {
   if (resourceCache.has(url)) return resourceCache.get(url)!;
   try {
-    const response = await fetch(url);
-    const blob = await response.blob();
+    const res = await fetch(url);
+    const blob = await res.blob();
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -64,57 +73,37 @@ async function buildFontEmbedCSS(): Promise<string> {
   }
 }
 
+/* ─────────────────────────── px → mm ────────────────────────────────── */
+
 function pxToMm(px: number): number {
   return (px / 96) * 25.4;
 }
 
+/* ──────────────────────────── download logic ─────────────────────────── */
+
 /**
- * Trigger a file download that works across all platforms:
- *   - Desktop (Chrome/Firefox/Edge): blob URL + <a download>
- *   - Android Chrome: blob URL + <a download>
- *   - iOS Safari: open data URI in new tab (user taps Share → Save to Files)
+ * Triggers a file download cross-platform:
+ *  - iOS Safari : opens in new tab (blob URL) → user taps Share → Save to Files
+ *  - Android / Desktop : <a download> with blob URL
  */
-function triggerDownload(data: string | Blob, filename: string, mimeType: string) {
+function triggerDownload(blob: Blob, filename: string) {
   if (isIOS()) {
-    // iOS Safari blocks <a download> on blob/data URLs.
-    // Best UX: open the file in a new tab — user can then tap Share → Save to Files / AirDrop.
-    let dataUri: string;
-    if (typeof data === 'string') {
-      dataUri = data; // already a data URI
-    } else {
-      // Convert blob to data URI
-      const reader = new FileReader();
-      reader.readAsDataURL(data);
-      reader.onloadend = () => {
-        const uri = reader.result as string;
-        const w = window.open('', '_blank');
-        if (w) {
-          w.document.write(
-            `<!DOCTYPE html><html><head><title>${filename}</title><meta name="viewport" content="width=device-width"></head>` +
-            `<body style="margin:0;padding:0;background:#000">` +
-            `<iframe src="${uri}" style="width:100vw;height:100vh;border:none"></iframe>` +
-            `</body></html>`
-          );
-          w.document.close();
-        }
-      };
-      return;
+    // iOS Safari: <a download> is blocked. Open blob URL in new tab instead.
+    const url = URL.createObjectURL(blob);
+    const w = window.open(url, '_blank');
+    if (!w) {
+      // Popup blocked — fall back to inline link
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
-    const w = window.open('', '_blank');
-    if (w) {
-      w.document.write(
-        `<!DOCTYPE html><html><head><title>${filename}</title><meta name="viewport" content="width=device-width"></head>` +
-        `<body style="margin:0;padding:0;background:#000">` +
-        `<iframe src="${dataUri}" style="width:100vw;height:100vh;border:none"></iframe>` +
-        `</body></html>`
-      );
-      w.document.close();
-    }
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
   } else {
-    // Android + Desktop: blob URL download
-    const blob = typeof data === 'string'
-      ? new Blob([Uint8Array.from(atob(data.split(',')[1] ?? ''), c => c.charCodeAt(0))], { type: mimeType })
-      : data;
+    // Android & Desktop
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -127,20 +116,59 @@ function triggerDownload(data: string | Blob, filename: string, mimeType: string
   }
 }
 
-async function captureElement(el: HTMLElement): Promise<string> {
-  await document.fonts.ready;
-  const fontEmbedCSS = await buildFontEmbedCSS();
+/* ───────────────────────────── capture logic ─────────────────────────── */
 
-  // Use offsetWidth/offsetHeight — NOT getBoundingClientRect — to get the
-  // NATURAL pixel size before any CSS transform (scale) is applied.
+/**
+ * MOBILE: use html2canvas — handles transforms, CORS images, and Arabic fonts
+ * natively without any extra HTTP requests. Much more stable on mobile.
+ */
+async function captureElementMobile(el: HTMLElement): Promise<string> {
+  await document.fonts.ready;
+
   const naturalWidth = el.offsetWidth;
   const naturalHeight = el.offsetHeight;
 
-  // Lower pixel ratio on mobile to avoid exceeding canvas memory limits.
-  const pixelRatio = isMobile() ? 2 : 3;
+  // Temporarily clear the CSS transform so html2canvas sees the element at
+  // its natural size (the editor applies scale(0.72) on mobile which would
+  // otherwise distort the output).
+  const originalTransform = el.style.transform;
+  const originalTransformOrigin = el.style.transformOrigin;
+  el.style.transform = 'none';
+  el.style.transformOrigin = 'top left';
+
+  try {
+    const canvas = await html2canvas(el, {
+      scale: 2,               // 2× resolution — good quality without crashing
+      useCORS: true,          // allow cross-origin images (template backgrounds)
+      allowTaint: false,
+      backgroundColor: '#ffffff',
+      width: naturalWidth,
+      height: naturalHeight,
+      windowWidth: naturalWidth,
+      windowHeight: naturalHeight,
+      logging: false,
+    });
+
+    return canvas.toDataURL('image/png');
+  } finally {
+    // Always restore the transform
+    el.style.transform = originalTransform;
+    el.style.transformOrigin = originalTransformOrigin;
+  }
+}
+
+/**
+ * DESKTOP: use html-to-image with full font embedding for crisp output.
+ */
+async function captureElementDesktop(el: HTMLElement): Promise<string> {
+  await document.fonts.ready;
+  const fontEmbedCSS = await buildFontEmbedCSS();
+
+  const naturalWidth = el.offsetWidth;
+  const naturalHeight = el.offsetHeight;
 
   const options = {
-    pixelRatio,
+    pixelRatio: 3,
     cacheBust: true,
     width: naturalWidth,
     height: naturalHeight,
@@ -148,17 +176,17 @@ async function captureElement(el: HTMLElement): Promise<string> {
     skipAutoScale: true,
     style: {
       overflow: 'hidden',
-      transform: 'none',        // remove inherited scale from editor preview
+      transform: 'none',
       transformOrigin: 'top left',
     },
   };
 
-  // Run 2 warm-up passes (loads remote resources into cache), then final capture
+  // Two warm-up passes to load remote resources into cache
   await toPng(el, options).catch(() => null);
   await toPng(el, options).catch(() => null);
   const rawDataUrl = await toPng(el, options);
 
-  // Paint onto a clean white canvas so background is always solid
+  // Stamp onto white canvas for solid background
   const img = new Image();
   img.src = rawDataUrl;
   await new Promise<void>((resolve, reject) => {
@@ -166,8 +194,8 @@ async function captureElement(el: HTMLElement): Promise<string> {
     img.onerror = reject;
   });
 
-  const cw = naturalWidth * pixelRatio;
-  const ch = naturalHeight * pixelRatio;
+  const cw = naturalWidth * 3;
+  const ch = naturalHeight * 3;
   const canvas = document.createElement('canvas');
   canvas.width = cw;
   canvas.height = ch;
@@ -178,6 +206,14 @@ async function captureElement(el: HTMLElement): Promise<string> {
 
   return canvas.toDataURL('image/png');
 }
+
+async function captureElement(el: HTMLElement): Promise<string> {
+  return isMobile()
+    ? captureElementMobile(el)
+    : captureElementDesktop(el);
+}
+
+/* ──────────────────────────── exported hook ──────────────────────────── */
 
 export function useExport() {
   const exportAsPdf = async (): Promise<{ ok: boolean; error?: string }> => {
@@ -203,23 +239,17 @@ export function useExport() {
       pdf.addImage(pngDataUrl, 'PNG', 0, 0, wMm, hMm, undefined, 'NONE');
 
       const filename = `creative-touch-${Date.now()}.pdf`;
+      const pdfBlob = pdf.output('blob');
 
-      if (isIOS()) {
-        // iOS: embed in new tab as iframe so user can Save to Files
-        const dataUri = pdf.output('datauristring');
-        triggerDownload(dataUri, filename, 'application/pdf');
-      } else if (isAndroid()) {
-        // Android: blob URL + <a download> — works in Chrome
-        const blob = pdf.output('blob');
-        triggerDownload(blob, filename, 'application/pdf');
+      if (isMobile()) {
+        triggerDownload(pdfBlob, filename);
       } else {
-        // Desktop
         pdf.save(filename);
       }
 
       return { ok: true };
     } catch (e) {
-      console.error('PDF export failed', e);
+      console.error('PDF export failed:', e);
       return { ok: false, error: String(e) };
     }
   };
@@ -231,14 +261,12 @@ export function useExport() {
     try {
       const pngDataUrl = await captureElement(el);
       const filename = `creative-touch-${Date.now()}.png`;
-
       const res = await fetch(pngDataUrl);
       const blob = await res.blob();
-      triggerDownload(blob, filename, 'image/png');
-
+      triggerDownload(blob, filename);
       return { ok: true };
     } catch (e) {
-      console.error('PNG export failed', e);
+      console.error('PNG export failed:', e);
       return { ok: false, error: String(e) };
     }
   };
