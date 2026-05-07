@@ -154,6 +154,28 @@ export function PaymentRequestModal({ onClose, templateName }: PaymentRequestMod
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
+
+              {/* Bank info box */}
+              <div style={{ background: 'linear-gradient(135deg,#eef2ff,#fdf4ff)', border: '1.5px solid #c7d2fe', borderRadius: 16, padding: '16px 18px', marginBottom: 20 }}>
+                <p style={{ color: '#6366f1', fontSize: 13, fontWeight: 900, margin: '0 0 10px', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  🏦 حوّل المبلغ إلى الحساب التالي
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ color: '#64748b', fontSize: 12, fontWeight: 600 }}>البنك</span>
+                    <span style={{ color: '#1e1b4b', fontSize: 13, fontWeight: 800 }}>بنك تضامن</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ color: '#64748b', fontSize: 12, fontWeight: 600 }}>اسم صاحب الحساب</span>
+                    <span style={{ color: '#1e1b4b', fontSize: 13, fontWeight: 800 }}>احمد عبدالله عقلان الحمادي</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#fff', borderRadius: 10, padding: '8px 12px', border: '1px solid #e0e7ff' }}>
+                    <span style={{ color: '#64748b', fontSize: 12, fontWeight: 600 }}>رقم الحساب</span>
+                    <span style={{ color: '#6366f1', fontSize: 15, fontWeight: 900, letterSpacing: '0.05em', direction: 'ltr' }}>00154578</span>
+                  </div>
+                </div>
+              </div>
+
                 <div>
                   <label style={{ display: 'block', color: '#374151', fontSize: 13, fontWeight: 700, marginBottom: 6 }}>الاسم الكامل <span style={{ color: '#ef4444' }}>*</span></label>
                   <input value={name} onChange={e => setName(e.target.value)} placeholder="أدخل اسمك" style={inp}
