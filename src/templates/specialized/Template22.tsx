@@ -9,6 +9,7 @@ export default function SpecializedTemplate22({ data }: Props) {
   const fs = fontSize || 14;
   const features = (description || '').split('،').map(s => s.trim()).filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 360, height: 460,
@@ -42,7 +43,7 @@ export default function SpecializedTemplate22({ data }: Props) {
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 5,
             background: '#eff6ff', borderRadius: 20, padding: '3px 12px',
-            color: '#1d4ed8', fontSize: 10, fontWeight: 800, marginBottom: 6,
+            color: '#1d4ed8', fontSize: 10 + _d, fontWeight: 800, marginBottom: 6,
           }}>🌐 Language Academy</div>
           <h1 style={{ color: '#1e293b', fontSize: fs + 4, fontWeight: 900, margin: 0, lineHeight: 1.2 }}>{title}</h1>
           <p style={{ color: '#64748b', fontSize: fs - 3, fontWeight: 600, margin: '4px 0 0' }}>{subtitle}</p>
@@ -59,7 +60,7 @@ export default function SpecializedTemplate22({ data }: Props) {
         }}>
           {image
             ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            : <span style={{ fontSize: 34 }}>👩‍🏫</span>}
+            : <span style={{ fontSize: 34 + _d }}>👩‍🏫</span>}
         </div>
       </div>
 

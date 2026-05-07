@@ -6,6 +6,7 @@ export default function CongratsTemplate20({ data }: Props) {
   const { title, subtitle, description, email, website, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -49,8 +50,8 @@ export default function CongratsTemplate20({ data }: Props) {
               zIndex: 0,
             }}>
               <div style={{ textAlign: 'center', opacity: 0.5 }}>
-                <div style={{ fontSize: 56 }}>👤</div>
-                <span style={{ color: colors.primary, fontSize: 10 }}>ارفع صورة</span>
+                <div style={{ fontSize: 56 + _d }}>👤</div>
+                <span style={{ color: colors.primary, fontSize: 10 + _d }}>ارفع صورة</span>
               </div>
             </div>
           )}
@@ -68,12 +69,12 @@ export default function CongratsTemplate20({ data }: Props) {
             padding: '12px 20px',
             zIndex: 2,
           }}>
-            <p style={{ color: colors.accent, fontSize: 9, margin: '0 0 2px', letterSpacing: 3, fontWeight: 700 }}>
+            <p style={{ color: colors.accent, fontSize: 9 + _d, margin: '0 0 2px', letterSpacing: 3, fontWeight: 700 }}>
               WEDDING INVITATION
             </p>
             <h1 style={{
               color: '#ffffff',
-              fontSize: 36, fontWeight: 900,
+              fontSize: 36 + _d, fontWeight: 900,
               margin: 0, lineHeight: 1.0,
               textShadow: '0 2px 12px rgba(0,0,0,0.4)',
             }}>{title || 'سامح'}</h1>
@@ -95,7 +96,7 @@ export default function CongratsTemplate20({ data }: Props) {
             <path d="M0,0 Q88,10 176,5 Q264,0 352,8 L352,0 Z" fill={colors.primary}/>
           </svg>
 
-          <p style={{ color: '#666', fontSize: 10, margin: 0 }}>
+          <p style={{ color: '#666', fontSize: 10 + _d, margin: 0 }}>
             {subtitle || 'يتشرف الوالد بالدعوة الكريمة'}
           </p>
 
@@ -111,7 +112,7 @@ export default function CongratsTemplate20({ data }: Props) {
               background: `linear-gradient(135deg, ${colors.primary}, ${colors.accent})`,
               flexShrink: 0,
             }} />
-            <p style={{ color: colors.primary, fontSize: 13, fontWeight: 800, margin: 0 }}>
+            <p style={{ color: colors.primary, fontSize: 13 + _d, fontWeight: 800, margin: 0 }}>
               {lines[0] || 'المقيل والزفة والسمرة'}
             </p>
           </div>
@@ -128,9 +129,9 @@ export default function CongratsTemplate20({ data }: Props) {
                 borderRadius: 8, padding: '7px 10px',
                 border: `1px solid ${i === 0 ? colors.primary : colors.accent}22`,
               }}>
-                <p style={{ fontSize: 14, margin: '0 0 2px' }}>{item.icon}</p>
-                <p style={{ color: '#999', fontSize: 8, margin: '0 0 2px', letterSpacing: 1 }}>{item.label}</p>
-                <p style={{ color: i === 0 ? colors.primary : colors.secondary, fontSize: 11, fontWeight: 800, margin: 0, lineHeight: 1.2 }}>
+                <p style={{ fontSize: 14 + _d, margin: '0 0 2px' }}>{item.icon}</p>
+                <p style={{ color: '#999', fontSize: 8 + _d, margin: '0 0 2px', letterSpacing: 1 }}>{item.label}</p>
+                <p style={{ color: i === 0 ? colors.primary : colors.secondary, fontSize: 11 + _d, fontWeight: 800, margin: 0, lineHeight: 1.2 }}>
                   {item.val}
                 </p>
               </div>
@@ -143,14 +144,14 @@ export default function CongratsTemplate20({ data }: Props) {
             paddingTop: 8, borderTop: '1px solid #eee',
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           }}>
-            <p style={{ color: '#aaa', fontSize: 9, margin: 0 }}>
+            <p style={{ color: '#aaa', fontSize: 9 + _d, margin: 0 }}>
               {email || 'أفراح آل الحاج'}
             </p>
             <div style={{
               background: `linear-gradient(135deg, ${colors.primary}, ${colors.accent})`,
               borderRadius: 20, padding: '4px 14px',
             }}>
-              <p style={{ color: '#fff', fontSize: 9, fontWeight: 800, margin: 0 }}>تهنئة</p>
+              <p style={{ color: '#fff', fontSize: 9 + _d, fontWeight: 800, margin: 0 }}>تهنئة</p>
             </div>
           </div>
         </div>

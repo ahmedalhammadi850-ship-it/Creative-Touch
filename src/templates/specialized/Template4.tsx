@@ -9,6 +9,7 @@ export default function SpecializedTemplate4({ data }: Props) {
     'خصم الأخوة', 'خصم الثقات', 'خصم حفظة القرآن', 'خصم القوات المسلحة'
   ];
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -49,8 +50,8 @@ export default function SpecializedTemplate4({ data }: Props) {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <div style={{ color: '#fff', fontSize: 18, fontWeight: 900 }}>{title || 'أكاديمية المستقبل'}</div>
-            <div style={{ color: colors.accent, fontSize: 10, fontWeight: 600 }}>{subtitle || 'الدولية'}</div>
+            <div style={{ color: '#fff', fontSize: 18 + _d, fontWeight: 900 }}>{title || 'أكاديمية المستقبل'}</div>
+            <div style={{ color: colors.accent, fontSize: 10 + _d, fontWeight: 600 }}>{subtitle || 'الدولية'}</div>
           </div>
           {/* Logo circle */}
           <div style={{
@@ -58,7 +59,7 @@ export default function SpecializedTemplate4({ data }: Props) {
             borderRadius: '50%',
             background: colors.accent,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 22,
+            fontSize: 22 + _d,
             boxShadow: '0 2px 12px rgba(0,0,0,0.2)',
           }}>🎓</div>
         </div>
@@ -78,12 +79,12 @@ export default function SpecializedTemplate4({ data }: Props) {
             marginBottom: 8,
             width: 'fit-content',
           }}>
-            <span style={{ color: colors.primary, fontSize: 10, fontWeight: 700 }}>هل تبحث لأبنائك</span>
+            <span style={{ color: colors.primary, fontSize: 10 + _d, fontWeight: 700 }}>هل تبحث لأبنائك</span>
           </div>
 
           <p style={{
             color: '#1a1a1a',
-            fontSize: 13,
+            fontSize: 13 + _d,
             fontWeight: 700,
             margin: '0 0 10px',
             lineHeight: 1.5,
@@ -102,7 +103,7 @@ export default function SpecializedTemplate4({ data }: Props) {
                   background: colors.accent,
                   flexShrink: 0,
                 }} />
-                <span style={{ color: '#444', fontSize: 11, fontWeight: 600 }}>{b}</span>
+                <span style={{ color: '#444', fontSize: 11 + _d, fontWeight: 600 }}>{b}</span>
               </div>
             ))}
           </div>
@@ -124,7 +125,7 @@ export default function SpecializedTemplate4({ data }: Props) {
             background: `linear-gradient(160deg, ${colors.primary}22, ${colors.secondary}33)`,
             border: `2px solid ${colors.primary}33`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 48,
+            fontSize: 48 + _d,
           }}>🧒</div>
 
           {/* Highlight callout */}
@@ -134,7 +135,7 @@ export default function SpecializedTemplate4({ data }: Props) {
             padding: '6px 8px',
             textAlign: 'center',
           }}>
-            <span style={{ color: colors.primary, fontSize: 9, fontWeight: 900, lineHeight: 1.3 }}>
+            <span style={{ color: colors.primary, fontSize: 9 + _d, fontWeight: 900, lineHeight: 1.3 }}>
               الخيار الأنسب<br/>لأبنائك
             </span>
           </div>
@@ -149,7 +150,7 @@ export default function SpecializedTemplate4({ data }: Props) {
         alignItems: 'center',
         justifyContent: 'space-between',
       }}>
-        <span style={{ color: '#ffffff', fontSize: 13, fontWeight: 700 }}>
+        <span style={{ color: '#ffffff', fontSize: 13 + _d, fontWeight: 700 }}>
           {phone || '0778761241'}
         </span>
         <button style={{
@@ -158,7 +159,7 @@ export default function SpecializedTemplate4({ data }: Props) {
           border: 'none',
           borderRadius: 20,
           padding: '5px 18px',
-          fontSize: 11,
+          fontSize: 11 + _d,
           fontWeight: 900,
           cursor: 'pointer',
           boxShadow: '0 2px 8px rgba(0,0,0,0.15)',

@@ -6,6 +6,7 @@ export default function SpecializedTemplate21({ data }: Props) {
   const fs = fontSize || 14;
   const features = (description || '').split('،').map(s => s.trim()).filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 360, height: 460,
@@ -36,7 +37,7 @@ export default function SpecializedTemplate21({ data }: Props) {
           background: 'rgba(255,255,255,0.15)',
           border: '1.5px solid rgba(255,255,255,0.4)',
           borderRadius: 10, padding: '5px 12px',
-          color: '#fff', fontSize: 10, fontWeight: 800,
+          color: '#fff', fontSize: 10 + _d, fontWeight: 800,
           display: 'flex', alignItems: 'center', gap: 5,
         }}>
           🛡 Academic Institute
@@ -47,7 +48,7 @@ export default function SpecializedTemplate21({ data }: Props) {
           position: 'absolute', top: 14, right: 14,
           background: '#f59e0b', color: '#1e3a8a',
           borderRadius: 8, padding: '4px 10px',
-          fontSize: 10, fontWeight: 900,
+          fontSize: 10 + _d, fontWeight: 900,
         }}>منذ 2005</div>
 
         {/* School name */}
@@ -93,7 +94,7 @@ export default function SpecializedTemplate21({ data }: Props) {
           <div style={{
             width: 44, height: 44, borderRadius: 14,
             background: '#1e3a8a', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 22,
+            fontSize: 22 + _d,
           }}>🎓</div>
         </div>
 

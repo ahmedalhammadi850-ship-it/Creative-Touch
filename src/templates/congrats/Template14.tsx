@@ -7,6 +7,7 @@ export default function CongratsTemplate14({ data }: Props) {
   const lines = (description || '').split('\n').filter(Boolean);
   const dateText = lines[2] || '28.7.2025';
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -34,7 +35,7 @@ export default function CongratsTemplate14({ data }: Props) {
         padding: '10px 20px',
         textAlign: 'center',
       }}>
-        <p style={{ color: colors.accent, fontSize: 12, margin: 0, fontWeight: 700 }}>
+        <p style={{ color: colors.accent, fontSize: 12 + _d, margin: 0, fontWeight: 700 }}>
           {email || 'أفراح آل القيسي'}
         </p>
       </div>
@@ -45,18 +46,18 @@ export default function CongratsTemplate14({ data }: Props) {
         textAlign: 'center',
         padding: '12px 24px 0',
       }}>
-        <p style={{ color: colors.primary, fontSize: 10, margin: '0 0 2px', opacity: 0.7 }}>
+        <p style={{ color: colors.primary, fontSize: 10 + _d, margin: '0 0 2px', opacity: 0.7 }}>
           لفخامة العريس الغالي
         </p>
         <h1 style={{
           color: colors.primary,
-          fontSize: 28, fontWeight: 900,
+          fontSize: 28 + _d, fontWeight: 900,
           margin: '0 0 4px', lineHeight: 1.0,
         }}>{title || 'سامي باشا'}</h1>
-        <p style={{ color: colors.primary, fontSize: 10, margin: 0, opacity: 0.7, lineHeight: 1.4 }}>
+        <p style={{ color: colors.primary, fontSize: 10 + _d, margin: 0, opacity: 0.7, lineHeight: 1.4 }}>
           {lines[0] || 'المقيل والزفة والسمرة - من نجل الشيخ'}
         </p>
-        <p style={{ color: colors.primary, fontSize: 9, margin: '2px 0 0', opacity: 0.6 }}>
+        <p style={{ color: colors.primary, fontSize: 9 + _d, margin: '2px 0 0', opacity: 0.6 }}>
           {website || '📍 قاعة الأفراح - المدينة'}
         </p>
       </div>
@@ -80,8 +81,8 @@ export default function CongratsTemplate14({ data }: Props) {
             display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column',
             gap: 8, opacity: 0.4,
           }}>
-            <div style={{ fontSize: 68 }}>👤</div>
-            <span style={{ color: colors.primary, fontSize: 9 }}>صورة كاملة</span>
+            <div style={{ fontSize: 68 + _d }}>👤</div>
+            <span style={{ color: colors.primary, fontSize: 9 + _d }}>صورة كاملة</span>
           </div>
         )}
         {/* Left fade */}
@@ -99,7 +100,7 @@ export default function CongratsTemplate14({ data }: Props) {
         zIndex: 3,
       }}>
         <div style={{
-          fontSize: 44,
+          fontSize: 44 + _d,
           fontWeight: 900,
           color: colors.primary,
           textShadow: `2px 2px 0 ${colors.accent}cc, 4px 4px 0 rgba(0,0,0,0.2)`,
@@ -110,14 +111,14 @@ export default function CongratsTemplate14({ data }: Props) {
         }}>
           {dateText}
         </div>
-        <p style={{ color: `${colors.primary}88`, fontSize: 9, margin: '2px 0 0' }}>
+        <p style={{ color: `${colors.primary}88`, fontSize: 9 + _d, margin: '2px 0 0' }}>
           {lines[1] || 'الأحد'}
         </p>
       </div>
 
       {/* Watermark */}
       <div style={{ position: 'absolute', bottom: 10, right: 12, zIndex: 3 }}>
-        <p style={{ color: `${colors.primary}44`, fontSize: 8, margin: 0, fontStyle: 'italic' }}>
+        <p style={{ color: `${colors.primary}44`, fontSize: 8 + _d, margin: 0, fontStyle: 'italic' }}>
           {subtitle || 'تفضلي'}
         </p>
       </div>

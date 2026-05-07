@@ -6,6 +6,7 @@ export default function SpecializedTemplate20({ data }: Props) {
   const fs = fontSize || 14;
   const features = (description || '').split('،').map(s => s.trim()).filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 360, height: 460,
@@ -41,7 +42,7 @@ export default function SpecializedTemplate20({ data }: Props) {
         background: 'rgba(255,255,255,0.15)',
         border: '2px solid rgba(255,255,255,0.4)',
         borderRadius: 14, padding: '6px 12px',
-        color: '#fff', fontSize: 10, fontWeight: 800,
+        color: '#fff', fontSize: 10 + _d, fontWeight: 800,
         zIndex: 3,
       }}>
         🚀 STEM School
@@ -59,7 +60,7 @@ export default function SpecializedTemplate20({ data }: Props) {
       }}>
         {image
           ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <span style={{ fontSize: 40 }}>🎓</span>}
+          : <span style={{ fontSize: 40 + _d }}>🎓</span>}
       </div>
 
       {/* Title on banner */}
@@ -83,7 +84,7 @@ export default function SpecializedTemplate20({ data }: Props) {
               borderRadius: 12, padding: '8px 10px',
               display: 'flex', alignItems: 'center', gap: 6,
             }}>
-              <span style={{ fontSize: 14 }}>{'🔬📚🎯💡'[i]}</span>
+              <span style={{ fontSize: 14 + _d }}>{'🔬📚🎯💡'[i]}</span>
               <span style={{ color: '#0c4a6e', fontSize: fs - 3.5, fontWeight: 700, lineHeight: 1.3 }}>{f}</span>
             </div>
           ))}

@@ -2,6 +2,7 @@ import type { TemplateData } from '../../types/template';
 
 export default function SpecializedTemplate5({ data }: { data: TemplateData }) {
   const services = (data.description || '').split('،').map(s => s.trim()).filter(Boolean);
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{ width: '360px', height: '360px', position: 'relative', overflow: 'hidden', fontFamily: 'Cairo, sans-serif', direction: 'rtl', backgroundColor: data.colors.bg }}>
       {/* Soft pastel top arc */}

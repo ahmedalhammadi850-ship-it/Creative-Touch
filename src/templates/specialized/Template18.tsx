@@ -8,6 +8,7 @@ export default function SpecializedTemplate18({ data }: Props) {
 
   const pillColors = ['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#06b6d4', '#8b5cf6'];
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 360, height: 520,
@@ -38,7 +39,7 @@ export default function SpecializedTemplate18({ data }: Props) {
         }}>
           {image
             ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            : <span style={{ fontSize: 32 }}>🏫</span>}
+            : <span style={{ fontSize: 32 + _d }}>🏫</span>}
         </div>
 
         <div style={{ flex: 1 }}>
@@ -60,8 +61,8 @@ export default function SpecializedTemplate18({ data }: Props) {
           justifyContent: 'center',
           boxShadow: `0 4px 14px ${colors.accent}44`,
         }}>
-          <span style={{ fontSize: 18 }}>⭐</span>
-          <span style={{ fontSize: 8, fontWeight: 900 }}>مميز</span>
+          <span style={{ fontSize: 18 + _d }}>⭐</span>
+          <span style={{ fontSize: 8 + _d, fontWeight: 900 }}>مميز</span>
         </div>
       </div>
 
@@ -102,7 +103,7 @@ export default function SpecializedTemplate18({ data }: Props) {
                 background: `${pillColors[i % pillColors.length]}18`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <span style={{ fontSize: 18 }}>
+                <span style={{ fontSize: 18 + _d }}>
                   {['🎓','📖','🧪','🎨','💻','⚽'][i] || '✅'}
                 </span>
               </div>

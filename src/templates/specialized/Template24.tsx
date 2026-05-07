@@ -6,6 +6,7 @@ export default function SpecializedTemplate24({ data }: Props) {
   const fs = fontSize || 14;
   const features = (description || '').split('،').map(s => s.trim()).filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 360, height: 460,
@@ -49,7 +50,7 @@ export default function SpecializedTemplate24({ data }: Props) {
 
       {/* Corner ornaments */}
       {['top:8,right:8','top:8,left:8','bottom:8,right:8','bottom:8,left:8'].map((pos, i) => {
-        const s: Record<string, string | number> = { position: 'absolute', fontSize: 18, opacity: 0.4 };
+        const s: Record<string, string | number> = { position: 'absolute', fontSize: 18 + _d, opacity: 0.4 };
         pos.split(',').forEach(p => { const [k,v] = p.split(':'); s[k] = parseInt(v); });
         return <span key={i} style={s}>🌿</span>;
       })}
@@ -66,14 +67,14 @@ export default function SpecializedTemplate24({ data }: Props) {
         }}>
           {image
             ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            : <span style={{ fontSize: 36 }}>👨‍🏫</span>}
+            : <span style={{ fontSize: 36 + _d }}>👨‍🏫</span>}
         </div>
 
         <div style={{ flex: 1 }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 4,
             background: '#d1fae5', borderRadius: 20, padding: '3px 10px',
-            color: '#065f46', fontSize: 9, fontWeight: 800, marginBottom: 5,
+            color: '#065f46', fontSize: 9 + _d, fontWeight: 800, marginBottom: 5,
           }}>☪ مركز إسلامي متميز</div>
           <h1 style={{ color: '#065f46', fontSize: fs + 4, fontWeight: 900, margin: 0, lineHeight: 1.2 }}>{title}</h1>
           <p style={{ color: '#6b7280', fontSize: fs - 3, fontWeight: 600, margin: '4px 0 0' }}>{subtitle}</p>
@@ -91,7 +92,7 @@ export default function SpecializedTemplate24({ data }: Props) {
         display: 'flex', alignItems: 'center', gap: 12,
         boxShadow: '0 6px 24px rgba(16,185,129,0.25)',
       }}>
-        <span style={{ fontSize: 26 }}>📖</span>
+        <span style={{ fontSize: 26 + _d }}>📖</span>
         <div>
           <p style={{ color: '#fff', fontSize: fs, fontWeight: 900, margin: 0 }}>القيم والمعرفة</p>
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: fs - 3, margin: '2px 0 0', direction: 'ltr', fontWeight: 600 }}>Values & Knowledge Memorization</p>
@@ -111,7 +112,7 @@ export default function SpecializedTemplate24({ data }: Props) {
               <div style={{
                 width: 30, height: 30, borderRadius: 10, flexShrink: 0,
                 background: `${['#d1fae5','#fef9c3','#ecfdf5','#d1fae5'][i]}`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15 + _d,
               }}>
                 {['📿','🌙','🕌','✨'][i]}
               </div>

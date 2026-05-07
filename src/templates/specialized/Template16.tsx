@@ -7,6 +7,7 @@ export default function SpecializedTemplate16({ data }: Props) {
   const featureIcons = ['🎓', '🏅', '🔬', '🎭', '🌐', '💡', '📖', '🤸'];
   const featureColors = ['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#06b6d4', '#8b5cf6'];
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 360, height: 460,
@@ -31,11 +32,11 @@ export default function SpecializedTemplate16({ data }: Props) {
           }}>
             {image
               ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              : <span style={{ fontSize: 28 }}>🏫</span>}
+              : <span style={{ fontSize: 28 + _d }}>🏫</span>}
           </div>
           <div>
-            <h1 style={{ color: colors.primary, fontSize: 18, fontWeight: 900, margin: 0, lineHeight: 1.2 }}>{title}</h1>
-            <p style={{ color: colors.secondary, fontSize: 11, margin: '3px 0 0', fontWeight: 700 }}>{subtitle}</p>
+            <h1 style={{ color: colors.primary, fontSize: 18 + _d, fontWeight: 900, margin: 0, lineHeight: 1.2 }}>{title}</h1>
+            <p style={{ color: colors.secondary, fontSize: 11 + _d, margin: '3px 0 0', fontWeight: 700 }}>{subtitle}</p>
           </div>
         </div>
 
@@ -44,7 +45,7 @@ export default function SpecializedTemplate16({ data }: Props) {
           background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
           borderRadius: 14, padding: '10px 16px', marginBottom: 4,
         }}>
-          <p style={{ color: '#fff', fontSize: 12, fontWeight: 800, margin: 0, textAlign: 'center', lineHeight: 1.5 }}>
+          <p style={{ color: '#fff', fontSize: 12 + _d, fontWeight: 800, margin: 0, textAlign: 'center', lineHeight: 1.5 }}>
             🌟 لماذا تختار مدرستنا؟ اكتشف الفرق!
           </p>
         </div>
@@ -65,11 +66,11 @@ export default function SpecializedTemplate16({ data }: Props) {
                 width: 32, height: 32, borderRadius: 10, flexShrink: 0,
                 background: `${featureColors[i % featureColors.length]}18`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 16,
+                fontSize: 16 + _d,
               }}>
                 {featureIcons[i] || '✅'}
               </div>
-              <span style={{ color: '#2d2d2d', fontSize: 11, fontWeight: 700, flex: 1 }}>{f}</span>
+              <span style={{ color: '#2d2d2d', fontSize: 11 + _d, fontWeight: 700, flex: 1 }}>{f}</span>
               <div style={{ width: 7, height: 7, borderRadius: '50%', background: featureColors[i % featureColors.length], flexShrink: 0 }} />
             </div>
           ))}
@@ -79,7 +80,7 @@ export default function SpecializedTemplate16({ data }: Props) {
       {/* Motivational tagline */}
       <div style={{ padding: '10px 14px 0', zIndex: 1 }}>
         <p style={{
-          color: colors.primary, fontSize: 10.5, fontWeight: 800,
+          color: colors.primary, fontSize: 10.5 + _d, fontWeight: 800,
           textAlign: 'center', margin: 0,
           background: `${colors.accent}30`, borderRadius: 10, padding: '6px 12px',
         }}>
@@ -94,8 +95,8 @@ export default function SpecializedTemplate16({ data }: Props) {
         borderRadius: 14, padding: '10px 18px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 1,
       }}>
-        <span style={{ color: colors.accent, fontSize: 11, fontWeight: 800 }}>📞 {phone}</span>
-        <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: 10 }}>{email}</span>
+        <span style={{ color: colors.accent, fontSize: 11 + _d, fontWeight: 800 }}>📞 {phone}</span>
+        <span style={{ color: 'rgba(255,255,255,0.75)', fontSize: 10 + _d }}>{email}</span>
       </div>
     </div>
   );

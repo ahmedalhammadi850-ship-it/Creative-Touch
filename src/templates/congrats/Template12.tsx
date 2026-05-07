@@ -6,6 +6,7 @@ export default function CongratsTemplate12({ data }: Props) {
   const { title, subtitle, description, email, website, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -35,8 +36,8 @@ export default function CongratsTemplate12({ data }: Props) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           flexDirection: 'column', gap: 8, zIndex: 0,
         }}>
-          <div style={{ fontSize: 72, opacity: 0.4 }}>👤</div>
-          <span style={{ color: '#ffffff66', fontSize: 10 }}>ارفع صورة لتملأ الخلفية</span>
+          <div style={{ fontSize: 72 + _d, opacity: 0.4 }}>👤</div>
+          <span style={{ color: '#ffffff66', fontSize: 10 + _d }}>ارفع صورة لتملأ الخلفية</span>
         </div>
       )}
 
@@ -83,7 +84,7 @@ export default function CongratsTemplate12({ data }: Props) {
         textAlign: 'center', zIndex: 3,
         padding: '0 30px',
       }}>
-        <p style={{ color: colors.accent, fontSize: 11, margin: 0, fontWeight: 700, letterSpacing: 2 }}>
+        <p style={{ color: colors.accent, fontSize: 11 + _d, margin: 0, fontWeight: 700, letterSpacing: 2 }}>
           {email || 'أفراح آل باشا'}
         </p>
       </div>
@@ -105,13 +106,13 @@ export default function CongratsTemplate12({ data }: Props) {
         }}>
           <h1 style={{
             color: colors.accent,
-            fontSize: 38, fontWeight: 900,
+            fontSize: 38 + _d, fontWeight: 900,
             margin: 0, lineHeight: 1.0,
             textShadow: `0 2px 12px ${colors.accent}66`,
           }}>{title || 'نسيد باشا'}</h1>
         </div>
 
-        <p style={{ color: '#ffffffcc', fontSize: 10, margin: 0 }}>
+        <p style={{ color: '#ffffffcc', fontSize: 10 + _d, margin: 0 }}>
           {subtitle || 'من قِبَل الشيخ عصام باشا'}
         </p>
 
@@ -127,13 +128,13 @@ export default function CongratsTemplate12({ data }: Props) {
               padding: '4px 8px',
               border: `1px solid ${colors.accent}44`,
             }}>
-              <p style={{ color: colors.accent, fontSize: 9, fontWeight: 700, margin: '0 0 2px' }}>{item.label}</p>
-              <p style={{ color: '#ffffffdd', fontSize: 9, margin: 0 }}>{item.value}</p>
+              <p style={{ color: colors.accent, fontSize: 9 + _d, fontWeight: 700, margin: '0 0 2px' }}>{item.label}</p>
+              <p style={{ color: '#ffffffdd', fontSize: 9 + _d, margin: 0 }}>{item.value}</p>
             </div>
           ))}
         </div>
 
-        <p style={{ color: colors.accent, fontSize: 12, fontWeight: 900, margin: '4px 0 0', letterSpacing: 1 }}>
+        <p style={{ color: colors.accent, fontSize: 12 + _d, fontWeight: 900, margin: '4px 0 0', letterSpacing: 1 }}>
           {lines[2] || 'المقيل والزفة والسمرة'}
         </p>
       </div>

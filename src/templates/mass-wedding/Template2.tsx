@@ -3,7 +3,7 @@ import type { TemplateData } from '../../types/template';
 export default function Template2({ data }: { data: TemplateData }) {
   const couples = data.description ? data.description.split('\n').filter(Boolean) : [];
   const images = data.images || [];
-  const fs = data.fontSize ?? 1;
+  const fs = (data.fontSize ?? 21) / 21;
 
   const filledCount = images.filter(Boolean).length;
   const gridCols = filledCount === 0 ? 3 : filledCount === 1 ? 1 : filledCount === 2 ? 2 : 3;

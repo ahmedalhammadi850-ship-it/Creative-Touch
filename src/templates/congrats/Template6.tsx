@@ -6,6 +6,7 @@ export default function CongratsTemplate6({ data }: Props) {
   const { title, subtitle, description, email, website, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -35,8 +36,8 @@ export default function CongratsTemplate6({ data }: Props) {
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           flexDirection: 'column', gap: 8, zIndex: 0,
         }}>
-          <div style={{ fontSize: 64, opacity: 0.5 }}>👤</div>
-          <span style={{ color: '#ffffff55', fontSize: 11 }}>ارفع صورة لتملأ الخلفية كاملة</span>
+          <div style={{ fontSize: 64 + _d, opacity: 0.5 }}>👤</div>
+          <span style={{ color: '#ffffff55', fontSize: 11 + _d }}>ارفع صورة لتملأ الخلفية كاملة</span>
         </div>
       )}
 
@@ -73,13 +74,13 @@ export default function CongratsTemplate6({ data }: Props) {
         padding: '20px 16px 20px 20px',
         gap: 8,
       }}>
-        <p style={{ color: colors.accent, fontSize: 10, margin: 0, fontWeight: 700, letterSpacing: 2 }}>
+        <p style={{ color: colors.accent, fontSize: 10 + _d, margin: 0, fontWeight: 700, letterSpacing: 2 }}>
           ✦ WEDDING ✦
         </p>
 
         <h1 style={{
           color: '#ffffff',
-          fontSize: 34, fontWeight: 900,
+          fontSize: 34 + _d, fontWeight: 900,
           margin: '4px 0', lineHeight: 1.0,
           textShadow: '0 2px 12px rgba(0,0,0,0.5)',
         }}>{title || 'سامح'}</h1>
@@ -89,12 +90,12 @@ export default function CongratsTemplate6({ data }: Props) {
           <div style={{ width: 5, height: 5, borderRadius: '50%', background: colors.accent }} />
         </div>
 
-        <p style={{ color: '#ffffffcc', fontSize: 10, margin: 0 }}>يتشرف الوالد</p>
-        <p style={{ color: colors.accent, fontSize: 13, fontWeight: 700, margin: '0 0 6px', lineHeight: 1.3 }}>
+        <p style={{ color: '#ffffffcc', fontSize: 10 + _d, margin: 0 }}>يتشرف الوالد</p>
+        <p style={{ color: colors.accent, fontSize: 13 + _d, fontWeight: 700, margin: '0 0 6px', lineHeight: 1.3 }}>
           {subtitle || 'أحمد سعيد'}
         </p>
 
-        <p style={{ color: '#ffffffaa', fontSize: 10, margin: '0 0 4px' }}>بدعوتكم لحضور</p>
+        <p style={{ color: '#ffffffaa', fontSize: 10 + _d, margin: '0 0 4px' }}>بدعوتكم لحضور</p>
 
         <div style={{
           background: colors.accent,
@@ -103,7 +104,7 @@ export default function CongratsTemplate6({ data }: Props) {
           display: 'inline-block',
           width: 'fit-content',
         }}>
-          <span style={{ color: colors.primary, fontSize: 11, fontWeight: 900 }}>
+          <span style={{ color: colors.primary, fontSize: 11 + _d, fontWeight: 900 }}>
             {lines[0] || 'المقيل والزفة'}
           </span>
         </div>
@@ -118,7 +119,7 @@ export default function CongratsTemplate6({ data }: Props) {
             }}>{l}</p>
           ))}
           {website && (
-            <p style={{ color: '#ffffffaa', fontSize: 10, margin: '4px 0 0' }}>📍 {website}</p>
+            <p style={{ color: '#ffffffaa', fontSize: 10 + _d, margin: '4px 0 0' }}>📍 {website}</p>
           )}
         </div>
 
@@ -128,7 +129,7 @@ export default function CongratsTemplate6({ data }: Props) {
             paddingTop: 8,
             borderTop: `1px solid ${colors.accent}44`,
           }}>
-            <p style={{ color: colors.accent, fontSize: 9, margin: 0, fontWeight: 600 }}>{email}</p>
+            <p style={{ color: colors.accent, fontSize: 9 + _d, margin: 0, fontWeight: 600 }}>{email}</p>
           </div>
         )}
       </div>

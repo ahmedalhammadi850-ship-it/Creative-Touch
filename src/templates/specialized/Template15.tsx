@@ -6,6 +6,7 @@ export default function SpecializedTemplate15({ data }: Props) {
   const features = (description || '').split('،').map(s => s.trim()).filter(Boolean);
   const featureIcons = ['🏆', '📚', '🧪', '🎨', '⚽', '💻', '🎓', '🤝'];
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 360, height: 460,
@@ -30,16 +31,16 @@ export default function SpecializedTemplate15({ data }: Props) {
         }}>
           {image
             ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            : <span style={{ fontSize: 26 }}>🏫</span>}
+            : <span style={{ fontSize: 26 + _d }}>🏫</span>}
         </div>
         <div style={{ flex: 1, zIndex: 1 }}>
-          <h1 style={{ color: '#fff', fontSize: 16, fontWeight: 900, margin: 0 }}>{title}</h1>
-          <p style={{ color: colors.accent, fontSize: 10.5, margin: '3px 0 0', fontWeight: 700 }}>{subtitle}</p>
+          <h1 style={{ color: '#fff', fontSize: 16 + _d, fontWeight: 900, margin: 0 }}>{title}</h1>
+          <p style={{ color: colors.accent, fontSize: 10.5 + _d, margin: '3px 0 0', fontWeight: 700 }}>{subtitle}</p>
         </div>
         <div style={{
           background: colors.accent, color: colors.primary,
           borderRadius: 20, padding: '4px 10px',
-          fontSize: 9, fontWeight: 900, whiteSpace: 'nowrap', zIndex: 1,
+          fontSize: 9 + _d, fontWeight: 900, whiteSpace: 'nowrap', zIndex: 1,
         }}>🌟 مزايانا</div>
       </div>
 
@@ -53,8 +54,8 @@ export default function SpecializedTemplate15({ data }: Props) {
             display: 'flex', alignItems: 'flex-start', gap: 8,
             boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
           }}>
-            <span style={{ fontSize: 18, lineHeight: 1, flexShrink: 0 }}>{featureIcons[i] || '✅'}</span>
-            <span style={{ color: '#333', fontSize: 10.5, fontWeight: 700, lineHeight: 1.5 }}>{f}</span>
+            <span style={{ fontSize: 18 + _d, lineHeight: 1, flexShrink: 0 }}>{featureIcons[i] || '✅'}</span>
+            <span style={{ color: '#333', fontSize: 10.5 + _d, fontWeight: 700, lineHeight: 1.5 }}>{f}</span>
           </div>
         ))}
       </div>
@@ -66,7 +67,7 @@ export default function SpecializedTemplate15({ data }: Props) {
         borderRadius: 12, padding: '8px 14px', textAlign: 'center',
         border: `1px solid ${colors.primary}20`,
       }}>
-        <p style={{ color: colors.primary, fontSize: 10.5, fontWeight: 800, margin: 0 }}>
+        <p style={{ color: colors.primary, fontSize: 10.5 + _d, fontWeight: 800, margin: 0 }}>
           ✨ انضم إلى عائلتنا — حيث يتفوق أبناؤنا ويُبدعون
         </p>
       </div>
@@ -76,8 +77,8 @@ export default function SpecializedTemplate15({ data }: Props) {
         background: colors.primary, padding: '9px 18px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
-        <span style={{ color: colors.accent, fontSize: 11, fontWeight: 700 }}>📞 {phone}</span>
-        <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 10 }}>{email}</span>
+        <span style={{ color: colors.accent, fontSize: 11 + _d, fontWeight: 700 }}>📞 {phone}</span>
+        <span style={{ color: 'rgba(255,255,255,0.7)', fontSize: 10 + _d }}>{email}</span>
       </div>
     </div>
   );

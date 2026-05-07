@@ -6,6 +6,7 @@ export default function SpecializedTemplate12({ data }: Props) {
   const { title, subtitle, description, phone, colors } = data;
   const services = (description || '').split(/[،,\n]/).map(s => s.trim()).filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 360, height: 360,

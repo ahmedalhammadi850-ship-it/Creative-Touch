@@ -6,6 +6,7 @@ export default function CongratsTemplate5({ data }: Props) {
   const { title, subtitle, description, email, website, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -56,7 +57,7 @@ export default function CongratsTemplate5({ data }: Props) {
         position: 'relative', zIndex: 1,
         margin: '22px 22px 0',
       }}>
-        <span style={{ color: colors.accent, fontSize: 13, fontWeight: 900, letterSpacing: 2 }}>
+        <span style={{ color: colors.accent, fontSize: 13 + _d, fontWeight: 900, letterSpacing: 2 }}>
           ✦ بطاقة تهنئة ✦
         </span>
       </div>
@@ -70,12 +71,12 @@ export default function CongratsTemplate5({ data }: Props) {
           padding: '16px 12px 16px 0',
           gap: 8,
         }}>
-          <p style={{ color: colors.primary, fontSize: 10, margin: 0, fontWeight: 600, letterSpacing: 1 }}>
+          <p style={{ color: colors.primary, fontSize: 10 + _d, margin: 0, fontWeight: 600, letterSpacing: 1 }}>
             بمناسبة زفاف نجلنا
           </p>
           <h1 style={{
             color: colors.primary,
-            fontSize: 30, fontWeight: 900,
+            fontSize: 30 + _d, fontWeight: 900,
             margin: '4px 0', lineHeight: 1.1,
           }}>{title || 'أحمد'}</h1>
 
@@ -85,8 +86,8 @@ export default function CongratsTemplate5({ data }: Props) {
             <div style={{ height: 1, flex: 1, background: colors.accent }} />
           </div>
 
-          <p style={{ color: '#555', fontSize: 11, margin: 0, fontWeight: 500 }}>يتشرف الوالد</p>
-          <p style={{ color: colors.secondary, fontSize: 13, fontWeight: 700, margin: '0 0 6px', lineHeight: 1.3 }}>
+          <p style={{ color: '#555', fontSize: 11 + _d, margin: 0, fontWeight: 500 }}>يتشرف الوالد</p>
+          <p style={{ color: colors.secondary, fontSize: 13 + _d, fontWeight: 700, margin: '0 0 6px', lineHeight: 1.3 }}>
             {subtitle || 'محمد بن علي'}
           </p>
 
@@ -96,7 +97,7 @@ export default function CongratsTemplate5({ data }: Props) {
             padding: '5px 10px',
             display: 'inline-block',
           }}>
-            <span style={{ color: colors.accent, fontSize: 11, fontWeight: 700 }}>
+            <span style={{ color: colors.accent, fontSize: 11 + _d, fontWeight: 700 }}>
               {lines[0] || 'المقيل والزفة والسمرة'}
             </span>
           </div>
@@ -111,7 +112,7 @@ export default function CongratsTemplate5({ data }: Props) {
               }}>{l}</p>
             ))}
             {website && (
-              <p style={{ color: '#888', fontSize: 10, margin: '2px 0 0' }}>📍 {website}</p>
+              <p style={{ color: '#888', fontSize: 10 + _d, margin: '2px 0 0' }}>📍 {website}</p>
             )}
           </div>
 
@@ -121,7 +122,7 @@ export default function CongratsTemplate5({ data }: Props) {
               borderTop: `1px solid ${colors.accent}55`,
               paddingTop: 6,
             }}>
-              <p style={{ color: colors.primary, fontSize: 9, margin: 0, fontWeight: 600 }}>{email}</p>
+              <p style={{ color: colors.primary, fontSize: 9 + _d, margin: 0, fontWeight: 600 }}>{email}</p>
             </div>
           )}
         </div>
@@ -158,8 +159,8 @@ export default function CongratsTemplate5({ data }: Props) {
                   style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
               ) : (
                 <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontSize: 36 }}>👤</div>
-                  <span style={{ color: `${colors.primary}88`, fontSize: 8 }}>ارفع صورة</span>
+                  <div style={{ fontSize: 36 + _d }}>👤</div>
+                  <span style={{ color: `${colors.primary}88`, fontSize: 8 + _d }}>ارفع صورة</span>
                 </div>
               )}
             </div>
@@ -188,7 +189,7 @@ export default function CongratsTemplate5({ data }: Props) {
         margin: '0 22px 22px',
         position: 'relative', zIndex: 1,
       }}>
-        <span style={{ color: colors.accent, fontSize: 10, fontWeight: 600 }}>
+        <span style={{ color: colors.accent, fontSize: 10 + _d, fontWeight: 600 }}>
           ألف مبروك ودامت الأفراح
         </span>
       </div>

@@ -6,6 +6,7 @@ export default function CongratsTemplate11({ data }: Props) {
   const { title, subtitle, description, email, website, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -39,15 +40,15 @@ export default function CongratsTemplate11({ data }: Props) {
           }}>
             <div style={{ display: 'flex', gap: 30, opacity: 0.6 }}>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 52 }}>👤</div>
-                <p style={{ color: '#ffffff88', fontSize: 9, margin: 0 }}>الأول</p>
+                <div style={{ fontSize: 52 + _d }}>👤</div>
+                <p style={{ color: '#ffffff88', fontSize: 9 + _d, margin: 0 }}>الأول</p>
               </div>
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: 52 }}>👤</div>
-                <p style={{ color: '#ffffff88', fontSize: 9, margin: 0 }}>الثاني</p>
+                <div style={{ fontSize: 52 + _d }}>👤</div>
+                <p style={{ color: '#ffffff88', fontSize: 9 + _d, margin: 0 }}>الثاني</p>
               </div>
             </div>
-            <span style={{ color: '#ffffff55', fontSize: 10 }}>ارفع صورة العريسين</span>
+            <span style={{ color: '#ffffff55', fontSize: 10 + _d }}>ارفع صورة العريسين</span>
           </div>
         )}
 
@@ -63,7 +64,7 @@ export default function CongratsTemplate11({ data }: Props) {
           display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6,
         }}>
           <div style={{ height: 1, flex: 1, maxWidth: 40, background: colors.accent, marginRight: 10, opacity: 0.7 }} />
-          <p style={{ color: '#ffffff', fontSize: 10, fontWeight: 700, margin: 0, letterSpacing: 1 }}>
+          <p style={{ color: '#ffffff', fontSize: 10 + _d, fontWeight: 700, margin: 0, letterSpacing: 1 }}>
             {email || 'أفراح المعلوم'}
           </p>
           <div style={{ height: 1, flex: 1, maxWidth: 40, background: colors.accent, marginLeft: 10, opacity: 0.7 }} />
@@ -89,18 +90,18 @@ export default function CongratsTemplate11({ data }: Props) {
           </g>
         </svg>
 
-        <p style={{ color: colors.accent, fontSize: 10, margin: '14px 0 4px', textAlign: 'center', fontWeight: 700 }}>
+        <p style={{ color: colors.accent, fontSize: 10 + _d, margin: '14px 0 4px', textAlign: 'center', fontWeight: 700 }}>
           نهديها للعرسان
         </p>
 
         <h1 style={{
           color: '#ffffff',
-          fontSize: 26, fontWeight: 900,
+          fontSize: 26 + _d, fontWeight: 900,
           margin: '0 0 4px', lineHeight: 1.1,
           textAlign: 'center',
         }}>{title || 'محمد & هيثم'}</h1>
 
-        <p style={{ color: '#ffffffaa', fontSize: 10, margin: '0 0 6px', textAlign: 'center' }}>
+        <p style={{ color: '#ffffffaa', fontSize: 10 + _d, margin: '0 0 6px', textAlign: 'center' }}>
           {subtitle || 'بمناسبة زفافهم الميمون'}
         </p>
 
@@ -113,12 +114,12 @@ export default function CongratsTemplate11({ data }: Props) {
           display: 'inline-block',
           alignSelf: 'center',
         }}>
-          <p style={{ color: colors.accent, fontSize: 11, fontWeight: 700, margin: 0 }}>
+          <p style={{ color: colors.accent, fontSize: 11 + _d, fontWeight: 700, margin: 0 }}>
             {lines[0] || 'فألف ألف مبروك وبالرفاء والبنين'}
           </p>
         </div>
 
-        <p style={{ color: '#ffffffaa', fontSize: 10, margin: '0 0 4px', textAlign: 'center' }}>
+        <p style={{ color: '#ffffffaa', fontSize: 10 + _d, margin: '0 0 4px', textAlign: 'center' }}>
           {lines[1] || 'تهنئة خاصة من'}
         </p>
 
@@ -137,13 +138,13 @@ export default function CongratsTemplate11({ data }: Props) {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexShrink: 0,
           }}>
-            <span style={{ fontSize: 14 }}>💊</span>
+            <span style={{ fontSize: 14 + _d }}>💊</span>
           </div>
           <div>
-            <p style={{ color: '#ffffff', fontSize: 12, fontWeight: 900, margin: 0 }}>
+            <p style={{ color: '#ffffff', fontSize: 12 + _d, fontWeight: 900, margin: 0 }}>
               {lines[2] || website || 'الراعي الرسمي'}
             </p>
-            <p style={{ color: colors.accent, fontSize: 9, margin: 0 }}>
+            <p style={{ color: colors.accent, fontSize: 9 + _d, margin: 0 }}>
               {lines[3] || email || ''}
             </p>
           </div>

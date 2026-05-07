@@ -6,6 +6,7 @@ export default function SpecializedTemplate23({ data }: Props) {
   const fs = fontSize || 14;
   const features = (description || '').split('،').map(s => s.trim()).filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 360, height: 460,
@@ -32,7 +33,7 @@ export default function SpecializedTemplate23({ data }: Props) {
         <div style={{
           border: '1.5px solid rgba(6,182,212,0.6)',
           borderRadius: 10, padding: '5px 12px',
-          color: '#06b6d4', fontSize: 10, fontWeight: 800,
+          color: '#06b6d4', fontSize: 10 + _d, fontWeight: 800,
           background: 'rgba(6,182,212,0.08)',
         }}>⚡ Tech Institute</div>
 
@@ -46,7 +47,7 @@ export default function SpecializedTemplate23({ data }: Props) {
         }}>
           {image
             ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            : <span style={{ fontSize: 40 }}>🤖</span>}
+            : <span style={{ fontSize: 40 + _d }}>🤖</span>}
         </div>
       </div>
 
@@ -83,7 +84,7 @@ export default function SpecializedTemplate23({ data }: Props) {
               borderRadius: 12, padding: '9px 10px',
               display: 'flex', alignItems: 'center', gap: 7,
             }}>
-              <span style={{ fontSize: 14 }}>{'⚡🧠🎯💡'[i]}</span>
+              <span style={{ fontSize: 14 + _d }}>{'⚡🧠🎯💡'[i]}</span>
               <span style={{ color: '#cbd5e1', fontSize: fs - 3.5, fontWeight: 700, lineHeight: 1.3 }}>{f}</span>
             </div>
           ))}

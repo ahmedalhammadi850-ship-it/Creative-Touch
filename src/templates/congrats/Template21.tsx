@@ -3,6 +3,7 @@ import type { TemplateData } from '../../types/template';
 export default function CongratsTemplate21({ data }: { data: TemplateData }) {
   const { title, subtitle, description, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{ width: '360px', height: '460px', position: 'relative', overflow: 'hidden', fontFamily: 'Cairo, sans-serif', direction: 'rtl', background: `linear-gradient(155deg, ${colors.primary} 0%, ${colors.secondary} 100%)` }}>
       {/* Confetti dots */}

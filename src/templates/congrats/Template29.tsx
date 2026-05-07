@@ -9,6 +9,7 @@ export default function CongratsTemplate29({ data }: Props) {
   const ihdaaText = website || 'إهداء';
   const extraLines = (images || []).filter(v => v !== undefined && !v.startsWith('data:image'));
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -51,7 +52,7 @@ export default function CongratsTemplate29({ data }: Props) {
             <ellipse cx="28" cy="18" rx="14" ry="16" fill={colors.primary} opacity="0.4" />
             <path d="M4 58 Q28 36 52 58" stroke={colors.primary} strokeWidth="2" fill={colors.primary} opacity="0.3" />
           </svg>
-          <span style={{ color: `${colors.primary}99`, fontSize: 9, textAlign: 'center', padding: '0 16px' }}>
+          <span style={{ color: `${colors.primary}99`, fontSize: 9 + _d, textAlign: 'center', padding: '0 16px' }}>
             ارفع صورة شخصية كاملة
           </span>
         </div>
@@ -102,7 +103,7 @@ export default function CongratsTemplate29({ data }: Props) {
         {/* Event title */}
         <div style={{
           color: colors.accent,
-          fontSize: 20,
+          fontSize: 20 + _d,
           fontWeight: 900,
           textAlign: 'center',
           lineHeight: 1.25,
@@ -121,7 +122,7 @@ export default function CongratsTemplate29({ data }: Props) {
         {/* Person name */}
         <div style={{
           color: '#ffffff',
-          fontSize: 12,
+          fontSize: 12 + _d,
           fontWeight: 700,
           textAlign: 'center',
           textShadow: `0 1px 6px ${colors.secondary}`,
@@ -148,7 +149,7 @@ export default function CongratsTemplate29({ data }: Props) {
         {/* Large calligraphic greeting — editable */}
         <div style={{
           color: colors.accent,
-          fontSize: 34,
+          fontSize: 34 + _d,
           fontWeight: 900,
           textAlign: 'center',
           lineHeight: 1,
@@ -162,7 +163,7 @@ export default function CongratsTemplate29({ data }: Props) {
         {/* Occasion line */}
         <div style={{
           color: '#ffffffdd',
-          fontSize: 9.5,
+          fontSize: 9.5 + _d,
           textAlign: 'center',
           lineHeight: 1.6,
           padding: '0 14px',
@@ -175,7 +176,7 @@ export default function CongratsTemplate29({ data }: Props) {
         {extraLines.filter(Boolean).map((line, i) => (
           <div key={i} style={{
             color: '#ffffffcc',
-            fontSize: 9,
+            fontSize: 9 + _d,
             textAlign: 'center',
             lineHeight: 1.5,
             padding: '1px 14px 0',
@@ -195,7 +196,7 @@ export default function CongratsTemplate29({ data }: Props) {
           <div style={{ width: 28, height: 1, background: `linear-gradient(to right, transparent, ${colors.primary})` }} />
           <div style={{
             color: colors.accent,
-            fontSize: 9,
+            fontSize: 9 + _d,
             fontWeight: 700,
             letterSpacing: '0.12em',
             textShadow: `0 1px 4px ${colors.secondary}`,
@@ -218,7 +219,7 @@ export default function CongratsTemplate29({ data }: Props) {
         }}>
           <div style={{
             color: colors.accent,
-            fontSize: 9,
+            fontSize: 9 + _d,
             fontWeight: 700,
             textAlign: 'center',
             letterSpacing: '0.04em',

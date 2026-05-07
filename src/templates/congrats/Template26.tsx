@@ -6,6 +6,7 @@ export default function CongratsTemplate26({ data }: Props) {
   const { title, subtitle, description, email, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 360, height: 460,

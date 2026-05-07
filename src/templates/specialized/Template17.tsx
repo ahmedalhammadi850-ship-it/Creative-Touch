@@ -8,6 +8,7 @@ export default function SpecializedTemplate17({ data }: Props) {
 
   const featureIcons = ['🏆', '📚', '🔬', '🎨', '🌐', '⚽'];
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 360, height: 520,
@@ -40,7 +41,7 @@ export default function SpecializedTemplate17({ data }: Props) {
           position: 'absolute', top: 14, left: 14,
           background: colors.accent, color: colors.primary,
           borderRadius: 20, padding: '5px 14px',
-          fontSize: 10, fontWeight: 900,
+          fontSize: 10 + _d, fontWeight: 900,
           boxShadow: '0 3px 12px rgba(0,0,0,0.25)',
         }}>
           🎓 التسجيل مفتوح
@@ -53,7 +54,7 @@ export default function SpecializedTemplate17({ data }: Props) {
           background: 'rgba(255,255,255,0.25)',
           border: '2px solid rgba(255,255,255,0.4)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 26,
+          fontSize: 26 + _d,
         }}>
           🏫
         </div>
@@ -95,7 +96,7 @@ export default function SpecializedTemplate17({ data }: Props) {
               borderRadius: 12, padding: '9px 10px',
               display: 'flex', alignItems: 'center', gap: 8,
             }}>
-              <span style={{ fontSize: 16, lineHeight: 1, flexShrink: 0 }}>{featureIcons[i] || '✅'}</span>
+              <span style={{ fontSize: 16 + _d, lineHeight: 1, flexShrink: 0 }}>{featureIcons[i] || '✅'}</span>
               <span style={{ color: '#1a1a2e', fontSize: fs - 3.5, fontWeight: 700, lineHeight: 1.4 }}>{f}</span>
             </div>
           ))}

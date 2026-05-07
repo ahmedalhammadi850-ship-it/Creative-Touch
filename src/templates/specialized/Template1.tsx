@@ -6,6 +6,7 @@ export default function SpecializedTemplate1({ data }: Props) {
   const { title, subtitle, description, phone, colors } = data;
   const services = (description || '').split('،').map(s => s.trim()).filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -49,14 +50,14 @@ export default function SpecializedTemplate1({ data }: Props) {
       <div style={{ padding: '20px 20px 0', zIndex: 1 }}>
         <h2 style={{
           color: '#ffffff',
-          fontSize: 22,
+          fontSize: 22 + _d,
           fontWeight: 900,
           margin: 0,
           lineHeight: 1.3,
         }}>{title || 'رعاية كاملة...'}</h2>
         <p style={{
           color: colors.accent,
-          fontSize: 14,
+          fontSize: 14 + _d,
           margin: '6px 0 14px',
           fontWeight: 600,
         }}>{subtitle || 'خدمة متكاملة بأسلوب حديث'}</p>
@@ -70,7 +71,7 @@ export default function SpecializedTemplate1({ data }: Props) {
               border: '1px solid #ffffff55',
               borderRadius: 20,
               padding: '3px 12px',
-              fontSize: 11,
+              fontSize: 11 + _d,
               fontWeight: 600,
             }}>{s}</span>
           ))}
@@ -98,7 +99,7 @@ export default function SpecializedTemplate1({ data }: Props) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: 36,
+            fontSize: 36 + _d,
           }}>🏥</div>
         </div>
 
@@ -115,7 +116,7 @@ export default function SpecializedTemplate1({ data }: Props) {
           justifyContent: 'center',
           boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
         }}>
-          <span style={{ color: colors.primary, fontSize: 9, fontWeight: 900, textAlign: 'center', lineHeight: 1.2 }}>بادر<br/>بالحجز</span>
+          <span style={{ color: colors.primary, fontSize: 9 + _d, fontWeight: 900, textAlign: 'center', lineHeight: 1.2 }}>بادر<br/>بالحجز</span>
         </div>
       </div>
 
@@ -128,7 +129,7 @@ export default function SpecializedTemplate1({ data }: Props) {
         justifyContent: 'center',
         gap: 8,
       }}>
-        <span style={{ fontSize: 13, fontWeight: 700, color: colors.primary }}>
+        <span style={{ fontSize: 13 + _d, fontWeight: 700, color: colors.primary }}>
           احجز الآن | {phone || '+0123 456 789'}
         </span>
       </div>

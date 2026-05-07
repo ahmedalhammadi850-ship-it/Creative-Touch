@@ -6,6 +6,7 @@ export default function CongratsTemplate2({ data }: Props) {
   const { title, subtitle, description, website, email, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -40,18 +41,18 @@ export default function CongratsTemplate2({ data }: Props) {
           zIndex: 1,
         }}>
           {/* Ornament */}
-          <div style={{ fontSize: 22, marginBottom: 8, opacity: 0.9 }}>✦ ✦ ✦</div>
+          <div style={{ fontSize: 22 + _d, marginBottom: 8, opacity: 0.9 }}>✦ ✦ ✦</div>
 
           <p style={{
             color: '#ffffffaa',
-            fontSize: 12,
+            fontSize: 12 + _d,
             margin: '0 0 4px',
             fontWeight: 500,
           }}>سروراً وابتهاجاً بزفاف</p>
 
           <h1 style={{
             color: colors.accent,
-            fontSize: 32,
+            fontSize: 32 + _d,
             fontWeight: 900,
             margin: '4px 0',
             lineHeight: 1.1,
@@ -64,15 +65,15 @@ export default function CongratsTemplate2({ data }: Props) {
             margin: '8px 0',
           }} />
 
-          <p style={{ color: '#ffffffaa', fontSize: 11, margin: '0 0 2px' }}>يتشرف الوالد</p>
+          <p style={{ color: '#ffffffaa', fontSize: 11 + _d, margin: '0 0 2px' }}>يتشرف الوالد</p>
           <p style={{
             color: '#ffffffee',
-            fontSize: 14,
+            fontSize: 14 + _d,
             fontWeight: 700,
             margin: '0 0 10px',
           }}>{subtitle || 'أحمد سعيد الحاج'}</p>
 
-          <p style={{ color: '#ffffff88', fontSize: 11, margin: '0 0 6px' }}>بدعوتكم لحضور</p>
+          <p style={{ color: '#ffffff88', fontSize: 11 + _d, margin: '0 0 6px' }}>بدعوتكم لحضور</p>
 
           {/* Event type badges */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
@@ -82,7 +83,7 @@ export default function CongratsTemplate2({ data }: Props) {
                 color: colors.bg || '#000',
                 borderRadius: 4,
                 padding: '3px 10px',
-                fontSize: 11,
+                fontSize: 11 + _d,
                 fontWeight: 700,
               }}>{line}</div>
             ))}
@@ -109,8 +110,8 @@ export default function CongratsTemplate2({ data }: Props) {
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               flexDirection: 'column', gap: 6,
             }}>
-              <div style={{ fontSize: 52 }}>👤</div>
-              <span style={{ color: '#ffffff55', fontSize: 9, textAlign: 'center' }}>ارفع صورة</span>
+              <div style={{ fontSize: 52 + _d }}>👤</div>
+              <span style={{ color: '#ffffff55', fontSize: 9 + _d, textAlign: 'center' }}>ارفع صورة</span>
             </div>
           )}
           {/* Thin fade left for edge blend only */}
@@ -136,22 +137,22 @@ export default function CongratsTemplate2({ data }: Props) {
         {lines.length > 2 ? lines.slice(2).map((line, i) => (
           <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <div style={{ width: 4, height: 4, borderRadius: '50%', background: colors.accent, flexShrink: 0 }} />
-            <p style={{ color: '#ffffffcc', fontSize: 12, margin: 0 }}>{line}</p>
+            <p style={{ color: '#ffffffcc', fontSize: 12 + _d, margin: 0 }}>{line}</p>
           </div>
         )) : (
           <>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <div style={{ width: 4, height: 4, borderRadius: '50%', background: colors.accent, flexShrink: 0 }} />
-              <p style={{ color: '#ffffffcc', fontSize: 12, margin: 0 }}>الجمعة 29.08.2025</p>
+              <p style={{ color: '#ffffffcc', fontSize: 12 + _d, margin: 0 }}>الجمعة 29.08.2025</p>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <div style={{ width: 4, height: 4, borderRadius: '50%', background: colors.accent, flexShrink: 0 }} />
-              <p style={{ color: '#ffffffcc', fontSize: 12, margin: 0 }}>{website || 'المخا - مدينة الكهرباء'}</p>
+              <p style={{ color: '#ffffffcc', fontSize: 12 + _d, margin: 0 }}>{website || 'المخا - مدينة الكهرباء'}</p>
             </div>
           </>
         )}
         {email && (
-          <p style={{ color: colors.accent, fontSize: 11, margin: '4px 0 0', fontWeight: 700 }}>{email}</p>
+          <p style={{ color: colors.accent, fontSize: 11 + _d, margin: '4px 0 0', fontWeight: 700 }}>{email}</p>
         )}
       </div>
     </div>

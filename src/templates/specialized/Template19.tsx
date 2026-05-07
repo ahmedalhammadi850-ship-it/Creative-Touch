@@ -5,6 +5,7 @@ export default function SpecializedTemplate19({ data }: Props) {
   const { title, subtitle, description, phone, email, colors, image, fontSize } = data;
   const fs = fontSize || 14;
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 360, height: 460,
@@ -45,7 +46,7 @@ export default function SpecializedTemplate19({ data }: Props) {
       {/* Stars */}
       {['★','✦','✧','⭐'].map((s,i) => (
         <div key={i} style={{
-          position: 'absolute', fontSize: 12 + i*3,
+          position: 'absolute', fontSize: 12 + _d + i*3,
           color: '#fbbf24', opacity: 0.7,
           top: [30,60,18,45][i], left: [50,100,200,260][i],
         }}>{s}</div>
@@ -63,7 +64,7 @@ export default function SpecializedTemplate19({ data }: Props) {
       }}>
         {image
           ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <span style={{ fontSize: 60 }}>👶</span>}
+          : <span style={{ fontSize: 60 + _d }}>👶</span>}
       </div>
 
       {/* Wave bottom of sky */}

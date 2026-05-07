@@ -9,6 +9,7 @@ export default function SpecializedTemplate2({ data }: Props) {
     'الخدمة الأولى', 'الخدمة الثانية', 'الخدمة الثالثة', 'الخدمة الرابعة', 'الخدمة الخامسة'
   ];
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -37,29 +38,29 @@ export default function SpecializedTemplate2({ data }: Props) {
             borderRadius: '50%',
             background: colors.accent,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontWeight: 900, fontSize: 14, color: colors.primary,
+            fontWeight: 900, fontSize: 14 + _d, color: colors.primary,
             boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
           }}>
             {(title || 'DC').slice(0, 2).toUpperCase()}
           </div>
           <div style={{ textAlign: 'left' }}>
-            <div style={{ color: '#fff', fontSize: 11, fontWeight: 700, opacity: 0.9 }}>{website || 'CLINIC'}</div>
-            <div style={{ color: colors.accent, fontSize: 9, fontWeight: 600 }}>{email || 'CENTER'}</div>
+            <div style={{ color: '#fff', fontSize: 11 + _d, fontWeight: 700, opacity: 0.9 }}>{website || 'CLINIC'}</div>
+            <div style={{ color: colors.accent, fontSize: 9 + _d, fontWeight: 600 }}>{email || 'CENTER'}</div>
           </div>
         </div>
 
         {/* Decorative hearts */}
-        <div style={{ position: 'absolute', top: 10, left: 70, fontSize: 18, opacity: 0.6 }}>💛</div>
-        <div style={{ position: 'absolute', top: 5, left: 40, fontSize: 12, opacity: 0.4 }}>💛</div>
+        <div style={{ position: 'absolute', top: 10, left: 70, fontSize: 18 + _d, opacity: 0.6 }}>💛</div>
+        <div style={{ position: 'absolute', top: 5, left: 40, fontSize: 12 + _d, opacity: 0.4 }}>💛</div>
 
         <h2 style={{
           color: '#ffffff',
-          fontSize: 16,
+          fontSize: 16 + _d,
           fontWeight: 900,
           margin: 0,
           lineHeight: 1.4,
         }}>
-          هدفنا أن تكون <span style={{ color: colors.accent, fontSize: 20 }}>{subtitle || 'ابتسامتك'}</span> مثالية
+          هدفنا أن تكون <span style={{ color: colors.accent, fontSize: 20 + _d }}>{subtitle || 'ابتسامتك'}</span> مثالية
         </h2>
       </div>
 
@@ -75,11 +76,11 @@ export default function SpecializedTemplate2({ data }: Props) {
                 background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
                 color: '#fff',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 9, fontWeight: 900, flexShrink: 0,
+                fontSize: 9 + _d, fontWeight: 900, flexShrink: 0,
               }}>
                 0{i + 1}
               </div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: '#1a1a1a' }}>{s}</span>
+              <span style={{ fontSize: 12 + _d, fontWeight: 600, color: '#1a1a1a' }}>{s}</span>
             </div>
           ))}
         </div>
@@ -95,7 +96,7 @@ export default function SpecializedTemplate2({ data }: Props) {
             background: `linear-gradient(135deg, ${colors.primary}33, ${colors.secondary}55)`,
             border: `3px solid ${colors.primary}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 40,
+            fontSize: 40 + _d,
             boxShadow: `0 4px 20px ${colors.primary}44`,
           }}>
             🦷
@@ -112,9 +113,9 @@ export default function SpecializedTemplate2({ data }: Props) {
         justifyContent: 'space-between',
         gap: 8,
       }}>
-        <span style={{ color: '#fff', fontSize: 10, fontWeight: 600 }}>{title || 'Dream Clinic'}</span>
-        <span style={{ color: colors.accent, fontSize: 11, fontWeight: 700 }}>{phone || '+90 535 081 96 31'}</span>
-        <span style={{ color: '#fff', fontSize: 10, opacity: 0.8 }}>{email || '@clinic'}</span>
+        <span style={{ color: '#fff', fontSize: 10 + _d, fontWeight: 600 }}>{title || 'Dream Clinic'}</span>
+        <span style={{ color: colors.accent, fontSize: 11 + _d, fontWeight: 700 }}>{phone || '+90 535 081 96 31'}</span>
+        <span style={{ color: '#fff', fontSize: 10 + _d, opacity: 0.8 }}>{email || '@clinic'}</span>
       </div>
     </div>
   );

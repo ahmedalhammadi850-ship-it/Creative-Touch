@@ -6,6 +6,7 @@ export default function CongratsTemplate18({ data }: Props) {
   const { title, subtitle, description, email, website, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -66,7 +67,7 @@ export default function CongratsTemplate18({ data }: Props) {
               <div style={{
                 width: '100%', height: '100%',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 48,
+                fontSize: 48 + _d,
               }}>👤</div>
             )}
           </div>
@@ -82,13 +83,13 @@ export default function CongratsTemplate18({ data }: Props) {
         display: 'flex', flexDirection: 'column', alignItems: 'center',
         gap: 6,
       }}>
-        <p style={{ color: `${colors.accent}99`, fontSize: 10, margin: 0, letterSpacing: 3, fontWeight: 600 }}>
+        <p style={{ color: `${colors.accent}99`, fontSize: 10 + _d, margin: 0, letterSpacing: 3, fontWeight: 600 }}>
           WEDDING INVITATION
         </p>
 
         <h1 style={{
           color: '#ffffff',
-          fontSize: 34, fontWeight: 900,
+          fontSize: 34 + _d, fontWeight: 900,
           margin: '2px 0',
           textShadow: `0 0 30px ${colors.accent}88`,
           lineHeight: 1.0,
@@ -104,7 +105,7 @@ export default function CongratsTemplate18({ data }: Props) {
           <div style={{ flex: 1, height: 1, background: `linear-gradient(to left, transparent, ${colors.accent}88)` }} />
         </div>
 
-        <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 10, margin: 0 }}>
+        <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 10 + _d, margin: 0 }}>
           {subtitle || 'يتشرف الوالد'}
         </p>
 
@@ -115,20 +116,20 @@ export default function CongratsTemplate18({ data }: Props) {
           padding: '6px 20px',
           width: '100%',
         }}>
-          <p style={{ color: colors.accent, fontSize: 12, fontWeight: 800, margin: 0 }}>
+          <p style={{ color: colors.accent, fontSize: 12 + _d, fontWeight: 800, margin: 0 }}>
             {lines[0] || 'المقيل والزفة والسمرة'}
           </p>
         </div>
 
         <p style={{
-          color: colors.accent, fontSize: 18, fontWeight: 900, margin: '2px 0 0',
+          color: colors.accent, fontSize: 18 + _d, fontWeight: 900, margin: '2px 0 0',
           textShadow: `0 0 15px ${colors.accent}99`,
         }}>
           {lines[1] || '28 - 7 - 2025'}
         </p>
 
-        {website && <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 9, margin: 0 }}>📍 {website}</p>}
-        {email && <p style={{ color: `${colors.accent}88`, fontSize: 9, margin: '2px 0 0', fontWeight: 600 }}>{email}</p>}
+        {website && <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 9 + _d, margin: 0 }}>📍 {website}</p>}
+        {email && <p style={{ color: `${colors.accent}88`, fontSize: 9 + _d, margin: '2px 0 0', fontWeight: 600 }}>{email}</p>}
       </div>
 
       {/* Bottom neon bar */}

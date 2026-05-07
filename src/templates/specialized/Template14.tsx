@@ -6,6 +6,7 @@ export default function SpecializedTemplate14({ data }: Props) {
   const grades = (description || '').split('،').map(s => s.trim()).filter(Boolean);
   const fs = fontSize || 14;
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 360, height: 460,
@@ -43,7 +44,7 @@ export default function SpecializedTemplate14({ data }: Props) {
       }}>
         {image
           ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <span style={{ fontSize: 40 }}>🏫</span>}
+          : <span style={{ fontSize: 40 + _d }}>🏫</span>}
       </div>
 
       {/* Badge */}
@@ -51,7 +52,7 @@ export default function SpecializedTemplate14({ data }: Props) {
         position: 'absolute', top: 138, right: 22, zIndex: 3,
         background: colors.accent, color: colors.primary,
         borderRadius: 20, padding: '4px 12px',
-        fontSize: 10, fontWeight: 900,
+        fontSize: 10 + _d, fontWeight: 900,
         boxShadow: '0 3px 10px rgba(0,0,0,0.2)',
       }}>
         ✅ مقاعد محدودة
@@ -70,7 +71,7 @@ export default function SpecializedTemplate14({ data }: Props) {
             display: 'inline-flex', alignItems: 'center', gap: 4,
             background: colors.primary, color: '#fff',
             borderRadius: 20, padding: '3px 10px', marginBottom: 8,
-            fontSize: 9, fontWeight: 900,
+            fontSize: 9 + _d, fontWeight: 900,
           }}>
             📝 باب التسجيل
           </div>

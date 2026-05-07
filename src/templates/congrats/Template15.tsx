@@ -7,6 +7,7 @@ export default function CongratsTemplate15({ data }: Props) {
   const lines = (description || '').split('\n').filter(Boolean);
   const dateText = lines[2] || '2.7.2023';
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -44,8 +45,8 @@ export default function CongratsTemplate15({ data }: Props) {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexDirection: 'column', gap: 8, opacity: 0.5,
           }}>
-            <div style={{ fontSize: 64 }}>👤</div>
-            <span style={{ color: colors.primary, fontSize: 9 }}>صورة العريس</span>
+            <div style={{ fontSize: 64 + _d }}>👤</div>
+            <span style={{ color: colors.primary, fontSize: 9 + _d }}>صورة العريس</span>
           </div>
         )}
         {/* Right fade */}
@@ -66,25 +67,25 @@ export default function CongratsTemplate15({ data }: Props) {
       }}>
         {/* Top label */}
         <div>
-          <p style={{ color: colors.primary, fontSize: 11, fontWeight: 700, margin: '0 0 2px', opacity: 0.8 }}>
+          <p style={{ color: colors.primary, fontSize: 11 + _d, fontWeight: 700, margin: '0 0 2px', opacity: 0.8 }}>
             {email || 'أفراح آل باشا'}
           </p>
           <div style={{ height: 1.5, background: colors.primary, opacity: 0.25, marginBottom: 8 }} />
-          <p style={{ color: colors.primary, fontSize: 9, margin: 0, opacity: 0.65 }}>
+          <p style={{ color: colors.primary, fontSize: 9 + _d, margin: 0, opacity: 0.65 }}>
             لفخامة العريس الغالي
           </p>
           <h1 style={{
             color: colors.primary,
-            fontSize: 26, fontWeight: 900,
+            fontSize: 26 + _d, fontWeight: 900,
             margin: '2px 0 6px', lineHeight: 1.0,
           }}>{title || 'نسيم باشا'}</h1>
-          <p style={{ color: colors.primary, fontSize: 9, margin: 0, lineHeight: 1.5, opacity: 0.75 }}>
+          <p style={{ color: colors.primary, fontSize: 9 + _d, margin: 0, lineHeight: 1.5, opacity: 0.75 }}>
             {lines[0] || 'المقيل والزفة والسمرة'}
           </p>
-          <p style={{ color: colors.primary, fontSize: 9, margin: '3px 0', opacity: 0.6 }}>
+          <p style={{ color: colors.primary, fontSize: 9 + _d, margin: '3px 0', opacity: 0.6 }}>
             {subtitle || 'من نجل الشيخ عبدرب باشا'}
           </p>
-          <p style={{ color: colors.primary, fontSize: 9, margin: 0, opacity: 0.6 }}>
+          <p style={{ color: colors.primary, fontSize: 9 + _d, margin: 0, opacity: 0.6 }}>
             {website || '📍 خوالة فوق دوحة باب'}
           </p>
         </div>
@@ -97,7 +98,7 @@ export default function CongratsTemplate15({ data }: Props) {
           alignSelf: 'flex-start',
           marginTop: 8,
         }}>
-          <span style={{ color: colors.accent, fontSize: 11, fontWeight: 800 }}>
+          <span style={{ color: colors.accent, fontSize: 11 + _d, fontWeight: 800 }}>
             {lines[1] || 'الأحد'}
           </span>
         </div>
@@ -105,7 +106,7 @@ export default function CongratsTemplate15({ data }: Props) {
         {/* Big date number */}
         <div style={{ marginTop: 'auto' }}>
           <div style={{
-            fontSize: 50,
+            fontSize: 50 + _d,
             fontWeight: 900,
             color: colors.primary,
             textShadow: `3px 3px 0 ${colors.accent}bb, 5px 5px 0 rgba(0,0,0,0.1)`,

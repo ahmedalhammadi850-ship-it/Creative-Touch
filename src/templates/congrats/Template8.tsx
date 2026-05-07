@@ -6,6 +6,7 @@ export default function CongratsTemplate8({ data }: Props) {
   const { title, subtitle, description, email, website, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -64,7 +65,7 @@ export default function CongratsTemplate8({ data }: Props) {
         }}>
           <p style={{
             color: '#ffffff',
-            fontSize: 9,
+            fontSize: 9 + _d,
             fontWeight: 700,
             margin: 0,
             letterSpacing: 3,
@@ -76,7 +77,7 @@ export default function CongratsTemplate8({ data }: Props) {
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 8, position: 'relative', zIndex: 1 }}>
           <h1 style={{
             color: '#ffffff',
-            fontSize: 38,
+            fontSize: 38 + _d,
             fontWeight: 900,
             margin: 0,
             lineHeight: 1.0,
@@ -87,11 +88,11 @@ export default function CongratsTemplate8({ data }: Props) {
             <div style={{ height: 2, width: 10, background: '#ffffff44' }} />
           </div>
 
-          <p style={{ color: '#ffffffbb', fontSize: 10, margin: 0 }}>يتشرف بدعوتكم</p>
+          <p style={{ color: '#ffffffbb', fontSize: 10 + _d, margin: 0 }}>يتشرف بدعوتكم</p>
 
           <p style={{
             color: '#ffffffee',
-            fontSize: 13,
+            fontSize: 13 + _d,
             fontWeight: 700,
             margin: '0 0 4px',
             lineHeight: 1.4,
@@ -105,7 +106,7 @@ export default function CongratsTemplate8({ data }: Props) {
             width: 'fit-content',
             borderRadius: 2,
           }}>
-            <span style={{ color: colors.primary, fontSize: 12, fontWeight: 900 }}>
+            <span style={{ color: colors.primary, fontSize: 12 + _d, fontWeight: 900 }}>
               {lines[0] || 'المقيل والزفة'}
             </span>
           </div>
@@ -121,7 +122,7 @@ export default function CongratsTemplate8({ data }: Props) {
               }}>{l}</p>
             ))}
             {website && (
-              <p style={{ color: '#ffffffaa', fontSize: 9, margin: '2px 0 0' }}>📍 {website}</p>
+              <p style={{ color: '#ffffffaa', fontSize: 9 + _d, margin: '2px 0 0' }}>📍 {website}</p>
             )}
           </div>
         </div>
@@ -134,7 +135,7 @@ export default function CongratsTemplate8({ data }: Props) {
             position: 'relative',
             zIndex: 1,
           }}>
-            <p style={{ color: colors.accent, fontSize: 9, margin: 0, fontWeight: 700 }}>{email}</p>
+            <p style={{ color: colors.accent, fontSize: 9 + _d, margin: 0, fontWeight: 700 }}>{email}</p>
           </div>
         )}
       </div>
@@ -186,8 +187,8 @@ export default function CongratsTemplate8({ data }: Props) {
             gap: 8,
             background: `linear-gradient(160deg, ${colors.primary}18, ${colors.accent}18)`,
           }}>
-            <div style={{ fontSize: 56, opacity: 0.5 }}>👤</div>
-            <span style={{ color: `${colors.primary}66`, fontSize: 10, textAlign: 'center' }}>
+            <div style={{ fontSize: 56 + _d, opacity: 0.5 }}>👤</div>
+            <span style={{ color: `${colors.primary}66`, fontSize: 10 + _d, textAlign: 'center' }}>
               ارفع صورة<br/>من الشريط الجانبي
             </span>
           </div>

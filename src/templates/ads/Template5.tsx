@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template5({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{ width: '360px', height: '360px', position: 'relative', overflow: 'hidden', fontFamily: "'Helvetica Neue', Arial, sans-serif", direction: 'rtl', backgroundColor: data.colors.bg }}>
       {/* Diagonal split background */}

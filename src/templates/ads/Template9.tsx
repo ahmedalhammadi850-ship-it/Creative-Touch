@@ -3,6 +3,7 @@ import type { TemplateData } from '../../types/template';
 export default function Template9({ data }: { data: TemplateData }) {
   const services = (data.description || '').split(/[,،\n]/).map(s => s.trim()).filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: '360px', height: '360px',

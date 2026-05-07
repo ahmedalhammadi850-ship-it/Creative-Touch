@@ -11,6 +11,7 @@ export default function SpecializedTemplate3({ data }: Props) {
     'أسعار مخففة وبالتقسيط',
   ];
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -39,21 +40,21 @@ export default function SpecializedTemplate3({ data }: Props) {
           minWidth: 56,
           boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
         }}>
-          <span style={{ color: colors.primary, fontSize: 18, fontWeight: 900, lineHeight: 1 }}>2025</span>
-          <span style={{ color: colors.primary, fontSize: 8, fontWeight: 700 }}>للعام الدراسي</span>
+          <span style={{ color: colors.primary, fontSize: 18 + _d, fontWeight: 900, lineHeight: 1 }}>2025</span>
+          <span style={{ color: colors.primary, fontSize: 8 + _d, fontWeight: 700 }}>للعام الدراسي</span>
         </div>
 
         {/* Title */}
         <div style={{ flex: 1 }}>
           <h2 style={{
             color: '#ffffff',
-            fontSize: 20,
+            fontSize: 20 + _d,
             fontWeight: 900,
             margin: 0,
             lineHeight: 1.3,
             textShadow: '0 2px 4px rgba(0,0,0,0.2)',
           }}>{title || 'مركز التعليمي'}</h2>
-          <p style={{ color: '#ffffffcc', fontSize: 11, margin: '4px 0 0', fontWeight: 500 }}>
+          <p style={{ color: '#ffffffcc', fontSize: 11 + _d, margin: '4px 0 0', fontWeight: 500 }}>
             {subtitle || 'نعلن عن بدء التسجيل'}
           </p>
         </div>
@@ -71,9 +72,9 @@ export default function SpecializedTemplate3({ data }: Props) {
                 background: colors.accent,
                 color: colors.primary,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 8, fontWeight: 900, flexShrink: 0,
+                fontSize: 8 + _d, fontWeight: 900, flexShrink: 0,
               }}>0{i + 1}</div>
-              <span style={{ color: '#fff', fontSize: 11, fontWeight: 600, lineHeight: 1.3 }}>{f}</span>
+              <span style={{ color: '#fff', fontSize: 11 + _d, fontWeight: 600, lineHeight: 1.3 }}>{f}</span>
             </div>
           ))}
         </div>
@@ -87,7 +88,7 @@ export default function SpecializedTemplate3({ data }: Props) {
             background: '#ffffff30',
             border: '3px solid #ffffff66',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 44,
+            fontSize: 44 + _d,
           }}>👨‍🎓</div>
 
           {/* Small bottom circle */}
@@ -97,7 +98,7 @@ export default function SpecializedTemplate3({ data }: Props) {
             background: colors.accent + '33',
             border: `2px solid ${colors.accent}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 24,
+            fontSize: 24 + _d,
           }}>👩‍🎓</div>
         </div>
       </div>
@@ -116,8 +117,8 @@ export default function SpecializedTemplate3({ data }: Props) {
             padding: '4px 8px',
             display: 'flex', alignItems: 'center', gap: 4,
           }}>
-            <span style={{ fontSize: 10, color: colors.accent }}>📚</span>
-            <span style={{ color: '#fff', fontSize: 10, fontWeight: 700 }}>{s}</span>
+            <span style={{ fontSize: 10 + _d, color: colors.accent }}>📚</span>
+            <span style={{ color: '#fff', fontSize: 10 + _d, fontWeight: 700 }}>{s}</span>
           </div>
         ))}
       </div>
@@ -130,14 +131,14 @@ export default function SpecializedTemplate3({ data }: Props) {
         justifyContent: 'space-between',
         alignItems: 'center',
       }}>
-        <span style={{ color: colors.accent, fontSize: 12, fontWeight: 700 }}>{phone || '07826560604'}</span>
+        <span style={{ color: colors.accent, fontSize: 12 + _d, fontWeight: 700 }}>{phone || '07826560604'}</span>
         <button style={{
           background: colors.accent,
           color: colors.primary,
           border: 'none',
           borderRadius: 20,
           padding: '4px 14px',
-          fontSize: 11,
+          fontSize: 11 + _d,
           fontWeight: 900,
           cursor: 'pointer',
         }}>سجل الآن</button>

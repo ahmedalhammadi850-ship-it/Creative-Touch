@@ -6,6 +6,7 @@ export default function CongratsTemplate3({ data }: Props) {
   const { title, subtitle, description, email, website, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -54,21 +55,21 @@ export default function CongratsTemplate3({ data }: Props) {
             borderRadius: 8,
             padding: '6px 12px',
             textAlign: 'center',
-            fontSize: 14,
+            fontSize: 14 + _d,
             fontWeight: 900,
             boxShadow: `0 3px 12px ${colors.primary}44`,
           }}>تهانينا</div>
 
           <p style={{
             color: '#555',
-            fontSize: 11,
+            fontSize: 11 + _d,
             margin: 0,
             lineHeight: 1.5,
           }}>لفخامة العريس الغالي</p>
 
           <h1 style={{
             color: colors.primary,
-            fontSize: 22,
+            fontSize: 22 + _d,
             fontWeight: 900,
             margin: '4px 0',
             lineHeight: 1.2,
@@ -76,7 +77,7 @@ export default function CongratsTemplate3({ data }: Props) {
 
           <p style={{
             color: '#666',
-            fontSize: 12,
+            fontSize: 12 + _d,
             fontWeight: 600,
             margin: 0,
           }}>{subtitle || 'ابن الفاضل'}</p>
@@ -87,10 +88,10 @@ export default function CongratsTemplate3({ data }: Props) {
             margin: '4px 0',
           }} />
 
-          <p style={{ color: '#555', fontSize: 11, margin: 0, lineHeight: 1.6 }}>
+          <p style={{ color: '#555', fontSize: 11 + _d, margin: 0, lineHeight: 1.6 }}>
             {lines[0] || 'بمناسبة زفافه الميمون ودخوله القفص الذهبي'}
           </p>
-          <p style={{ color: colors.primary, fontSize: 13, fontWeight: 700, margin: 0 }}>
+          <p style={{ color: colors.primary, fontSize: 13 + _d, fontWeight: 700, margin: 0 }}>
             ألف مبروك
           </p>
 
@@ -102,7 +103,7 @@ export default function CongratsTemplate3({ data }: Props) {
             padding: '4px 10px',
             marginTop: 4,
           }}>
-            <p style={{ color: colors.primary, fontSize: 10, margin: 0, fontWeight: 600 }}>
+            <p style={{ color: colors.primary, fontSize: 10 + _d, margin: 0, fontWeight: 600 }}>
               {email || 'تهنئة مقدمة من'}
             </p>
           </div>
@@ -141,8 +142,8 @@ export default function CongratsTemplate3({ data }: Props) {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexDirection: 'column', gap: 4,
               }}>
-                <div style={{ fontSize: 40 }}>👤</div>
-                <span style={{ color: `${colors.primary}88`, fontSize: 8, textAlign: 'center' }}>ارفع صورة</span>
+                <div style={{ fontSize: 40 + _d }}>👤</div>
+                <span style={{ color: `${colors.primary}88`, fontSize: 8 + _d, textAlign: 'center' }}>ارفع صورة</span>
               </div>
             )}
           </div>
@@ -156,13 +157,13 @@ export default function CongratsTemplate3({ data }: Props) {
             overflow: 'hidden',
             background: `${colors.primary}11`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 24,
+            fontSize: 24 + _d,
           }}>
             💍
           </div>
 
           {website && (
-            <p style={{ color: '#888', fontSize: 9, textAlign: 'center', margin: 0 }}>{website}</p>
+            <p style={{ color: '#888', fontSize: 9 + _d, textAlign: 'center', margin: 0 }}>{website}</p>
           )}
         </div>
       </div>
@@ -175,7 +176,7 @@ export default function CongratsTemplate3({ data }: Props) {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-        <p style={{ color: colors.accent, fontSize: 12, fontWeight: 700, margin: 0 }}>
+        <p style={{ color: colors.accent, fontSize: 12 + _d, fontWeight: 700, margin: 0 }}>
           {lines[1] || 'ودامت أيامكم عامرة بالمسرات'}
         </p>
       </div>

@@ -7,6 +7,7 @@ export default function CongratsTemplate19({ data }: Props) {
   const lines = (description || '').split('\n').filter(Boolean);
   const nameChars = (title || 'محمد').split('');
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -62,7 +63,7 @@ export default function CongratsTemplate19({ data }: Props) {
             width: 80, height: 80, borderRadius: '50%',
             background: '#ffffff22',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 36,
+            fontSize: 36 + _d,
           }}>👤</div>
         )}
 
@@ -75,16 +76,16 @@ export default function CongratsTemplate19({ data }: Props) {
           padding: '20px 20px 20px 10px',
           zIndex: 2,
         }}>
-          <p style={{ color: colors.accent, fontSize: 9, margin: '0 0 4px', letterSpacing: 3, fontWeight: 700 }}>
+          <p style={{ color: colors.accent, fontSize: 9 + _d, margin: '0 0 4px', letterSpacing: 3, fontWeight: 700 }}>
             WEDDING · {new Date().getFullYear()}
           </p>
           <h1 style={{
             color: '#ffffff',
-            fontSize: 38, fontWeight: 900,
+            fontSize: 38 + _d, fontWeight: 900,
             margin: '0 0 6px', lineHeight: 1.0,
             textShadow: '0 2px 20px rgba(0,0,0,0.3)',
           }}>{title || 'محمد'}</h1>
-          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 10, margin: 0, lineHeight: 1.5 }}>
+          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 10 + _d, margin: 0, lineHeight: 1.5 }}>
             {subtitle || 'يتشرف الوالد بالدعوة'}
           </p>
         </div>
@@ -115,13 +116,13 @@ export default function CongratsTemplate19({ data }: Props) {
             width: 40, height: 40, borderRadius: 10,
             background: `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0, fontSize: 18,
+            flexShrink: 0, fontSize: 18 + _d,
           }}>🎊</div>
           <div>
-            <p style={{ color: colors.primary, fontSize: 13, fontWeight: 800, margin: 0 }}>
+            <p style={{ color: colors.primary, fontSize: 13 + _d, fontWeight: 800, margin: 0 }}>
               {lines[0] || 'المقيل والزفة والسمرة'}
             </p>
-            <p style={{ color: '#888', fontSize: 10, margin: '2px 0 0' }}>
+            <p style={{ color: '#888', fontSize: 10 + _d, margin: '2px 0 0' }}>
               {email || 'أفراح آل الحاج'}
             </p>
           </div>
@@ -135,8 +136,8 @@ export default function CongratsTemplate19({ data }: Props) {
             flex: 1, background: `${colors.primary}0d`, borderRadius: 8,
             padding: '8px 12px', border: `1px solid ${colors.primary}22`,
           }}>
-            <p style={{ color: '#888', fontSize: 8, margin: '0 0 2px', textTransform: 'uppercase', letterSpacing: 1 }}>التاريخ</p>
-            <p style={{ color: colors.primary, fontSize: 14, fontWeight: 900, margin: 0 }}>
+            <p style={{ color: '#888', fontSize: 8 + _d, margin: '0 0 2px', textTransform: 'uppercase', letterSpacing: 1 }}>التاريخ</p>
+            <p style={{ color: colors.primary, fontSize: 14 + _d, fontWeight: 900, margin: 0 }}>
               {lines[1] || '28 - 7 - 2025'}
             </p>
           </div>
@@ -144,8 +145,8 @@ export default function CongratsTemplate19({ data }: Props) {
             flex: 1, background: `${colors.accent}0d`, borderRadius: 8,
             padding: '8px 12px', border: `1px solid ${colors.accent}33`,
           }}>
-            <p style={{ color: '#888', fontSize: 8, margin: '0 0 2px', textTransform: 'uppercase', letterSpacing: 1 }}>المكان</p>
-            <p style={{ color: colors.secondary, fontSize: 10, fontWeight: 700, margin: 0, lineHeight: 1.3 }}>
+            <p style={{ color: '#888', fontSize: 8 + _d, margin: '0 0 2px', textTransform: 'uppercase', letterSpacing: 1 }}>المكان</p>
+            <p style={{ color: colors.secondary, fontSize: 10 + _d, fontWeight: 700, margin: 0, lineHeight: 1.3 }}>
               {website || 'قاعة الأفراح'}
             </p>
           </div>

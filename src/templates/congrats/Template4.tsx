@@ -6,6 +6,7 @@ export default function CongratsTemplate4({ data }: Props) {
   const { title, subtitle, description, email, website, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -40,8 +41,8 @@ export default function CongratsTemplate4({ data }: Props) {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexDirection: 'column', gap: 8,
           }}>
-            <div style={{ fontSize: 56 }}>👤</div>
-            <span style={{ color: '#ffffff55', fontSize: 9, textAlign: 'center', padding: '0 8px' }}>
+            <div style={{ fontSize: 56 + _d }}>👤</div>
+            <span style={{ color: '#ffffff55', fontSize: 9 + _d, textAlign: 'center', padding: '0 8px' }}>
               ارفع صورة<br/>من الشريط
             </span>
           </div>
@@ -59,14 +60,14 @@ export default function CongratsTemplate4({ data }: Props) {
           background: colors.secondary,
           padding: '3px 10px 3px 16px',
         }}>
-          <span style={{ color: colors.accent, fontSize: 10, fontWeight: 900, letterSpacing: 2 }}>WEDDING</span>
+          <span style={{ color: colors.accent, fontSize: 10 + _d, fontWeight: 900, letterSpacing: 2 }}>WEDDING</span>
         </div>
         <div style={{
           position: 'absolute', top: 34, right: 0,
           background: colors.secondary + 'bb',
           padding: '2px 10px 2px 16px',
         }}>
-          <span style={{ color: '#ffffffaa', fontSize: 9, letterSpacing: 1 }}>{title || 'بسم'}</span>
+          <span style={{ color: '#ffffffaa', fontSize: 9 + _d, letterSpacing: 1 }}>{title || 'بسم'}</span>
         </div>
       </div>
 
@@ -90,18 +91,18 @@ export default function CongratsTemplate4({ data }: Props) {
         {/* Calligraphy ornament */}
         <div style={{
           textAlign: 'center',
-          fontSize: 11,
+          fontSize: 11 + _d,
           color: colors.accent,
           marginBottom: 4,
           opacity: 0.9,
           letterSpacing: 2,
         }}>✦ ✦ ✦ ✦ ✦</div>
 
-        <p style={{ color: '#ffffffaa', fontSize: 10, margin: '0 0 2px', textAlign: 'center' }}>بمناسبة زفاف نجلنا</p>
+        <p style={{ color: '#ffffffaa', fontSize: 10 + _d, margin: '0 0 2px', textAlign: 'center' }}>بمناسبة زفاف نجلنا</p>
 
         <h1 style={{
           color: colors.accent,
-          fontSize: 28,
+          fontSize: 28 + _d,
           fontWeight: 900,
           margin: '4px 0',
           textAlign: 'center',
@@ -115,17 +116,17 @@ export default function CongratsTemplate4({ data }: Props) {
           margin: '8px auto',
         }} />
 
-        <p style={{ color: '#ffffffbb', fontSize: 10, margin: '0 0 2px', textAlign: 'center' }}>يتشرف</p>
+        <p style={{ color: '#ffffffbb', fontSize: 10 + _d, margin: '0 0 2px', textAlign: 'center' }}>يتشرف</p>
         <p style={{
           color: '#ffffffe0',
-          fontSize: 12,
+          fontSize: 12 + _d,
           fontWeight: 700,
           textAlign: 'center',
           margin: '0 0 10px',
           lineHeight: 1.4,
         }}>{subtitle || 'الوالد والعائلة الكريمة'}</p>
 
-        <p style={{ color: '#ffffffaa', fontSize: 10, margin: '0 0 8px', textAlign: 'center' }}>بدعوتكم لحضور</p>
+        <p style={{ color: '#ffffffaa', fontSize: 10 + _d, margin: '0 0 8px', textAlign: 'center' }}>بدعوتكم لحضور</p>
 
         {/* Event type highlight */}
         <div style={{
@@ -135,7 +136,7 @@ export default function CongratsTemplate4({ data }: Props) {
           textAlign: 'center',
           marginBottom: 8,
         }}>
-          <span style={{ color: colors.secondary, fontSize: 12, fontWeight: 900 }}>
+          <span style={{ color: colors.secondary, fontSize: 12 + _d, fontWeight: 900 }}>
             {lines[0] || 'المقيل والزفة والسمرة'}
           </span>
         </div>
@@ -145,7 +146,7 @@ export default function CongratsTemplate4({ data }: Props) {
           {(lines.length > 1 ? lines.slice(1) : ['يوم الأربعاء', '28-7-2021']).map((line, i) => (
             <div key={i} style={{ textAlign: 'center' }}>
               {i === 0 && (
-                <p style={{ color: '#ffffffaa', fontSize: 9, margin: '0 0 2px' }}>يوم</p>
+                <p style={{ color: '#ffffffaa', fontSize: 9 + _d, margin: '0 0 2px' }}>يوم</p>
               )}
               <p style={{
                 color: i === 1 ? colors.accent : '#ffffffee',
@@ -159,7 +160,7 @@ export default function CongratsTemplate4({ data }: Props) {
           {website && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'center', marginTop: 4 }}>
               <div style={{ width: 4, height: 4, borderRadius: '50%', background: colors.accent }} />
-              <p style={{ color: '#ffffffcc', fontSize: 10, margin: 0 }}>{website}</p>
+              <p style={{ color: '#ffffffcc', fontSize: 10 + _d, margin: 0 }}>{website}</p>
             </div>
           )}
         </div>
@@ -172,7 +173,7 @@ export default function CongratsTemplate4({ data }: Props) {
             paddingTop: 6,
             textAlign: 'center',
           }}>
-            <p style={{ color: colors.accent, fontSize: 9, margin: 0, fontWeight: 600 }}>{email}</p>
+            <p style={{ color: colors.accent, fontSize: 9 + _d, margin: 0, fontWeight: 600 }}>{email}</p>
           </div>
         )}
       </div>

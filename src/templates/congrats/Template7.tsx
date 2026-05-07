@@ -10,6 +10,7 @@ export default function CongratsTemplate7({ data }: Props) {
   const cx = 180;
   const cy = 170;
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -99,7 +100,7 @@ export default function CongratsTemplate7({ data }: Props) {
         position: 'absolute', top: 18, left: 0, right: 0,
         textAlign: 'center', zIndex: 3,
       }}>
-        <p style={{ color: colors.accent, fontSize: 10, margin: 0, letterSpacing: 2, fontWeight: 700 }}>
+        <p style={{ color: colors.accent, fontSize: 10 + _d, margin: 0, letterSpacing: 2, fontWeight: 700 }}>
           ✦ بمناسبة الزفاف الميمون ✦
         </p>
       </div>
@@ -115,7 +116,7 @@ export default function CongratsTemplate7({ data }: Props) {
       }}>
         <h1 style={{
           color: '#ffffff',
-          fontSize: 30, fontWeight: 900,
+          fontSize: 30 + _d, fontWeight: 900,
           margin: '0 0 4px', lineHeight: 1.1,
           textShadow: `0 2px 16px ${colors.primary}`,
         }}>{title || 'محمد'}</h1>
@@ -126,7 +127,7 @@ export default function CongratsTemplate7({ data }: Props) {
           <div style={{ height: 1, width: 40, background: colors.accent }} />
         </div>
 
-        <p style={{ color: '#ffffffaa', fontSize: 11, margin: '0 0 4px' }}>
+        <p style={{ color: '#ffffffaa', fontSize: 11 + _d, margin: '0 0 4px' }}>
           {subtitle || 'يتشرف الوالد بالدعوة'}
         </p>
 
@@ -138,18 +139,18 @@ export default function CongratsTemplate7({ data }: Props) {
             display: 'inline-block',
             margin: '6px 0',
           }}>
-            <span style={{ color: colors.bg || '#1a1a2e', fontSize: 11, fontWeight: 900 }}>
+            <span style={{ color: colors.bg || '#1a1a2e', fontSize: 11 + _d, fontWeight: 900 }}>
               {lines[0]}
             </span>
           </div>
         )}
 
-        <p style={{ color: colors.accent, fontSize: 15, fontWeight: 900, margin: '4px 0 0' }}>
+        <p style={{ color: colors.accent, fontSize: 15 + _d, fontWeight: 900, margin: '4px 0 0' }}>
           {lines[1] || '28 - 7 - 2025'}
         </p>
 
-        {website && <p style={{ color: '#ffffff88', fontSize: 10, margin: '2px 0 0' }}>📍 {website}</p>}
-        {email && <p style={{ color: colors.accent, fontSize: 9, margin: '4px 0 0', fontWeight: 600 }}>{email}</p>}
+        {website && <p style={{ color: '#ffffff88', fontSize: 10 + _d, margin: '2px 0 0' }}>📍 {website}</p>}
+        {email && <p style={{ color: colors.accent, fontSize: 9 + _d, margin: '4px 0 0', fontWeight: 600 }}>{email}</p>}
       </div>
     </div>
   );
