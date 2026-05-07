@@ -203,6 +203,8 @@ export default function EditorPage() {
       {showPayment && (
         <PaymentRequestModal
           templateName={templateConfig.name}
+          categoryId={categoryId}
+          templateId={templateId}
           onClose={() => setShowPayment(false)}
         />
       )}

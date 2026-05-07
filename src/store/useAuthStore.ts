@@ -8,6 +8,7 @@ export interface User {
   plan: 'free' | 'starter' | 'weekly' | 'monthly';
   planStatus: 'active' | 'pending' | 'rejected' | null;
   createdAt: string;
+  activatedTemplates?: string[];
 }
 
 interface AuthState {
@@ -18,6 +19,7 @@ interface AuthState {
   getUserByEmail: (email: string) => User | undefined;
   logout: () => void;
   updateUserPlan: (userId: string, plan: User['plan'], status: User['planStatus']) => void;
+  addActivatedTemplate: (userId: string, templateKey: string) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -52,6 +54,20 @@ export const useAuthStore = create<AuthState>()(
           user:
             state.user?.id === userId
               ? { ...state.user, plan, planStatus: status }
+              : state.user,
+        }));
+      },
+
+      addActivatedTemplate: (userId, templateKey) => {
+        set((state) => ({
+          users: state.users.map((u) =>
+            u.id === userId
+              ? { ...u, activatedTemplates: [...new Set([...(u.activatedTemplates || []), templateKey])] }
+              : u
+          ),
+          user:
+            state.user?.id === userId
+              ? { ...state.user, activatedTemplates: [...new Set([...(state.user.activatedTemplates || []), templateKey])] }
               : state.user,
         }));
       },

@@ -57,7 +57,7 @@ export default function AdminDashboard() {
   const { logout } = useAdminStore();
   const { plans, updatePlan, updateFeature, addFeature, removeFeature, resetToDefault } = usePricingStore();
   const { requests, updateStatus } = useRequestStore();
-  const { users, updateUserPlan } = useAuthStore();
+  const { users, updateUserPlan, addActivatedTemplate } = useAuthStore();
 
   const [tab, setTab] = useState<Tab>('requests');
   const [editingPlan, setEditingPlan] = useState<string | null>(null);
@@ -95,7 +95,11 @@ export default function AdminDashboard() {
   const handleApprove = (req: AppRequest) => {
     updateStatus(req.id, 'approved');
     if (req.userId) {
-      updateUserPlan(req.userId, resolvePlanId(req), 'active');
+      if (req.type === 'activation' && req.categoryId && req.templateId) {
+        addActivatedTemplate(req.userId, `${req.categoryId}/${req.templateId}`);
+      } else {
+        updateUserPlan(req.userId, resolvePlanId(req), 'active');
+      }
     }
   };
 

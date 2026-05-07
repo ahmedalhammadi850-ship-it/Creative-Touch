@@ -5,7 +5,7 @@ import { useRequestStore } from '../store/useRequestStore';
 import { usePricingStore } from '../store/usePricingStore';
 import {
   LayoutTemplate, LogOut, Crown, Clock, CheckCircle, XCircle,
-  User, Zap, Star, ChevronLeft, Bell, RefreshCw
+  User, Zap, Star, ChevronLeft, Bell, RefreshCw, ExternalLink
 } from 'lucide-react';
 
 const ALL_CATEGORIES = [
@@ -339,9 +339,10 @@ export default function UserDashboard() {
                 {myRequests.map(req => {
                   const st = REQUEST_STATUS[req.status];
                   const StatusIcon = st.icon;
+                  const canOpenTemplate = req.status === 'approved' && req.type === 'activation' && req.categoryId && req.templateId;
                   return (
-                    <div key={req.id} style={{ background: '#f8fafc', borderRadius: 14, padding: '16px 18px', border: `1px solid ${st.color}20`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div key={req.id} style={{ background: req.status === 'approved' && req.type === 'activation' ? '#f0fdf4' : '#f8fafc', borderRadius: 14, padding: '16px 18px', border: `1.5px solid ${req.status === 'approved' && req.type === 'activation' ? '#bbf7d0' : st.color + '20'}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, flex: 1 }}>
                         <div style={{ width: 40, height: 40, borderRadius: 12, background: st.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                           <StatusIcon size={18} color={st.color} />
                         </div>
@@ -350,13 +351,24 @@ export default function UserDashboard() {
                             <span style={{ background: '#eef2ff', color: '#6366f1', fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 20 }}>{REQUEST_TYPE[req.type] || req.type}</span>
                             {req.plan && <span style={{ background: '#fdf4ff', color: '#a855f7', fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 20 }}>{req.plan}</span>}
                           </div>
-                          <p style={{ color: '#475569', fontSize: 13, margin: 0 }}>
+                          <p style={{ color: '#475569', fontSize: 13, margin: 0, fontWeight: 700 }}>
                             {req.templateName && req.templateName !== 'غير محدد' ? req.templateName : REQUEST_TYPE[req.type]}
                           </p>
                           <p style={{ color: '#94a3b8', fontSize: 11, margin: '2px 0 0' }}>{new Date(req.createdAt).toLocaleDateString('ar-YE')}</p>
                         </div>
                       </div>
-                      <span style={{ background: st.bg, color: st.color, fontSize: 12, fontWeight: 800, padding: '5px 12px', borderRadius: 20, border: `1px solid ${st.color}30`, whiteSpace: 'nowrap' }}>{st.label}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                        <span style={{ background: st.bg, color: st.color, fontSize: 12, fontWeight: 800, padding: '5px 12px', borderRadius: 20, border: `1px solid ${st.color}30`, whiteSpace: 'nowrap' }}>{st.label}</span>
+                        {canOpenTemplate && (
+                          <button
+                            onClick={() => setLocation(`/editor/${req.categoryId}/${req.templateId}`)}
+                            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg,#10b981,#059669)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 13, fontWeight: 800, padding: '7px 16px', borderRadius: 20, ...inp, boxShadow: '0 4px 12px rgba(16,185,129,0.35)', whiteSpace: 'nowrap' }}
+                          >
+                            <ExternalLink size={14} />
+                            افتح القالب
+                          </button>
+                        )}
+                      </div>
                     </div>
                   );
                 })}

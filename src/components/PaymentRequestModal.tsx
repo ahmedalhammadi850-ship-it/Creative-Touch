@@ -10,9 +10,11 @@ const COOLDOWN_MS = 60_000;
 interface PaymentRequestModalProps {
   onClose: () => void;
   templateName?: string;
+  categoryId?: string;
+  templateId?: string;
 }
 
-export function PaymentRequestModal({ onClose, templateName }: PaymentRequestModalProps) {
+export function PaymentRequestModal({ onClose, templateName, categoryId, templateId }: PaymentRequestModalProps) {
   const { addRequest } = useRequestStore();
   const { user } = useAuthStore();
 
@@ -84,6 +86,8 @@ export function PaymentRequestModal({ onClose, templateName }: PaymentRequestMod
         userPhone: 'غير مزود',
         userEmail: user?.email,
         templateName: templateName || 'غير محدد',
+        categoryId,
+        templateId,
         imageBase64,
         imageName: image.name,
       });

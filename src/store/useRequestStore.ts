@@ -12,6 +12,8 @@ export interface AppRequest {
   userPhone: string;
   userEmail?: string;
   templateName?: string;
+  categoryId?: string;
+  templateId?: string;
   plan?: string;
   planId?: string;
   imageBase64?: string;
