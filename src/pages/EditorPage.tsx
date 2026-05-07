@@ -128,9 +128,9 @@ export default function EditorPage() {
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <header className="bg-white border-b px-4 h-16 flex items-center justify-between shrink-0 shadow-sm z-20">
         <div className="flex items-center gap-3">
-          <Link href={`/category/${categoryId}`} className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-gray-100 transition-colors">
+          <button onClick={() => window.history.back()} className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-gray-100 transition-colors border-0 bg-transparent cursor-pointer">
             <ChevronRight className="w-5 h-5" />
-          </Link>
+          </button>
           <div>
             <h1 className="text-base font-bold hidden sm:block">{templateConfig.name}</h1>
             <span className="text-xs text-muted-foreground hidden sm:block">{category.name}</span>
