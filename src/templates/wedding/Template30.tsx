@@ -89,7 +89,7 @@ export default function Template30({ data }: { data: TemplateData }) {
 
         {/* Date block */}
         {data.phone && (
-          <div className="border py-1.5 px-5 mt-1" style={{ borderColor: data.colors.accent, borderOpacity: 0.6 }}>
+          <div className="border py-1.5 px-5 mt-1" style={{ borderColor: data.colors.accent }}>
             <p className="text-[13px] font-bold tracking-wider text-center" dir="ltr" style={{ color: data.colors.primary }}>{data.phone}</p>
           </div>
         )}

@@ -38,7 +38,7 @@ export default function Template28({ data }: { data: TemplateData }) {
 
       {/* Logo / Monogram area */}
       <div className="relative z-10 mt-8 flex items-center justify-center">
-        <div className="w-14 h-14 rounded-full border-2 flex items-center justify-center" style={{ borderColor: data.colors.primary, borderOpacity: 0.5 }}>
+        <div className="w-14 h-14 rounded-full border-2 flex items-center justify-center" style={{ borderColor: data.colors.primary }}>
           <span className="text-[20px] font-bold" style={{ color: data.colors.primary }}>
             {data.title?.charAt(0)}
           </span>

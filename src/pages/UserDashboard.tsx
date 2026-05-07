@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useLocation } from 'wouter';
-import { useAuthStore, isPlanActive, getTimeRemaining, getSelectedTemplatesCount } from '../store/useAuthStore';
+import { useAuthStore, isPlanActive, getTimeRemaining, getSelectedTemplatesCount, type User as AuthUser } from '../store/useAuthStore';
 import { useRequestStore } from '../store/useRequestStore';
 import { usePricingStore } from '../store/usePricingStore';
 import {
@@ -47,7 +47,7 @@ const REQUEST_STATUS: Record<string, { label: string; color: string; bg: string;
 
 type ActiveView = 'home' | 'explore' | 'requests';
 
-function SubscriptionStatusCard({ user }: { user: NonNullable<ReturnType<typeof useAuthStore>['user']> }) {
+function SubscriptionStatusCard({ user }: { user: AuthUser }) {
   const planColor = PLAN_COLORS[user.plan] || PLAN_COLORS.free;
   const timeLeft = getTimeRemaining(user);
   const active = isPlanActive(user);

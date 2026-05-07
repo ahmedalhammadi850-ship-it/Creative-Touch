@@ -8,7 +8,12 @@
     "pnpm": ">=9"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild", "protobufjs", "core-js", "@firebase/util"]
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "protobufjs",
+      "core-js",
+      "@firebase/util"
+    ]
   },
   "scripts": {
     "dev": "vite --config vite.config.ts --host 0.0.0.0",
@@ -79,6 +84,7 @@
     "zod": "^3.25.76"
   },
   "dependencies": {
+    "@types/lodash": "^4.17.24",
     "firebase": "^12.12.1",
     "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
