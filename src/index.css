@@ -96,6 +96,9 @@
   .nav-logo-icon         { width: 36px !important; height: 36px !important; border-radius: 10px !important; }
   .nav-btn-text          { display: none !important; }
   .nav-container         { padding: 0 14px !important; height: 56px !important; }
+  .nav-hamburger         { display: flex !important; }
+  .nav-guest-btns        { display: none !important; }
+  .nav-user-btn          { display: none !important; }
   .stats-card-inner      { padding: 28px 20px !important; }
   .cta-banner-inner      { padding: 36px 20px !important; }
   .section-heading-xl    { font-size: clamp(24px, 7vw, 38px) !important; }

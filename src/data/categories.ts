@@ -768,7 +768,7 @@ export const categories: Category[] = [
         defaultData: {
           title: "أفراح الراعيني", subtitle: "عبدالرحمن الرعيني", image: "",
           description: "بمناسبة الزفاف قالف الف مبروك",
-          phone: "تهانينا", email: "عمار ياسر المصطرف - صلاح حسن الحيمي", website: "إهداء",
+          phone: "تهانينا", email: "احمد ناصر - محمد هاشم", website: "إهداء",
           colors: { primary: "#c8a050", secondary: "#2a1a08", accent: "#f0d070", bg: "#3a2510" }
         }
       }

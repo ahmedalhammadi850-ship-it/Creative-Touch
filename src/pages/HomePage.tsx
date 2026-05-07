@@ -7,7 +7,8 @@ import { useRequestStore } from '../store/useRequestStore';
 import {
   Sparkles, Zap, Download, Palette, Star,
   LayoutTemplate, Users, Award, ChevronLeft, ArrowLeft, Check, Crown,
-  LogIn, UserPlus, LogOut, LayoutDashboard, X, Send, CheckCircle, ImageIcon
+  LogIn, UserPlus, LogOut, LayoutDashboard, X, Send, CheckCircle, ImageIcon,
+  Menu, Home
 } from 'lucide-react';
 
 const categoryIcons: Record<string, string> = {
@@ -211,6 +212,7 @@ export default function HomePage() {
   const { user, logout } = useAuthStore();
   const [subModal, setSubModal] = useState<{ name: string; id: string } | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   return (
     <div dir="rtl" style={{ fontFamily: "'Cairo', sans-serif", minHeight: '100vh', background: '#f8f7ff' }}>
@@ -222,12 +224,83 @@ export default function HomePage() {
         <div style={{ position: 'absolute', bottom: -100, right: 100, width: 450, height: 450, borderRadius: '50%', background: 'radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 70%)' }} />
       </div>
 
+      {/* ─── Mobile Sidebar Drawer ─── */}
+      {showMobileMenu && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex' }} dir="rtl">
+          {/* Overlay */}
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.55)', backdropFilter: 'blur(4px)' }} onClick={() => setShowMobileMenu(false)} />
+          {/* Drawer from right */}
+          <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: 270, background: 'linear-gradient(180deg,#1e1b4b,#0f172a)', display: 'flex', flexDirection: 'column', padding: '28px 20px', zIndex: 1, boxShadow: '-8px 0 40px rgba(0,0,0,0.3)' }}>
+            {/* Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 36 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <LayoutTemplate size={18} color="#fff" />
+                </div>
+                <span style={{ color: '#fff', fontSize: 14, fontWeight: 900 }}>ستوديو القوالب</span>
+              </div>
+              <button onClick={() => setShowMobileMenu(false)} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', cursor: 'pointer', borderRadius: '50%', width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                <X size={16} />
+              </button>
+            </div>
+            {/* Nav links */}
+            <nav style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
+              {[
+                { label: 'الصفحة الرئيسية', icon: Home, action: () => { setShowMobileMenu(false); window.scrollTo({ top: 0, behavior: 'smooth' }); } },
+                { label: 'الأسعار', icon: Crown, action: () => { setShowMobileMenu(false); setTimeout(() => document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' }), 100); } },
+                { label: 'من نحن', icon: Users, action: () => { setShowMobileMenu(false); setLocation('/about'); } },
+              ].map(({ label, icon: Icon, action }) => (
+                <button key={label} onClick={action}
+                  style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 16px', borderRadius: 14, border: 'none', cursor: 'pointer', background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.85)', fontSize: 15, fontWeight: 700, fontFamily: "'Cairo',sans-serif", textAlign: 'right', marginBottom: 4, transition: 'all 0.15s' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(99,102,241,0.25)')}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.06)')}>
+                  <Icon size={18} color="#a5b4fc" />
+                  {label}
+                </button>
+              ))}
+            </nav>
+            {/* Auth buttons */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {user ? (
+                <>
+                  <button onClick={() => { setShowMobileMenu(false); setLocation('/dashboard'); }}
+                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderRadius: 14, border: 'none', cursor: 'pointer', background: 'rgba(99,102,241,0.25)', color: '#a5b4fc', fontSize: 14, fontWeight: 800, fontFamily: "'Cairo',sans-serif" }}>
+                    <LayoutDashboard size={16} />لوحتي
+                  </button>
+                  <button onClick={() => { logout(); setShowMobileMenu(false); }}
+                    style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderRadius: 14, border: 'none', cursor: 'pointer', background: 'rgba(239,68,68,0.15)', color: '#fca5a5', fontSize: 14, fontWeight: 800, fontFamily: "'Cairo',sans-serif" }}>
+                    <LogOut size={16} />تسجيل الخروج
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button onClick={() => { setShowMobileMenu(false); setLocation('/login'); }}
+                    style={{ padding: '12px', borderRadius: 14, border: '2px solid rgba(255,255,255,0.15)', cursor: 'pointer', background: 'transparent', color: '#fff', fontSize: 14, fontWeight: 800, fontFamily: "'Cairo',sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                    <LogIn size={16} />دخول
+                  </button>
+                  <button onClick={() => { setShowMobileMenu(false); setLocation('/register'); }}
+                    style={{ padding: '12px', borderRadius: 14, border: 'none', cursor: 'pointer', background: 'linear-gradient(135deg,#6366f1,#a855f7)', color: '#fff', fontSize: 14, fontWeight: 800, fontFamily: "'Cairo',sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: '0 4px 14px rgba(99,102,241,0.4)' }}>
+                    <UserPlus size={16} />إنشاء حساب
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ─── NAVBAR ─── */}
       <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(99,102,241,0.1)', boxShadow: '0 1px 20px rgba(99,102,241,0.08)' }}>
         <div className="nav-container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
           {/* Right: actions */}
           <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            {/* Hamburger — mobile only */}
+            <button className="nav-hamburger" onClick={() => setShowMobileMenu(true)}
+              style={{ display: 'none', alignItems: 'center', justifyContent: 'center', width: 38, height: 38, borderRadius: 10, border: '1.5px solid #e2e8f0', background: '#fff', cursor: 'pointer', color: '#6366f1' }}>
+              <Menu size={20} />
+            </button>
+
             <button onClick={() => document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' })}
               className="nav-text-links"
               style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#6366f1', fontSize: 14, fontWeight: 700, padding: '9px 16px', borderRadius: 10 }}
@@ -243,7 +316,7 @@ export default function HomePage() {
 
             {user ? (
               /* Logged-in user */
-              <div style={{ position: 'relative' }}>
+              <div className="nav-user-btn" style={{ position: 'relative' }}>
                 <button onClick={() => setShowUserMenu(v => !v)}
                   style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#eef2ff', border: '2px solid #c7d2fe', cursor: 'pointer', borderRadius: 12, padding: '7px 12px', color: '#6366f1', fontSize: 13, fontWeight: 800 }}>
                   <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12, fontWeight: 900, flexShrink: 0 }}>
@@ -270,7 +343,7 @@ export default function HomePage() {
               </div>
             ) : (
               /* Guest */
-              <div style={{ display: 'flex', gap: 6 }}>
+              <div className="nav-guest-btns" style={{ display: 'flex', gap: 6 }}>
                 <button onClick={() => setLocation('/login')}
                   style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'transparent', border: '2px solid #c7d2fe', cursor: 'pointer', color: '#6366f1', fontSize: 13, fontWeight: 800, padding: '7px 13px', borderRadius: 12 }}>
                   <LogIn size={15} /><span className="nav-btn-text">دخول</span>
