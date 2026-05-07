@@ -67,25 +67,17 @@ function SubscriptionStatusCard({ user }: { user: NonNullable<ReturnType<typeof 
             <p style={{ color: '#94a3b8', fontSize: 12, margin: 0 }}>الخطة المجانية</p>
           </div>
         </div>
-
-        <div style={{ background: '#f8fafc', borderRadius: 14, padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', marginBottom: 14 }}>
+        <div style={{ background: '#f0fdf4', border: '1.5px solid #6ee7b7', borderRadius: 14, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+          <span style={{ fontSize: 28 }}>🪪</span>
           <div>
-            <p style={{ color: '#94a3b8', fontSize: 12, fontWeight: 600, margin: '0 0 4px' }}>القوالب المختارة</p>
-            <p style={{ color: '#1e1b4b', fontSize: 22, fontWeight: 900, margin: 0 }}>{selectedCount} <span style={{ fontSize: 14, color: '#94a3b8', fontWeight: 600 }}>/ {MAX_FREE_TEMPLATES}</span></p>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ width: 56, height: 56, borderRadius: '50%', border: `4px solid ${remaining === 0 ? '#fecaca' : remaining <= 2 ? '#fde68a' : '#c7d2fe'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', background: remaining === 0 ? '#fef2f2' : remaining <= 2 ? '#fef9ee' : '#eef2ff' }}>
-              <span style={{ fontSize: 16, fontWeight: 900, color: remaining === 0 ? '#dc2626' : remaining <= 2 ? '#d97706' : '#6366f1' }}>{remaining}</span>
-            </div>
-            <p style={{ color: '#94a3b8', fontSize: 10, fontWeight: 600, margin: '4px 0 0', textAlign: 'center' }}>متبقي</p>
+            <p style={{ color: '#065f46', fontSize: 13, fontWeight: 900, margin: '0 0 2px' }}>بطاقات الأعمال — مجانية بالكامل</p>
+            <p style={{ color: '#10b981', fontSize: 12, margin: 0, fontWeight: 600 }}>يمكنك تصفيح واستخدام جميع قوالب بطاقات الأعمال مجاناً</p>
           </div>
         </div>
-        {remaining === 0 && (
-          <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 12, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8, ...inp }}>
-            <AlertTriangle size={15} color="#dc2626" />
-            <span style={{ color: '#dc2626', fontSize: 12, fontWeight: 700 }}>لقد استنفدت حصتك المجانية — قم بالترقية للمزيد</span>
-          </div>
-        )}
+        <div style={{ background: '#fef9ee', border: '1px solid #fde68a', borderRadius: 12, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <Lock size={14} color="#d97706" />
+          <span style={{ color: '#92400e', fontSize: 12, fontWeight: 700 }}>باقي الأقسام (زفاف، تهنئة، إعلانات...) تتطلب اشتراكاً مدفوعاً</span>
+        </div>
       </div>
     );
   }
@@ -334,17 +326,13 @@ export default function UserDashboard() {
               )}
               {user.plan === 'free' && (
                 <div>
-                  <p style={{ color: '#94a3b8', fontSize: 13, margin: '0 0 12px', lineHeight: 1.7 }}>
-                    أنت على الخطة المجانية — يمكنك اختيار {MAX_FREE_TEMPLATES} قوالب فقط.
-                  </p>
-                  <div style={{ background: '#f8fafc', borderRadius: 12, padding: '10px 14px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                      <span style={{ color: '#94a3b8', fontSize: 12, fontWeight: 600 }}>القوالب المستخدمة</span>
-                      <span style={{ color: '#1e1b4b', fontSize: 12, fontWeight: 800 }}>{selectedCount}/{MAX_FREE_TEMPLATES}</span>
-                    </div>
-                    <div style={{ background: '#e2e8f0', borderRadius: 20, height: 6, overflow: 'hidden' }}>
-                      <div style={{ background: selectedCount >= MAX_FREE_TEMPLATES ? '#ef4444' : 'linear-gradient(90deg,#6366f1,#a855f7)', height: '100%', width: `${Math.min(100, (selectedCount / MAX_FREE_TEMPLATES) * 100)}%`, borderRadius: 20, transition: 'width 0.4s' }} />
-                    </div>
+                  <div style={{ background: '#f0fdf4', border: '1px solid #6ee7b7', borderRadius: 12, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                    <span style={{ fontSize: 18 }}>🪪</span>
+                    <span style={{ color: '#065f46', fontSize: 13, fontWeight: 700 }}>بطاقات الأعمال — مجانية بالكامل</span>
+                  </div>
+                  <div style={{ background: '#fef9ee', border: '1px solid #fde68a', borderRadius: 12, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 7 }}>
+                    <Lock size={13} color="#d97706" />
+                    <span style={{ color: '#92400e', fontSize: 12, fontWeight: 600 }}>باقي الأقسام تتطلب اشتراكاً مدفوعاً</span>
                   </div>
                 </div>
               )}
