@@ -1,9 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Upload, X, ImagePlus, Lock, Send, RotateCcw, Clock } from 'lucide-react';
+import { Upload, X, ImagePlus, Lock, Send, RotateCcw, Clock, RefreshCw, CheckCircle } from 'lucide-react';
 import type { TemplateData } from '../types/template';
 import { useAuthStore, isPlanActive } from '../store/useAuthStore';
 
@@ -205,16 +205,37 @@ export function InlineEditor({ categoryId, templateId, data, onChange, backCardM
   const isAds = categoryId === 'ads';
   const showFontSize = isMassWedding || isAds || isCongrats || isSpecialized || isWedding;
 
-  const { user } = useAuthStore();
+  const { user, refreshCurrentUser } = useAuthStore();
   const templateKey = templateId ? `${categoryId}/${templateId}` : '';
-  const hasPlanAccess = isPlanActive(user) && (user?.plan === 'weekly' || user?.plan === 'monthly');
-  const hasTemplateActivation = !!(user?.activatedTemplates?.includes(templateKey));
+  const hasPlanAccess = isPlanActive(user);
+  const hasTemplateActivation = !!(templateKey && user?.activatedTemplates?.includes(templateKey));
   const isUnlocked = isBusinessCard || hasPlanAccess || hasTemplateActivation;
 
   const planExpiresAt = user?.planExpiresAt ? new Date(user.planExpiresAt) : null;
   const daysLeft = planExpiresAt
     ? Math.ceil((planExpiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
     : null;
+
+  const [refreshing, setRefreshing] = useState(false);
+  const [justUnlocked, setJustUnlocked] = useState(false);
+  const prevUnlocked = useRef(isUnlocked);
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    useAuthStore.persist.rehydrate();
+    refreshCurrentUser();
+    await new Promise(r => setTimeout(r, 600));
+    setRefreshing(false);
+  }, [refreshCurrentUser]);
+
+  useEffect(() => {
+    if (!prevUnlocked.current && isUnlocked) {
+      setJustUnlocked(true);
+      const t = setTimeout(() => setJustUnlocked(false), 4000);
+      return () => clearTimeout(t);
+    }
+    prevUnlocked.current = isUnlocked;
+  }, [isUnlocked]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const multiImageInputRef = useRef<HTMLInputElement>(null);
@@ -579,52 +600,92 @@ export function InlineEditor({ categoryId, templateId, data, onChange, backCardM
             />
           )}
 
+          {/* ── SUCCESS BANNER — shown briefly when just unlocked ── */}
+          {justUnlocked && (
+            <div style={{
+              background: 'linear-gradient(135deg,#ecfdf5,#f0fdf4)',
+              border: '2px solid #6ee7b7',
+              borderRadius: 14, padding: '14px 16px',
+              display: 'flex', alignItems: 'center', gap: 10,
+              animation: 'fadeIn 0.4s ease',
+            }}>
+              <CheckCircle size={22} color="#059669" />
+              <div>
+                <p style={{ color: '#065f46', fontSize: 14, fontWeight: 900, margin: 0, fontFamily: "'Cairo',sans-serif" }}>
+                  تم فتح جميع الحقول!
+                </p>
+                <p style={{ color: '#059669', fontSize: 12, margin: 0, fontFamily: "'Cairo',sans-serif" }}>
+                  وافق الأدمن على طلبك — يمكنك الآن تخصيص القالب كاملاً
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* ── PAYMENT BANNER — only shown when locked ── */}
           {!isUnlocked && (
-            <div
-              onClick={onRequestPayment}
-              style={{
-                background: 'linear-gradient(135deg, #eef2ff, #fdf4ff)',
-                border: '2px solid #c7d2fe',
-                borderRadius: 14,
-                padding: '14px 16px',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                cursor: 'pointer', gap: 12,
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{
-                  width: 36, height: 36, borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                }}>
-                  <Lock size={16} color="#fff" />
-                </div>
-                <div>
-                  <p style={{ color: '#3730a3', fontSize: 13, fontWeight: 800, margin: 0, fontFamily: "'Cairo', sans-serif" }}>
-                    باقي الحقول تتطلب الدفع
-                  </p>
-                  <p style={{ color: '#6366f1', fontSize: 12, margin: 0, fontFamily: "'Cairo', sans-serif" }}>
-                    1000 ريال يمني ≈ 2$ • 7 قوالب
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={e => { e.stopPropagation(); onRequestPayment?.(); }}
+            <>
+              <div
+                onClick={onRequestPayment}
                 style={{
-                  display: 'flex', alignItems: 'center', gap: 5,
-                  background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-                  border: 'none', cursor: 'pointer',
-                  color: '#fff', fontSize: 12, fontWeight: 800,
-                  padding: '8px 14px', borderRadius: 9,
-                  fontFamily: "'Cairo', sans-serif",
-                  whiteSpace: 'nowrap', flexShrink: 0,
+                  background: 'linear-gradient(135deg, #eef2ff, #fdf4ff)',
+                  border: '2px solid #c7d2fe',
+                  borderRadius: 14,
+                  padding: '14px 16px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  cursor: 'pointer', gap: 12,
                 }}
               >
-                <Send size={12} />
-                فعّل الآن
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{
+                    width: 36, height: 36, borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                  }}>
+                    <Lock size={16} color="#fff" />
+                  </div>
+                  <div>
+                    <p style={{ color: '#3730a3', fontSize: 13, fontWeight: 800, margin: 0, fontFamily: "'Cairo', sans-serif" }}>
+                      باقي الحقول تتطلب الدفع
+                    </p>
+                    <p style={{ color: '#6366f1', fontSize: 12, margin: 0, fontFamily: "'Cairo', sans-serif" }}>
+                      1000 ريال يمني ≈ 2$ • 7 قوالب
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={e => { e.stopPropagation(); onRequestPayment?.(); }}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 5,
+                    background: 'linear-gradient(135deg, #6366f1, #a855f7)',
+                    border: 'none', cursor: 'pointer',
+                    color: '#fff', fontSize: 12, fontWeight: 800,
+                    padding: '8px 14px', borderRadius: 9,
+                    fontFamily: "'Cairo', sans-serif",
+                    whiteSpace: 'nowrap', flexShrink: 0,
+                  }}
+                >
+                  <Send size={12} />
+                  فعّل الآن
+                </button>
+              </div>
+
+              {/* Refresh status button */}
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                style={{
+                  width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+                  padding: '9px', borderRadius: 10,
+                  border: '1.5px dashed #cbd5e1', background: refreshing ? '#f1f5f9' : '#fff',
+                  cursor: refreshing ? 'wait' : 'pointer',
+                  color: '#64748b', fontSize: 12, fontWeight: 700,
+                  fontFamily: "'Cairo',sans-serif", transition: 'all 0.15s',
+                }}
+              >
+                <RefreshCw size={13} style={{ animation: refreshing ? 'spin 0.8s linear infinite' : 'none' }} />
+                {refreshing ? 'جاري التحقق...' : 'تحقق من حالة الموافقة'}
               </button>
-            </div>
+            </>
           )}
 
           {/* ── UNLOCKED FIELDS ── */}

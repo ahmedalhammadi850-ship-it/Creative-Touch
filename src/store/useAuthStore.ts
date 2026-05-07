@@ -21,6 +21,7 @@ interface AuthState {
   logout: () => void;
   updateUserPlan: (userId: string, plan: User['plan'], status: User['planStatus'], expiresAt?: string) => void;
   addActivatedTemplate: (userId: string, templateKey: string) => void;
+  refreshCurrentUser: () => void;
 }
 
 export function isPlanActive(user: User | null): boolean {
@@ -79,6 +80,13 @@ export const useAuthStore = create<AuthState>()(
               ? { ...state.user, activatedTemplates: [...new Set([...(state.user.activatedTemplates || []), templateKey])] }
               : state.user,
         }));
+      },
+
+      refreshCurrentUser: () => {
+        const { user, users } = get();
+        if (!user) return;
+        const fresh = users.find(u => u.id === user.id);
+        if (fresh) set({ user: { ...fresh } });
       },
     }),
     { name: 'auth-storage' }

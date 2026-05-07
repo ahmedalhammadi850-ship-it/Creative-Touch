@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRoute, Link } from 'wouter';
 import { categories } from '../data/categories';
 import { useTemplateStore } from '../store/useTemplateStore';
+import { useAuthStore } from '../store/useAuthStore';
 import { TemplateRenderer } from '../components/TemplateRenderer';
 import { InlineEditor } from '../components/InlineEditor';
 import { PaymentRequestModal } from '../components/PaymentRequestModal';
@@ -43,6 +44,7 @@ export default function EditorPage() {
   const [backStyleId, setBackStyleId] = useState('41');
   const [showPayment, setShowPayment] = useState(false);
 
+  const { refreshCurrentUser } = useAuthStore();
   const { setTemplate, templateData, updateData, resetData, duplicateTemplate } = useTemplateStore();
   const [verifyImg, setVerifyImg] = useState<string | null>(null);
   const { exportAsPdf, capturePreview } = useExport();
@@ -65,6 +67,17 @@ export default function EditorPage() {
       }
     }
   }, [categoryId, templateId, templateConfig, setTemplate, updateData]);
+
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'auth-storage') {
+        useAuthStore.persist.rehydrate();
+        refreshCurrentUser();
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, [refreshCurrentUser]);
 
   if (!category || !templateConfig || !categoryId || !templateId) {
     return <div className="p-20 text-center text-xl">القالب غير موجود</div>;
