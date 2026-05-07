@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useRoute, Link } from 'wouter';
+import { useRoute } from 'wouter';
 import { categories } from '../data/categories';
 import { useTemplateStore } from '../store/useTemplateStore';
 import { useAuthStore } from '../store/useAuthStore';
@@ -7,7 +7,7 @@ import { TemplateRenderer } from '../components/TemplateRenderer';
 import { InlineEditor } from '../components/InlineEditor';
 import { PaymentRequestModal } from '../components/PaymentRequestModal';
 import { Button } from '@/components/ui/button';
-import { Download, ChevronRight, RotateCcw, Copy, CreditCard, FlipHorizontal, Send, MoreVertical, Image } from 'lucide-react';
+import { Download, ChevronRight, RotateCcw, Copy, CreditCard, FlipHorizontal, Send, MoreVertical } from 'lucide-react';
 import { useExport } from '../hooks/useExport';
 import { useToast } from '@/hooks/use-toast';
 import type { TemplateData } from '../types/template';
@@ -50,7 +50,7 @@ export default function EditorPage() {
   const { setTemplate, templateData, updateData, resetData, duplicateTemplate } = useTemplateStore();
   const [verifyImg, setVerifyImg] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
-  const { exportAsPdf, exportAsPng, capturePreview, isMobileDevice, isIOSDevice } = useExport();
+  const { exportAsPdf, capturePreview, isMobileDevice, isIOSDevice } = useExport();
 
   const isBusinessCard = categoryId === 'business-card';
   const isFrontCard = isBusinessCard && !BACK_CARD_IDS.includes(templateId || '');
@@ -82,7 +82,6 @@ export default function EditorPage() {
     return () => window.removeEventListener('storage', handleStorage);
   }, [refreshCurrentUser]);
 
-  // Close more menu on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) {
@@ -119,33 +118,26 @@ export default function EditorPage() {
   const handleExportPdf = async () => {
     if (exporting) return;
     setExporting(true);
-    toast({ title: 'جاري التصدير...', description: 'يرجى الانتظار بينما يتم تحضير الملف.' });
+    toast({ title: 'جاري تحضير الملف...', description: 'يرجى الانتظار، قد يستغرق بضع ثوانٍ.' });
     const result = await exportAsPdf();
     setExporting(false);
     if (!result.ok) {
-      toast({ title: 'فشل التصدير', description: 'حدث خطأ أثناء التصدير. جرّب تحميل الصورة بدلاً من ذلك.', variant: 'destructive' });
+      toast({
+        title: 'فشل التصدير',
+        description: 'حدث خطأ أثناء التصدير، يرجى المحاولة مجدداً.',
+        variant: 'destructive',
+      });
     } else if (isIOSDevice) {
-      toast({ title: '✓ تم فتح الملف', description: 'اضغط على زر المشاركة ← "حفظ في الملفات" لحفظ الـ PDF.' });
+      toast({ title: '✓ تم', description: 'سيفتح الـ PDF — اضغط المشاركة ثم "حفظ في الملفات".' });
     } else if (isMobileDevice) {
-      toast({ title: '✓ جاهز', description: 'تحقق من مجلد التنزيلات.' });
-    }
-  };
-
-  const handleExportPng = async () => {
-    if (exporting) return;
-    setExporting(true);
-    toast({ title: 'جاري تحميل الصورة...', description: 'يرجى الانتظار.' });
-    const result = await exportAsPng();
-    setExporting(false);
-    if (!result.ok) {
-      toast({ title: 'فشل التحميل', description: 'حدث خطأ أثناء تحميل الصورة.', variant: 'destructive' });
+      toast({ title: '✓ تم التحميل', description: 'تحقق من مجلد التنزيلات.' });
     } else {
-      toast({ title: '✓ تم', description: 'تم تحميل الصورة بنجاح.' });
+      toast({ title: '✓ تم التصدير', description: 'تم تحميل ملف الـ PDF بنجاح.' });
     }
   };
 
   const handleVerify = async () => {
-    toast({ title: 'جاري الالتقاط...', description: 'يتم تصوير القالب كما سيظهر في الـ PDF' });
+    toast({ title: 'جاري الالتقاط...', description: 'يتم تصوير القالب كما سيظهر في الـ PDF.' });
     const dataUrl = await capturePreview();
     if (dataUrl) setVerifyImg(dataUrl);
   };
@@ -173,6 +165,7 @@ export default function EditorPage() {
 
       {/* ─── Header ─── */}
       <header className="bg-white border-b px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between shrink-0 shadow-sm z-20">
+
         {/* Back + title */}
         <div className="flex items-center gap-2 min-w-0">
           <button
@@ -190,15 +183,15 @@ export default function EditorPage() {
         {/* Actions */}
         <div className="flex items-center gap-1.5">
 
-          {/* PDF export — always visible */}
+          {/* PDF export — always visible on all screen sizes */}
           <Button
             onClick={handleExportPdf}
             disabled={exporting}
             size="sm"
-            className="bg-primary hover:bg-primary/90 text-white shadow-md h-8 sm:h-9 px-2.5 sm:px-3 text-xs sm:text-sm disabled:opacity-60"
+            className="bg-primary hover:bg-primary/90 text-white shadow-md h-8 sm:h-9 px-3 sm:px-4 text-xs sm:text-sm disabled:opacity-60 gap-1.5"
           >
-            <Download className="w-3.5 h-3.5 sm:ml-1.5" />
-            <span className="hidden sm:inline">{exporting ? 'جاري...' : 'تصدير PDF'}</span>
+            <Download className="w-3.5 h-3.5 shrink-0" />
+            <span>{exporting ? 'جاري...' : 'PDF'}</span>
           </Button>
 
           {/* Request activation — always visible */}
@@ -220,24 +213,12 @@ export default function EditorPage() {
               <MoreVertical className="w-4 h-4 text-gray-600" />
             </button>
             {showMoreMenu && (
-              <div className="absolute left-0 top-10 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 min-w-[190px] z-50" dir="rtl">
-
-                {/* PNG download — mobile-first alternative to PDF */}
-                <button
-                  onClick={() => { handleExportPng(); setShowMoreMenu(false); }}
-                  disabled={exporting}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-emerald-700 hover:bg-emerald-50 transition-colors disabled:opacity-50"
-                >
-                  <Image className="w-4 h-4" /> تحميل كصورة PNG
-                </button>
-
-                <div className="my-1 border-t border-gray-100" />
-
+              <div className="absolute left-0 top-10 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 min-w-[180px] z-50" dir="rtl">
                 <button
                   onClick={() => { handleVerify(); setShowMoreMenu(false); }}
                   className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors"
                 >
-                  <span className="text-base">🔍</span> تحقق من المعاينة
+                  <span className="text-base">🔍</span> معاينة التصدير
                 </button>
                 {(!isFrontCard || cardSide === 'front') && (
                   <button
@@ -259,9 +240,6 @@ export default function EditorPage() {
 
           {/* Desktop-only secondary actions */}
           <div className="hidden sm:flex items-center gap-1.5">
-            <Button variant="outline" size="sm" onClick={handleExportPng} disabled={exporting} className="border-emerald-500 text-emerald-700 hover:bg-emerald-50">
-              <Image className="w-4 h-4 ml-1.5" /> PNG
-            </Button>
             {(!isFrontCard || cardSide === 'front') && (
               <Button variant="outline" size="sm" onClick={handleDuplicate}>
                 <Copy className="w-4 h-4 ml-1.5" /> تكرار
@@ -321,8 +299,10 @@ export default function EditorPage() {
       <div className="flex flex-1 overflow-hidden flex-col md:flex-row">
 
         {/* Preview area */}
-        <main className="bg-[#e5e7eb] flex flex-col items-center justify-start md:justify-center p-4 sm:p-6 relative md:flex-1 md:overflow-auto"
-          style={{ minHeight: 0 }}>
+        <main
+          className="bg-[#e5e7eb] flex flex-col items-center justify-start md:justify-center p-4 sm:p-6 relative md:flex-1 md:overflow-auto"
+          style={{ minHeight: 0 }}
+        >
           <div
             className="absolute inset-0 pointer-events-none"
             style={{ backgroundSize: '20px 20px', backgroundImage: 'radial-gradient(#d1d5db 1px, transparent 1px)' }}
@@ -352,7 +332,7 @@ export default function EditorPage() {
             </div>
           )}
 
-          {/* Card preview — scaled to fit on mobile */}
+          {/* Template preview — scaled to fit on mobile */}
           <div className="relative shadow-2xl transition-all duration-300 editor-template-preview">
             <TemplateRenderer
               categoryId={categoryId}
@@ -389,8 +369,10 @@ export default function EditorPage() {
         </main>
 
         {/* Editor panel */}
-        <aside className="w-full md:w-80 lg:w-96 bg-white border-t md:border-t-0 md:border-r shrink-0 overflow-y-auto shadow-inner md:shadow-[-4px_0_15px_rgba(0,0,0,0.05)] z-10"
-          style={{ maxHeight: 'calc(100vh - 56px)' }}>
+        <aside
+          className="w-full md:w-80 lg:w-96 bg-white border-t md:border-t-0 md:border-r shrink-0 overflow-y-auto shadow-inner md:shadow-[-4px_0_15px_rgba(0,0,0,0.05)] z-10"
+          style={{ maxHeight: 'calc(100vh - 56px)' }}
+        >
           <div className="p-4 sm:p-6">
             {isFrontCard && cardSide === 'back' ? (
               <InlineEditor
