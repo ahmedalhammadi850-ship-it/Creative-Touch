@@ -6,7 +6,7 @@ import { usePricingStore } from '../store/usePricingStore';
 import {
   LayoutTemplate, LogOut, Crown, Clock, CheckCircle, XCircle,
   User, Zap, Star, ChevronLeft, Bell, RefreshCw, ExternalLink,
-  AlertTriangle, CalendarClock, ShieldCheck
+  AlertTriangle, CalendarClock, ShieldCheck, Lock as LockIcon
 } from 'lucide-react';
 
 const MAX_FREE_TEMPLATES = 7;
@@ -75,7 +75,7 @@ function SubscriptionStatusCard({ user }: { user: NonNullable<ReturnType<typeof 
           </div>
         </div>
         <div style={{ background: '#fef9ee', border: '1px solid #fde68a', borderRadius: 12, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Lock size={14} color="#d97706" />
+          <LockIcon size={14} color="#d97706" />
           <span style={{ color: '#92400e', fontSize: 12, fontWeight: 700 }}>باقي الأقسام (زفاف، تهنئة، إعلانات...) تتطلب اشتراكاً مدفوعاً</span>
         </div>
       </div>
@@ -331,7 +331,7 @@ export default function UserDashboard() {
                     <span style={{ color: '#065f46', fontSize: 13, fontWeight: 700 }}>بطاقات الأعمال — مجانية بالكامل</span>
                   </div>
                   <div style={{ background: '#fef9ee', border: '1px solid #fde68a', borderRadius: 12, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 7 }}>
-                    <Lock size={13} color="#d97706" />
+                    <LockIcon size={13} color="#d97706" />
                     <span style={{ color: '#92400e', fontSize: 12, fontWeight: 600 }}>باقي الأقسام تتطلب اشتراكاً مدفوعاً</span>
                   </div>
                 </div>

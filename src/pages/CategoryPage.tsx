@@ -2,7 +2,7 @@ import { useRoute, useLocation } from 'wouter';
 import { categories } from '../data/categories';
 import { TemplateRenderer } from '../components/TemplateRenderer';
 import { useAuthStore, isPlanActive, getSelectedTemplatesCount } from '../store/useAuthStore';
-import { ChevronRight, Lock, Zap, LayoutTemplate, ShieldCheck } from 'lucide-react';
+import { ChevronRight, Lock as LockIcon, Zap, LayoutTemplate, ShieldCheck } from 'lucide-react';
 
 const FREE_CATEGORY = 'business-card';
 const MAX_STARTER_TEMPLATES = 7;
@@ -132,7 +132,7 @@ export default function CategoryPage() {
         <div style={{ maxWidth: 600, margin: '80px auto', padding: '0 24px', textAlign: 'center' }}>
           <div style={{ background: '#fff', borderRadius: 24, padding: '48px 40px', boxShadow: '0 8px 40px rgba(0,0,0,0.08)', border: '1.5px solid #e2e8f0' }}>
             <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(135deg,#fef2f2,#fee2e2)', border: '3px solid #fecaca', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-              <Lock size={36} color="#dc2626" />
+              <LockIcon size={36} color="#dc2626" />
             </div>
             <h2 style={{ color: '#1e1b4b', fontSize: 22, fontWeight: 900, margin: '0 0 12px' }}>هذا القسم يتطلب اشتراكاً</h2>
             <p style={{ color: '#64748b', fontSize: 15, margin: '0 0 8px', lineHeight: 1.7 }}>
@@ -163,7 +163,7 @@ export default function CategoryPage() {
             <div style={{ background: 'linear-gradient(135deg,#fef2f2,#fff5f5)', borderBottom: '1px solid #fecaca', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fee2e2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Lock size={16} color="#dc2626" />
+                  <LockIcon size={16} color="#dc2626" />
                 </div>
                 <div>
                   <p style={{ color: '#991b1b', fontSize: 14, fontWeight: 900, margin: 0 }}>استنفدت قوالبك السبعة</p>
@@ -209,7 +209,7 @@ export default function CategoryPage() {
                       {locked && (
                         <div style={{ position: 'absolute', inset: 0, background: 'rgba(254,242,242,0.88)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                           <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#fecaca', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <Lock size={20} color="#dc2626" />
+                            <LockIcon size={20} color="#dc2626" />
                           </div>
                           <span style={{ color: '#dc2626', fontSize: 12, fontWeight: 800, fontFamily: "'Cairo',sans-serif", textAlign: 'center', padding: '0 12px' }}>
                             جدّد الباقة
@@ -226,7 +226,7 @@ export default function CategoryPage() {
 
                     <div style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                       <p style={{ color: '#1e1b4b', fontSize: 14, fontWeight: 800, margin: 0 }}>{template.name}</p>
-                      {locked && <div style={{ background: '#fee2e2', borderRadius: 8, padding: '3px 8px' }}><Lock size={12} color="#dc2626" /></div>}
+                      {locked && <div style={{ background: '#fee2e2', borderRadius: 8, padding: '3px 8px' }}><LockIcon size={12} color="#dc2626" /></div>}
                     </div>
                   </div>
                 );
