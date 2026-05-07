@@ -7,7 +7,7 @@ import { TemplateRenderer } from '../components/TemplateRenderer';
 import { InlineEditor } from '../components/InlineEditor';
 import { PaymentRequestModal } from '../components/PaymentRequestModal';
 import { Button } from '@/components/ui/button';
-import { Download, ChevronRight, RotateCcw, Copy, CreditCard, FlipHorizontal, Send } from 'lucide-react';
+import { Download, ChevronRight, RotateCcw, Copy, CreditCard, FlipHorizontal, Send, MoreVertical, X } from 'lucide-react';
 import { useExport } from '../hooks/useExport';
 import { useToast } from '@/hooks/use-toast';
 import type { TemplateData } from '../types/template';
@@ -43,6 +43,8 @@ export default function EditorPage() {
   const [cardSide, setCardSide] = useState<'front' | 'back'>('front');
   const [backStyleId, setBackStyleId] = useState('41');
   const [showPayment, setShowPayment] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
 
   const { refreshCurrentUser } = useAuthStore();
   const { setTemplate, templateData, updateData, resetData, duplicateTemplate } = useTemplateStore();
@@ -79,16 +81,24 @@ export default function EditorPage() {
     return () => window.removeEventListener('storage', handleStorage);
   }, [refreshCurrentUser]);
 
+  // Close more menu on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) {
+        setShowMoreMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
   if (!category || !templateConfig || !categoryId || !templateId) {
     return <div className="p-20 text-center text-xl">القالب غير موجود</div>;
   }
 
   const frontData = templateData[frontKey] || templateConfig.defaultData;
-
-  // Initialize back data lazily from front card's colors if not yet set
   const storedBackData = templateData[backKey];
   const backData: TemplateData = storedBackData ?? getDefaultBackData(frontData);
-
   const activeData = (isFrontCard && cardSide === 'back') ? backData : frontData;
   const displayTemplateId = (isFrontCard && cardSide === 'back') ? backStyleId : templateId;
 
@@ -116,74 +126,118 @@ export default function EditorPage() {
     if (dataUrl) setVerifyImg(dataUrl);
   };
 
-  const handleResetBack = () => {
-    const defaultBack = getDefaultBackData(frontData);
-    useTemplateStore.setState((state) => ({
-      templateData: { ...state.templateData, [backKey]: defaultBack },
-    }));
-    toast({ title: 'تم إعادة التعيين', description: 'تم إرجاع الوجه الخلفي للحالة الافتراضية.' });
+  const handleResetCurrent = () => {
+    if (isFrontCard && cardSide === 'back') {
+      const defaultBack = getDefaultBackData(frontData);
+      useTemplateStore.setState((state) => ({
+        templateData: { ...state.templateData, [backKey]: defaultBack },
+      }));
+      toast({ title: 'تم إعادة التعيين', description: 'تم إرجاع الوجه الخلفي للحالة الافتراضية.' });
+    } else {
+      resetData(categoryId, templateId, templateConfig.defaultData);
+      toast({ title: 'تم إعادة التعيين', description: 'تم إرجاع القالب للحالة الافتراضية.' });
+    }
+  };
+
+  const handleDuplicate = () => {
+    duplicateTemplate(categoryId, templateId);
+    toast({ title: 'تم التكرار', description: 'تم إنشاء نسخة من القالب.' });
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <header className="bg-white border-b px-4 h-16 flex items-center justify-between shrink-0 shadow-sm z-20">
-        <div className="flex items-center gap-3">
-          <button onClick={() => window.history.back()} className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-gray-100 transition-colors border-0 bg-transparent cursor-pointer">
+
+      {/* ─── Header ─── */}
+      <header className="bg-white border-b px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between shrink-0 shadow-sm z-20">
+        {/* Back + title */}
+        <div className="flex items-center gap-2 min-w-0">
+          <button
+            onClick={() => window.history.back()}
+            className="text-muted-foreground hover:text-foreground p-1.5 rounded-full hover:bg-gray-100 transition-colors border-0 bg-transparent cursor-pointer shrink-0"
+          >
             <ChevronRight className="w-5 h-5" />
           </button>
-          <div>
-            <h1 className="text-base font-bold hidden sm:block">{templateConfig.name}</h1>
-            <span className="text-xs text-muted-foreground hidden sm:block">{category.name}</span>
+          <div className="min-w-0 hidden sm:block">
+            <h1 className="text-sm font-bold truncate">{templateConfig.name}</h1>
+            <span className="text-xs text-muted-foreground">{category.name}</span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {(!isFrontCard || cardSide === 'front') && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => {
-                duplicateTemplate(categoryId, templateId);
-                toast({ title: 'تم التكرار', description: 'تم إنشاء نسخة من القالب.' });
-              }}
-              className="hidden sm:flex"
-            >
-              <Copy className="w-4 h-4 ml-2" />
-              تكرار
-            </Button>
-          )}
+        {/* Actions */}
+        <div className="flex items-center gap-1.5">
+
+          {/* PDF export — always visible */}
           <Button
-            variant="outline"
+            onClick={handleExport}
             size="sm"
-            onClick={() => {
-              if (isFrontCard && cardSide === 'back') {
-                handleResetBack();
-              } else {
-                resetData(categoryId, templateId, templateConfig.defaultData);
-                toast({ title: 'تم إعادة التعيين', description: 'تم إرجاع القالب للحالة الافتراضية.' });
-              }
-            }}
+            className="bg-primary hover:bg-primary/90 text-white shadow-md h-8 sm:h-9 px-2.5 sm:px-3 text-xs sm:text-sm"
           >
-            <RotateCcw className="w-4 h-4 ml-2" />
-            إعادة تعيين
+            <Download className="w-3.5 h-3.5 sm:ml-1.5" />
+            <span className="hidden sm:inline">تصدير PDF</span>
           </Button>
+
+          {/* Request activation — always visible */}
           <Button
             onClick={() => setShowPayment(true)}
-            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-md"
+            size="sm"
+            className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-md h-8 sm:h-9 px-2.5 sm:px-3 text-xs sm:text-sm"
           >
-            <Send className="w-4 h-4 ml-2" />
-            طلب تفعيل
+            <Send className="w-3.5 h-3.5 sm:ml-1.5" />
+            <span className="hidden sm:inline">طلب تفعيل</span>
           </Button>
-          <Button onClick={handleVerify} variant="outline" size="sm" className="border-green-500 text-green-700 hover:bg-green-50">
-            🔍 تحقق
-          </Button>
-          <Button onClick={handleExport} className="bg-primary hover:bg-primary/90 text-white shadow-md">
-            <Download className="w-4 h-4 ml-2" />
-            تصدير PDF
-          </Button>
+
+          {/* More menu — mobile only */}
+          <div className="relative sm:hidden" ref={moreMenuRef}>
+            <button
+              onClick={() => setShowMoreMenu(v => !v)}
+              className="flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 transition-colors border border-gray-200"
+            >
+              <MoreVertical className="w-4 h-4 text-gray-600" />
+            </button>
+            {showMoreMenu && (
+              <div className="absolute left-0 top-10 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 min-w-[170px] z-50" dir="rtl">
+                <button
+                  onClick={() => { handleVerify(); setShowMoreMenu(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  <span className="text-base">🔍</span> تحقق من المعاينة
+                </button>
+                {(!isFrontCard || cardSide === 'front') && (
+                  <button
+                    onClick={() => { handleDuplicate(); setShowMoreMenu(false); }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    <Copy className="w-4 h-4 text-indigo-500" /> تكرار القالب
+                  </button>
+                )}
+                <button
+                  onClick={() => { handleResetCurrent(); setShowMoreMenu(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 transition-colors"
+                >
+                  <RotateCcw className="w-4 h-4" /> إعادة تعيين
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Desktop-only secondary actions */}
+          <div className="hidden sm:flex items-center gap-1.5">
+            {(!isFrontCard || cardSide === 'front') && (
+              <Button variant="outline" size="sm" onClick={handleDuplicate}>
+                <Copy className="w-4 h-4 ml-1.5" /> تكرار
+              </Button>
+            )}
+            <Button variant="outline" size="sm" onClick={handleResetCurrent}>
+              <RotateCcw className="w-4 h-4 ml-1.5" /> إعادة تعيين
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleVerify} className="border-green-500 text-green-700 hover:bg-green-50">
+              🔍 تحقق
+            </Button>
+          </div>
         </div>
       </header>
 
+      {/* ─── Verify modal ─── */}
       {verifyImg && (
         <div
           className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
@@ -191,28 +245,29 @@ export default function EditorPage() {
         >
           <div className="bg-white rounded-xl p-4 max-w-5xl w-full" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-3">
-              <h2 className="font-bold text-lg">مقارنة: المعاينة ← الصورة المُصدَّرة في الـ PDF</h2>
+              <h2 className="font-bold text-sm sm:text-lg">مقارنة: المعاينة ← الصورة المُصدَّرة</h2>
               <button onClick={() => setVerifyImg(null)} className="text-gray-400 hover:text-gray-700 text-xl font-bold">✕</button>
             </div>
-            <div className="flex gap-6 items-start justify-center flex-wrap">
+            <div className="flex gap-4 sm:gap-6 items-start justify-center flex-wrap">
               <div className="text-center">
-                <p className="text-sm font-bold text-blue-600 mb-2">📱 المعاينة على الشاشة</p>
+                <p className="text-xs sm:text-sm font-bold text-blue-600 mb-2">📱 المعاينة على الشاشة</p>
                 <div className="border-2 border-blue-300 rounded inline-block">
                   <TemplateRenderer categoryId={categoryId} templateId={displayTemplateId} data={activeData} />
                 </div>
               </div>
               <div className="text-center">
-                <p className="text-sm font-bold text-green-600 mb-2">📄 الصورة المُلتقطة للـ PDF</p>
+                <p className="text-xs sm:text-sm font-bold text-green-600 mb-2">📄 الصورة المُلتقطة للـ PDF</p>
                 <div className="border-2 border-green-300 rounded inline-block">
                   <img src={verifyImg} alt="captured" style={{ display: 'block', maxWidth: '100%' }} />
                 </div>
               </div>
             </div>
-            <p className="text-center text-sm text-gray-500 mt-3">الصورتان يجب أن تكونا متطابقتان تماماً — انقر خارج النافذة للإغلاق</p>
+            <p className="text-center text-xs text-gray-500 mt-3">انقر خارج النافذة للإغلاق</p>
           </div>
         </div>
       )}
 
+      {/* ─── Payment modal ─── */}
       {showPayment && (
         <PaymentRequestModal
           templateName={templateConfig.name}
@@ -222,8 +277,12 @@ export default function EditorPage() {
         />
       )}
 
+      {/* ─── Main content ─── */}
       <div className="flex flex-1 overflow-hidden flex-col md:flex-row">
-        <main className="flex-1 overflow-auto bg-[#e5e7eb] flex flex-col items-center justify-center p-4 sm:p-8 relative">
+
+        {/* Preview area */}
+        <main className="bg-[#e5e7eb] flex flex-col items-center justify-start md:justify-center p-4 sm:p-6 relative md:flex-1 md:overflow-auto"
+          style={{ minHeight: 0 }}>
           <div
             className="absolute inset-0 pointer-events-none"
             style={{ backgroundSize: '20px 20px', backgroundImage: 'radial-gradient(#d1d5db 1px, transparent 1px)' }}
@@ -231,30 +290,30 @@ export default function EditorPage() {
 
           {/* Front / Back toggle */}
           {isFrontCard && (
-            <div className="relative z-10 mb-5 flex items-center bg-white rounded-full shadow-md p-1 gap-1">
+            <div className="relative z-10 mb-4 flex items-center bg-white rounded-full shadow-md p-1 gap-1">
               <button
                 onClick={() => setCardSide('front')}
-                className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-200 ${
+                className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 ${
                   cardSide === 'front' ? 'bg-primary text-white shadow' : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                <CreditCard className="w-3.5 h-3.5" />
+                <CreditCard className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 الوجه الأمامي
               </button>
               <button
                 onClick={() => setCardSide('back')}
-                className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold transition-all duration-200 ${
+                className={`flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 ${
                   cardSide === 'back' ? 'bg-primary text-white shadow' : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                <FlipHorizontal className="w-3.5 h-3.5" />
+                <FlipHorizontal className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 الوجه الخلفي
               </button>
             </div>
           )}
 
-          {/* Card preview */}
-          <div className="relative shadow-2xl transition-all duration-300">
+          {/* Card preview — scaled to fit on mobile */}
+          <div className="relative shadow-2xl transition-all duration-300 editor-template-preview">
             <TemplateRenderer
               categoryId={categoryId}
               templateId={displayTemplateId}
@@ -264,13 +323,13 @@ export default function EditorPage() {
 
           {/* Back style selector */}
           {isFrontCard && cardSide === 'back' && (
-            <div className="relative z-10 mt-5 flex items-center gap-2">
+            <div className="relative z-10 mt-4 flex items-center gap-1.5 flex-wrap justify-center">
               <span className="text-xs text-gray-400 font-medium ml-1">تصميم الخلف:</span>
               {BACK_STYLES.map((s) => (
                 <button
                   key={s.id}
                   onClick={() => setBackStyleId(s.id)}
-                  className={`px-3 py-1 rounded-full text-xs font-bold border transition-all duration-150 ${
+                  className={`px-2.5 sm:px-3 py-1 rounded-full text-xs font-bold border transition-all duration-150 ${
                     backStyleId === s.id
                       ? 'bg-primary text-white border-primary shadow'
                       : 'bg-white text-gray-600 border-gray-200 hover:border-primary hover:text-primary'
@@ -283,15 +342,16 @@ export default function EditorPage() {
           )}
 
           {isFrontCard && (
-            <p className="relative z-10 mt-3 text-xs text-gray-400 font-medium">
+            <p className="relative z-10 mt-2 text-xs text-gray-400 font-medium">
               {cardSide === 'front' ? 'الوجه الأمامي للبطاقة' : 'الوجه الخلفي — بيانات مستقلة'}
             </p>
           )}
         </main>
 
-        {/* Side panel — shows independent editor per side */}
-        <aside className="w-full md:w-80 lg:w-96 bg-white border-r shrink-0 overflow-y-auto shadow-[-4px_0_15px_rgba(0,0,0,0.05)] z-10">
-          <div className="p-6">
+        {/* Editor panel */}
+        <aside className="w-full md:w-80 lg:w-96 bg-white border-t md:border-t-0 md:border-r shrink-0 overflow-y-auto shadow-inner md:shadow-[-4px_0_15px_rgba(0,0,0,0.05)] z-10"
+          style={{ maxHeight: 'calc(100vh - 56px)' }}>
+          <div className="p-4 sm:p-6">
             {isFrontCard && cardSide === 'back' ? (
               <InlineEditor
                 categoryId={categoryId}

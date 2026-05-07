@@ -127,9 +127,40 @@
   }
 }
 
-/* ── EditorPage header responsive ───────────────────────── */
+/* ── EditorPage responsive ───────────────────────────────── */
+
+/* Scale down the template preview on small screens */
+.editor-template-preview {
+  transform-origin: top center;
+}
+
 @media (max-width: 640px) {
   .editor-btn-label {
     display: none !important;
+  }
+
+  /* Scale template preview to fit within mobile screen width */
+  .editor-template-preview {
+    transform: scale(0.72);
+    margin-bottom: -60px; /* compensate for scale gap */
+  }
+
+  /* Limit preview area height on mobile so editor panel is accessible */
+  .editor-preview-area {
+    max-height: 52vh;
+    overflow: hidden;
+  }
+
+  /* Editor aside fills remaining space */
+  .editor-aside {
+    flex: 1;
+    min-height: 300px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 900px) {
+  .editor-template-preview {
+    transform: scale(0.85);
+    margin-bottom: -40px;
   }
 }
