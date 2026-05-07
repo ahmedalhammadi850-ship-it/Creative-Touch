@@ -91,17 +91,21 @@
 
 /* ── HomePage responsive ────────────────────────────────── */
 @media (max-width: 640px) {
-  .nav-text-links      { display: none !important; }
-  .stats-card-inner    { padding: 28px 20px !important; }
-  .cta-banner-inner    { padding: 36px 20px !important; }
-  .section-heading-xl  { font-size: clamp(24px, 7vw, 38px) !important; }
-  .hero-section        { padding-top: 60px !important; padding-bottom: 56px !important; }
-  .pricing-card-inner  { padding: 30px 22px !important; }
-  .category-grid       { grid-template-columns: 1fr !important; }
-  .hero-buttons        { flex-direction: column !important; align-items: stretch !important; }
-  .hero-buttons button { width: 100% !important; justify-content: center !important; }
-  .cta-banner-inner h2 { font-size: 22px !important; }
-  .cta-banner-inner p  { font-size: 14px !important; }
+  .nav-text-links        { display: none !important; }
+  .nav-logo-text         { display: none !important; }
+  .nav-logo-icon         { width: 36px !important; height: 36px !important; border-radius: 10px !important; }
+  .nav-btn-text          { display: none !important; }
+  .nav-container         { padding: 0 14px !important; height: 56px !important; }
+  .stats-card-inner      { padding: 28px 20px !important; }
+  .cta-banner-inner      { padding: 36px 20px !important; }
+  .section-heading-xl    { font-size: clamp(24px, 7vw, 38px) !important; }
+  .hero-section          { padding-top: 60px !important; padding-bottom: 56px !important; }
+  .pricing-card-inner    { padding: 30px 22px !important; }
+  .category-grid         { grid-template-columns: 1fr !important; }
+  .hero-buttons          { flex-direction: column !important; align-items: stretch !important; }
+  .hero-buttons button   { width: 100% !important; justify-content: center !important; }
+  .cta-banner-inner h2   { font-size: 22px !important; }
+  .cta-banner-inner p    { font-size: 14px !important; }
 }
 
 @media (min-width: 641px) and (max-width: 900px) {

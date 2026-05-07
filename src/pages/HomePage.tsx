@@ -224,10 +224,10 @@ export default function HomePage() {
 
       {/* ─── NAVBAR ─── */}
       <nav style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(99,102,241,0.1)', boxShadow: '0 1px 20px rgba(99,102,241,0.08)' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="nav-container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
           {/* Right: actions */}
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
             <button onClick={() => document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' })}
               className="nav-text-links"
               style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#6366f1', fontSize: 14, fontWeight: 700, padding: '9px 16px', borderRadius: 10 }}
@@ -245,11 +245,11 @@ export default function HomePage() {
               /* Logged-in user */
               <div style={{ position: 'relative' }}>
                 <button onClick={() => setShowUserMenu(v => !v)}
-                  style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#eef2ff', border: '2px solid #c7d2fe', cursor: 'pointer', borderRadius: 12, padding: '7px 14px', color: '#6366f1', fontSize: 13, fontWeight: 800 }}>
-                  <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12, fontWeight: 900 }}>
+                  style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#eef2ff', border: '2px solid #c7d2fe', cursor: 'pointer', borderRadius: 12, padding: '7px 12px', color: '#6366f1', fontSize: 13, fontWeight: 800 }}>
+                  <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12, fontWeight: 900, flexShrink: 0 }}>
                     {user.name.charAt(0)}
                   </div>
-                  {user.name.split(' ')[0]}
+                  <span className="nav-btn-text">{user.name.split(' ')[0]}</span>
                 </button>
                 {showUserMenu && (
                   <div style={{ position: 'absolute', top: '110%', right: 0, background: '#fff', borderRadius: 16, boxShadow: '0 12px 40px rgba(0,0,0,0.15)', border: '1px solid #f1f5f9', minWidth: 190, padding: 8, zIndex: 100 }}>
@@ -270,25 +270,25 @@ export default function HomePage() {
               </div>
             ) : (
               /* Guest */
-              <div style={{ display: 'flex', gap: 8 }}>
+              <div style={{ display: 'flex', gap: 6 }}>
                 <button onClick={() => setLocation('/login')}
-                  style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'transparent', border: '2px solid #c7d2fe', cursor: 'pointer', color: '#6366f1', fontSize: 13, fontWeight: 800, padding: '8px 16px', borderRadius: 12 }}>
-                  <LogIn size={14} />دخول
+                  style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'transparent', border: '2px solid #c7d2fe', cursor: 'pointer', color: '#6366f1', fontSize: 13, fontWeight: 800, padding: '7px 13px', borderRadius: 12 }}>
+                  <LogIn size={15} /><span className="nav-btn-text">دخول</span>
                 </button>
                 <button onClick={() => setLocation('/register')}
-                  style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 13, fontWeight: 800, padding: '8px 16px', borderRadius: 12, boxShadow: '0 4px 14px rgba(99,102,241,0.35)' }}>
-                  <UserPlus size={14} />إنشاء حساب
+                  style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 13, fontWeight: 800, padding: '7px 13px', borderRadius: 12, boxShadow: '0 4px 14px rgba(99,102,241,0.35)' }}>
+                  <UserPlus size={15} /><span className="nav-btn-text">إنشاء حساب</span>
                 </button>
               </div>
             )}
           </div>
 
           {/* Logo */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 14, background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 15px rgba(99,102,241,0.35)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div className="nav-logo-icon" style={{ width: 44, height: 44, borderRadius: 14, background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 15px rgba(99,102,241,0.35)', flexShrink: 0 }}>
               <LayoutTemplate size={22} color="#fff" />
             </div>
-            <span style={{ color: '#1e1b4b', fontSize: 20, fontWeight: 900, letterSpacing: '-0.02em' }}>ستوديو القوالب</span>
+            <span className="nav-logo-text" style={{ color: '#1e1b4b', fontSize: 20, fontWeight: 900, letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>ستوديو القوالب</span>
           </div>
         </div>
       </nav>
