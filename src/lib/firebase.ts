@@ -161,6 +161,18 @@ export async function sendEmailVerification(_user: LocalUser): Promise<void> {
 export async function sendPasswordResetEmail(_auth: typeof auth, _email: string): Promise<void> {
 }
 
+export async function resetLocalPassword(email: string, newPassword: string): Promise<void> {
+  const users = getStoredUsers();
+  const idx = users.findIndex(u => u.email.toLowerCase() === email.toLowerCase());
+  if (idx === -1) {
+    const err = new Error('User not found') as Error & { code: string };
+    err.code = 'auth/user-not-found';
+    throw err;
+  }
+  users[idx].passwordHash = hashPassword(newPassword);
+  saveStoredUsers(users);
+}
+
 export async function updateProfile(
   _user: LocalUser,
   profile: { displayName?: string }
