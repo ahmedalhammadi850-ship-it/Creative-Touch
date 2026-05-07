@@ -6,6 +6,7 @@ export default function Template11({ data }: { data: TemplateData }) {
   const col1 = couples.slice(0, mid);
   const col2 = couples.slice(mid);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -112,13 +113,13 @@ export default function Template11({ data }: { data: TemplateData }) {
             border: `1px solid ${data.colors.primary}55`,
           }}
         >
-          <div style={{ color: data.colors.primary, fontSize: '7px', letterSpacing: '0.1em', marginBottom: '3px' }}>
+          <div style={{ color: data.colors.primary, fontSize: `${7 + _d}px`, letterSpacing: '0.1em', marginBottom: '3px' }}>
             ✿ دعوة عرس جماعي ✿
           </div>
           <div
             style={{
               color: data.colors.secondary,
-              fontSize: '12px',
+              fontSize: `${12 + _d}px`,
               fontWeight: 'bold',
               lineHeight: 1.4,
             }}
@@ -133,7 +134,7 @@ export default function Template11({ data }: { data: TemplateData }) {
           style={{
             background: 'rgba(255,255,255,0.7)',
             color: data.colors.secondary,
-            fontSize: '7px',
+            fontSize: `${7 + _d}px`,
             lineHeight: 1.6,
             opacity: 0.9,
           }}
@@ -144,7 +145,7 @@ export default function Template11({ data }: { data: TemplateData }) {
         {/* Divider */}
         <div className="flex items-center gap-1 w-full mb-2">
           <div style={{ flex: 1, height: '1px', background: `linear-gradient(to left, ${data.colors.primary}88, transparent)` }} />
-          <span style={{ color: data.colors.primary, fontSize: '10px' }}>❋</span>
+          <span style={{ color: data.colors.primary, fontSize: `${10 + _d}px` }}>❋</span>
           <div style={{ flex: 1, height: '1px', background: `linear-gradient(to right, ${data.colors.primary}88, transparent)` }} />
         </div>
 
@@ -157,7 +158,7 @@ export default function Template11({ data }: { data: TemplateData }) {
             boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
           }}
         >
-          <div className="text-center mb-2" style={{ color: data.colors.primary, fontSize: '7px', letterSpacing: '0.1em' }}>
+          <div className="text-center mb-2" style={{ color: data.colors.primary, fontSize: `${7 + _d}px`, letterSpacing: '0.1em' }}>
             قائمة العرسان السعداء
           </div>
 
@@ -166,8 +167,8 @@ export default function Template11({ data }: { data: TemplateData }) {
             <div className="flex flex-col gap-1 flex-1">
               {col1.map((couple, i) => (
                 <div key={i} className="flex items-center gap-1">
-                  <span style={{ color: data.colors.primary, fontSize: '6px', opacity: 0.8 }}>✦</span>
-                  <span style={{ color: data.colors.secondary, fontSize: '7.5px', lineHeight: 1.3, fontWeight: '500' }}>{couple}</span>
+                  <span style={{ color: data.colors.primary, fontSize: `${6 + _d}px`, opacity: 0.8 }}>✦</span>
+                  <span style={{ color: data.colors.secondary, fontSize: `${7.5 + _d}px`, lineHeight: 1.3, fontWeight: '500' }}>{couple}</span>
                 </div>
               ))}
             </div>
@@ -178,8 +179,8 @@ export default function Template11({ data }: { data: TemplateData }) {
                 <div className="flex flex-col gap-1 flex-1">
                   {col2.map((couple, i) => (
                     <div key={i} className="flex items-center gap-1">
-                      <span style={{ color: data.colors.accent, fontSize: '6px', opacity: 0.8 }}>✦</span>
-                      <span style={{ color: data.colors.secondary, fontSize: '7.5px', lineHeight: 1.3, fontWeight: '500' }}>{couple}</span>
+                      <span style={{ color: data.colors.accent, fontSize: `${6 + _d}px`, opacity: 0.8 }}>✦</span>
+                      <span style={{ color: data.colors.secondary, fontSize: `${7.5 + _d}px`, lineHeight: 1.3, fontWeight: '500' }}>{couple}</span>
                     </div>
                   ))}
                 </div>
@@ -194,7 +195,7 @@ export default function Template11({ data }: { data: TemplateData }) {
             className="text-center px-3 py-1.5 rounded mt-1"
             style={{
               background: 'rgba(255,255,255,0.75)',
-              fontSize: '6.5px',
+              fontSize: `${6.5 + _d}px`,
               color: data.colors.secondary,
               lineHeight: 1.8,
               opacity: 0.85,

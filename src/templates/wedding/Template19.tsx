@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template19({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: '280px', height: '400px',
@@ -38,8 +39,8 @@ export default function Template19({ data }: { data: TemplateData }) {
       </svg>
 
       <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 28px' }}>
-        <div style={{ color: data.colors.primary, fontSize: '7px', letterSpacing: '0.3em', marginBottom: '18px', opacity: 0.65 }}>دعوة زفاف</div>
-        <div style={{ color: data.colors.secondary, fontSize: '28px', fontWeight: 700, lineHeight: 1.25 }}>{data.title}</div>
+        <div style={{ color: data.colors.primary, fontSize: `${7 + _d}px`, letterSpacing: '0.3em', marginBottom: '18px', opacity: 0.65 }}>دعوة زفاف</div>
+        <div style={{ color: data.colors.secondary, fontSize: `${28 + _d}px`, fontWeight: 700, lineHeight: 1.25 }}>{data.title}</div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '9px 0', justifyContent: 'center' }}>
           <div style={{ width: '25px', height: '0.5px', background: `${data.colors.primary}88` }} />
@@ -47,9 +48,9 @@ export default function Template19({ data }: { data: TemplateData }) {
           <div style={{ width: '25px', height: '0.5px', background: `${data.colors.primary}88` }} />
         </div>
 
-        <div style={{ color: data.colors.secondary, fontSize: '28px', fontWeight: 700, lineHeight: 1.25, marginBottom: '14px' }}>{data.subtitle}</div>
+        <div style={{ color: data.colors.secondary, fontSize: `${28 + _d}px`, fontWeight: 700, lineHeight: 1.25, marginBottom: '14px' }}>{data.subtitle}</div>
         <div style={{ width: '40px', height: '1.5px', background: `linear-gradient(to left, transparent, ${data.colors.accent}, transparent)`, margin: '0 auto 12px', opacity: 0.9 }} />
-        <div style={{ color: `${data.colors.secondary}99`, fontSize: '9.5px', lineHeight: 1.9, letterSpacing: '0.02em' }}>{data.description}</div>
+        <div style={{ color: `${data.colors.secondary}99`, fontSize: `${9.5 + _d}px`, lineHeight: 1.9, letterSpacing: '0.02em' }}>{data.description}</div>
       </div>
     </div>
   );

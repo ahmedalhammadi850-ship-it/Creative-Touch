@@ -4,6 +4,7 @@ interface Props { data: TemplateData; }
 export default function WeddingTemplate8({ data }: Props) {
   const { title, subtitle, description, email, website, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 280, height: 400, position: 'relative', overflow: 'hidden',
@@ -21,8 +22,8 @@ export default function WeddingTemplate8({ data }: Props) {
             <img src={image} alt="صورة" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
           ) : (
             <div style={{ width: '100%', height: '100%', background: `linear-gradient(135deg, ${colors.primary}44, ${colors.secondary}55)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 6 }}>
-              <div style={{ fontSize: 50, opacity: 0.4 }}>💍</div>
-              <span style={{ color: `${colors.primary}88`, fontSize: 10 }}>صورة الزفاف</span>
+              <div style={{ fontSize: 50 + _d, opacity: 0.4 }}>💍</div>
+              <span style={{ color: `${colors.primary}88`, fontSize: 10 + _d }}>صورة الزفاف</span>
             </div>
           )}
           {/* Bottom wave */}
@@ -34,20 +35,20 @@ export default function WeddingTemplate8({ data }: Props) {
             position: 'absolute', top: 12, right: 12,
             background: colors.primary, borderRadius: 3, padding: '3px 10px',
           }}>
-            <span style={{ color: colors.accent, fontSize: 8, fontWeight: 800, letterSpacing: 2 }}>WEDDING</span>
+            <span style={{ color: colors.accent, fontSize: 8 + _d, fontWeight: 800, letterSpacing: 2 }}>WEDDING</span>
           </div>
         </div>
 
         {/* Bottom text */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '8px 18px 14px', gap: 6 }}>
-          <p style={{ color: '#aaa', fontSize: 9, margin: 0, textAlign: 'center' }}>{email || 'يتشرف بدعوتكم'}</p>
-          <h1 style={{ color: colors.primary, fontSize: 22, fontWeight: 900, margin: 0, textAlign: 'center', lineHeight: 1.0 }}>{title || 'عمر'}</h1>
+          <p style={{ color: '#aaa', fontSize: 9 + _d, margin: 0, textAlign: 'center' }}>{email || 'يتشرف بدعوتكم'}</p>
+          <h1 style={{ color: colors.primary, fontSize: 22 + _d, fontWeight: 900, margin: 0, textAlign: 'center', lineHeight: 1.0 }}>{title || 'عمر'}</h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
             <div style={{ flex: 1, height: 1, background: colors.accent, opacity: 0.4 }} />
-            <span style={{ color: colors.accent, fontSize: 12 }}>✦</span>
+            <span style={{ color: colors.accent, fontSize: 12 + _d }}>✦</span>
             <div style={{ flex: 1, height: 1, background: colors.accent, opacity: 0.4 }} />
           </div>
-          <p style={{ color: colors.secondary, fontSize: 14, fontWeight: 800, margin: 0, textAlign: 'center' }}>{subtitle || '& أميرة'}</p>
+          <p style={{ color: colors.secondary, fontSize: 14 + _d, fontWeight: 800, margin: 0, textAlign: 'center' }}>{subtitle || '& أميرة'}</p>
 
           <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
             {[
@@ -59,13 +60,13 @@ export default function WeddingTemplate8({ data }: Props) {
                 borderRadius: 6, padding: '5px 8px', textAlign: 'center',
                 border: `1px solid ${i === 0 ? colors.primary : colors.accent}22`,
               }}>
-                <p style={{ color: '#aaa', fontSize: 7, margin: '0 0 2px', letterSpacing: 1 }}>{item.label}</p>
-                <p style={{ color: i === 0 ? colors.primary : colors.secondary, fontSize: 10, fontWeight: 800, margin: 0 }}>{item.val}</p>
+                <p style={{ color: '#aaa', fontSize: 7 + _d, margin: '0 0 2px', letterSpacing: 1 }}>{item.label}</p>
+                <p style={{ color: i === 0 ? colors.primary : colors.secondary, fontSize: 10 + _d, fontWeight: 800, margin: 0 }}>{item.val}</p>
               </div>
             ))}
           </div>
 
-          {website && <p style={{ color: '#bbb', fontSize: 8.5, margin: '2px 0 0', textAlign: 'center' }}>📍 {website}</p>}
+          {website && <p style={{ color: '#bbb', fontSize: 8.5 + _d, margin: '2px 0 0', textAlign: 'center' }}>📍 {website}</p>}
         </div>
       </div>
     </div>

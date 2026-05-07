@@ -4,6 +4,7 @@ interface Props { data: TemplateData; }
 export default function WeddingTemplate5({ data }: Props) {
   const { title, subtitle, description, email, website, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 280, height: 400, position: 'relative', overflow: 'hidden',
@@ -34,8 +35,8 @@ export default function WeddingTemplate5({ data }: Props) {
           <img src={image} alt="صورة" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }} />
         ) : (
           <div style={{ width: '100%', height: '100%', background: `linear-gradient(160deg, ${colors.primary}33, ${colors.accent}22)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 6 }}>
-            <div style={{ fontSize: 44, opacity: 0.4 }}>💍</div>
-            <span style={{ color: `${colors.primary}88`, fontSize: 10 }}>صورة الزفاف</span>
+            <div style={{ fontSize: 44 + _d, opacity: 0.4 }}>💍</div>
+            <span style={{ color: `${colors.primary}88`, fontSize: 10 + _d }}>صورة الزفاف</span>
           </div>
         )}
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 60, background: `linear-gradient(to top, ${colors.bg || '#fff8f0'}, transparent)` }} />
@@ -45,26 +46,26 @@ export default function WeddingTemplate5({ data }: Props) {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '8px 20px 16px', zIndex: 2 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, width: '100%' }}>
           <div style={{ flex: 1, height: 1, background: colors.accent, opacity: 0.5 }} />
-          <span style={{ color: colors.accent, fontSize: 12 }}>✿</span>
+          <span style={{ color: colors.accent, fontSize: 12 + _d }}>✿</span>
           <div style={{ flex: 1, height: 1, background: colors.accent, opacity: 0.5 }} />
         </div>
 
-        <p style={{ color: colors.primary, fontSize: 10, margin: 0, fontWeight: 600, textAlign: 'center' }}>
+        <p style={{ color: colors.primary, fontSize: 10 + _d, margin: 0, fontWeight: 600, textAlign: 'center' }}>
           {email || 'يتشرف بدعوتكم لحضور'}
         </p>
-        <h1 style={{ color: colors.primary, fontSize: 24, fontWeight: 900, margin: 0, textAlign: 'center', lineHeight: 1.1 }}>{title || 'حفل زفاف'}</h1>
-        <p style={{ color: colors.secondary, fontSize: 12, fontWeight: 700, margin: 0, textAlign: 'center' }}>{subtitle || 'علي & فاطمة'}</p>
+        <h1 style={{ color: colors.primary, fontSize: 24 + _d, fontWeight: 900, margin: 0, textAlign: 'center', lineHeight: 1.1 }}>{title || 'حفل زفاف'}</h1>
+        <p style={{ color: colors.secondary, fontSize: 12 + _d, fontWeight: 700, margin: 0, textAlign: 'center' }}>{subtitle || 'علي & فاطمة'}</p>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, width: '100%' }}>
           <div style={{ flex: 1, height: 1, background: colors.accent, opacity: 0.3 }} />
-          <span style={{ color: colors.accent, fontSize: 10 }}>💫</span>
+          <span style={{ color: colors.accent, fontSize: 10 + _d }}>💫</span>
           <div style={{ flex: 1, height: 1, background: colors.accent, opacity: 0.3 }} />
         </div>
 
         {lines.map((l, i) => (
           <p key={i} style={{ color: i === 1 ? colors.primary : '#777', fontSize: i === 1 ? 14 : 10, fontWeight: i === 1 ? 800 : 400, margin: 0, textAlign: 'center' }}>{l}</p>
         ))}
-        {website && <p style={{ color: '#999', fontSize: 9, margin: '2px 0 0', textAlign: 'center' }}>📍 {website}</p>}
+        {website && <p style={{ color: '#999', fontSize: 9 + _d, margin: '2px 0 0', textAlign: 'center' }}>📍 {website}</p>}
       </div>
 
       {/* Bottom SVG wave */}

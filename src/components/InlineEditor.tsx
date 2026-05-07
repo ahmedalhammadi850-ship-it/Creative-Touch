@@ -201,7 +201,7 @@ export function InlineEditor({ categoryId, data, onChange, backCardMode = false,
   const isSpecialized = categoryId === 'specialized';
   const isMassWedding = categoryId === 'mass-wedding';
   const isAds = categoryId === 'ads';
-  const showFontSize = isMassWedding || isAds || isCongrats || isSpecialized;
+  const showFontSize = isMassWedding || isAds || isCongrats || isSpecialized || isWedding;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const multiImageInputRef = useRef<HTMLInputElement>(null);

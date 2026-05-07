@@ -6,6 +6,7 @@ export default function Template9({ data }: { data: TemplateData }) {
   const col1 = couples.slice(0, mid);
   const col2 = couples.slice(mid);
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -66,7 +67,7 @@ export default function Template9({ data }: { data: TemplateData }) {
       <div className="relative z-10 flex flex-col items-center w-full px-6 py-5">
 
         {/* Bismillah */}
-        <div className="text-center mb-1" style={{ color: data.colors.primary, fontSize: '10px', letterSpacing: '0.05em', opacity: 0.9 }}>
+        <div className="text-center mb-1" style={{ color: data.colors.primary, fontSize: `${10 + _d}px`, letterSpacing: '0.05em', opacity: 0.9 }}>
           بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ
         </div>
 
@@ -101,7 +102,7 @@ export default function Template9({ data }: { data: TemplateData }) {
           <span
             style={{
               color: data.colors.secondary,
-              fontSize: '9px',
+              fontSize: `${9 + _d}px`,
               fontWeight: 'bold',
               lineHeight: 1.4,
               position: 'relative',
@@ -114,7 +115,7 @@ export default function Template9({ data }: { data: TemplateData }) {
         </div>
 
         {/* Subtitle (date/location) */}
-        <div className="text-center mb-3" style={{ color: data.colors.secondary, fontSize: '7.5px', opacity: 0.85, lineHeight: 1.6 }}>
+        <div className="text-center mb-3" style={{ color: data.colors.secondary, fontSize: `${7.5 + _d}px`, opacity: 0.85, lineHeight: 1.6 }}>
           {data.subtitle}
         </div>
 
@@ -126,7 +127,7 @@ export default function Template9({ data }: { data: TemplateData }) {
         </div>
 
         {/* Label */}
-        <div className="text-center mb-2" style={{ color: data.colors.primary, fontSize: '7px', letterSpacing: '0.1em', opacity: 0.9 }}>
+        <div className="text-center mb-2" style={{ color: data.colors.primary, fontSize: `${7 + _d}px`, letterSpacing: '0.1em', opacity: 0.9 }}>
           ✦ قائمة العرسان ✦
         </div>
 
@@ -135,10 +136,10 @@ export default function Template9({ data }: { data: TemplateData }) {
           <div className="flex flex-col gap-1 flex-1">
             {col1.map((couple, i) => (
               <div key={i} className="flex items-center gap-1">
-                <span style={{ color: data.colors.primary, fontSize: '6.5px', opacity: 0.7, minWidth: '10px' }}>
+                <span style={{ color: data.colors.primary, fontSize: `${6.5 + _d}px`, opacity: 0.7, minWidth: '10px' }}>
                   {i + 1}.
                 </span>
-                <span style={{ color: data.colors.secondary, fontSize: '7px', lineHeight: 1.4, fontWeight: '500' }}>
+                <span style={{ color: data.colors.secondary, fontSize: `${7 + _d}px`, lineHeight: 1.4, fontWeight: '500' }}>
                   {couple}
                 </span>
               </div>
@@ -150,10 +151,10 @@ export default function Template9({ data }: { data: TemplateData }) {
               <div className="flex flex-col gap-1 flex-1">
                 {col2.map((couple, i) => (
                   <div key={i} className="flex items-center gap-1">
-                    <span style={{ color: data.colors.primary, fontSize: '6.5px', opacity: 0.7, minWidth: '12px' }}>
+                    <span style={{ color: data.colors.primary, fontSize: `${6.5 + _d}px`, opacity: 0.7, minWidth: '12px' }}>
                       {mid + i + 1}.
                     </span>
-                    <span style={{ color: data.colors.secondary, fontSize: '7px', lineHeight: 1.4, fontWeight: '500' }}>
+                    <span style={{ color: data.colors.secondary, fontSize: `${7 + _d}px`, lineHeight: 1.4, fontWeight: '500' }}>
                       {couple}
                     </span>
                   </div>
@@ -175,8 +176,8 @@ export default function Template9({ data }: { data: TemplateData }) {
         {/* Phone / website */}
         {(data.phone || data.website) && (
           <div className="flex gap-3 mt-2 text-center justify-center">
-            {data.phone && <span style={{ color: data.colors.secondary, fontSize: '6.5px', opacity: 0.7 }}>{data.phone}</span>}
-            {data.website && <span style={{ color: data.colors.secondary, fontSize: '6.5px', opacity: 0.7 }}>{data.website}</span>}
+            {data.phone && <span style={{ color: data.colors.secondary, fontSize: `${6.5 + _d}px`, opacity: 0.7 }}>{data.phone}</span>}
+            {data.website && <span style={{ color: data.colors.secondary, fontSize: `${6.5 + _d}px`, opacity: 0.7 }}>{data.website}</span>}
           </div>
         )}
       </div>

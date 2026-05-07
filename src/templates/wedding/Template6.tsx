@@ -4,6 +4,7 @@ interface Props { data: TemplateData; }
 export default function WeddingTemplate6({ data }: Props) {
   const { title, subtitle, description, email, website, colors, image } = data;
   const lines = (description || '').split('\n').filter(Boolean);
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: 280, height: 400, position: 'relative', overflow: 'hidden',
@@ -50,9 +51,9 @@ export default function WeddingTemplate6({ data }: Props) {
         zIndex: 3, textAlign: 'center', padding: '0 28px',
         display: 'flex', flexDirection: 'column', gap: 5,
       }}>
-        <p style={{ color: colors.accent, fontSize: 9, margin: 0, letterSpacing: 2, fontWeight: 700 }}>{email || '✦ دعوة زفاف ✦'}</p>
-        <h1 style={{ color: '#ffffff', fontSize: 24, fontWeight: 900, margin: 0, lineHeight: 1.0, textShadow: `0 2px 12px ${colors.primary}` }}>{title || 'عبدالله'}</h1>
-        <p style={{ color: colors.accent, fontSize: 13, fontWeight: 700, margin: 0 }}>{subtitle || '& نورة'}</p>
+        <p style={{ color: colors.accent, fontSize: 9 + _d, margin: 0, letterSpacing: 2, fontWeight: 700 }}>{email || '✦ دعوة زفاف ✦'}</p>
+        <h1 style={{ color: '#ffffff', fontSize: 24 + _d, fontWeight: 900, margin: 0, lineHeight: 1.0, textShadow: `0 2px 12px ${colors.primary}` }}>{title || 'عبدالله'}</h1>
+        <p style={{ color: colors.accent, fontSize: 13 + _d, fontWeight: 700, margin: 0 }}>{subtitle || '& نورة'}</p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
           <div style={{ flex: 1, height: 1, background: `linear-gradient(to right, transparent, ${colors.accent}88)` }} />
           <div style={{ width: 4, height: 4, borderRadius: '50%', background: colors.accent }} />
@@ -61,7 +62,7 @@ export default function WeddingTemplate6({ data }: Props) {
         {lines.map((l, i) => (
           <p key={i} style={{ color: i === 1 ? colors.accent : 'rgba(255,255,255,0.75)', fontSize: i === 1 ? 14 : 9, fontWeight: i === 1 ? 900 : 400, margin: 0 }}>{l}</p>
         ))}
-        {website && <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 9, margin: '2px 0 0' }}>📍 {website}</p>}
+        {website && <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 9 + _d, margin: '2px 0 0' }}>📍 {website}</p>}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template26({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -37,7 +38,7 @@ export default function Template26({ data }: { data: TemplateData }) {
           <p className="text-[9px] tracking-[0.3em] uppercase" style={{ color: data.colors.secondary }}>دعوة زفاف</p>
           <div className="flex items-center gap-2 mt-2">
             <div className="h-px flex-1" style={{ backgroundColor: data.colors.accent, opacity: 0.5 }} />
-            <span style={{ color: data.colors.accent, fontSize: 12 }}>✿</span>
+            <span style={{ color: data.colors.accent, fontSize: 12 + _d }}>✿</span>
             <div className="h-px flex-1" style={{ backgroundColor: data.colors.accent, opacity: 0.5 }} />
           </div>
         </div>
@@ -46,7 +47,7 @@ export default function Template26({ data }: { data: TemplateData }) {
         <div className="text-center">
           <h2
             className="font-bold leading-none"
-            style={{ color: data.colors.primary, fontSize: 42, letterSpacing: '-0.02em' }}
+            style={{ color: data.colors.primary, fontSize: 42 + _d, letterSpacing: '-0.02em' }}
           >
             {data.title}
           </h2>
@@ -55,7 +56,7 @@ export default function Template26({ data }: { data: TemplateData }) {
             <span className="text-[16px]" style={{ color: data.colors.accent }}>و</span>
             <div className="h-px w-8" style={{ backgroundColor: data.colors.accent, opacity: 0.6 }} />
           </div>
-          <p className="font-bold" style={{ color: data.colors.secondary, fontSize: 36, letterSpacing: '-0.02em' }}>{data.subtitle}</p>
+          <p className="font-bold" style={{ color: data.colors.secondary, fontSize: 36 + _d, letterSpacing: '-0.02em' }}>{data.subtitle}</p>
         </div>
 
         <div className="w-16 h-px" style={{ backgroundColor: data.colors.accent, opacity: 0.5 }} />

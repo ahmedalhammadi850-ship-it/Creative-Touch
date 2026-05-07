@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template15({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: '280px', height: '400px',
@@ -21,10 +22,10 @@ export default function Template15({ data }: { data: TemplateData }) {
       ))}
 
       <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 30px' }}>
-        <div style={{ color: data.colors.secondary, fontSize: '7px', letterSpacing: '0.35em', marginBottom: '20px', opacity: 0.55, fontWeight: 400 }}>
+        <div style={{ color: data.colors.secondary, fontSize: `${7 + _d}px`, letterSpacing: '0.35em', marginBottom: '20px', opacity: 0.55, fontWeight: 400 }}>
           دعوة زفاف
         </div>
-        <div style={{ color: data.colors.primary, fontSize: '28px', fontWeight: 300, lineHeight: 1.2, letterSpacing: '0.04em' }}>{data.title}</div>
+        <div style={{ color: data.colors.primary, fontSize: `${28 + _d}px`, fontWeight: 300, lineHeight: 1.2, letterSpacing: '0.04em' }}>{data.title}</div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '12px auto', width: '120px', justifyContent: 'center' }}>
           <div style={{ flex: 1, height: '1px', background: `linear-gradient(to left, ${data.colors.primary}88, transparent)` }} />
@@ -34,10 +35,10 @@ export default function Template15({ data }: { data: TemplateData }) {
           <div style={{ flex: 1, height: '1px', background: `linear-gradient(to right, ${data.colors.primary}88, transparent)` }} />
         </div>
 
-        <div style={{ color: data.colors.primary, fontSize: '28px', fontWeight: 300, lineHeight: 1.2, letterSpacing: '0.04em', marginBottom: '22px' }}>{data.subtitle}</div>
+        <div style={{ color: data.colors.primary, fontSize: `${28 + _d}px`, fontWeight: 300, lineHeight: 1.2, letterSpacing: '0.04em', marginBottom: '22px' }}>{data.subtitle}</div>
 
         <div style={{ width: '34px', height: '1px', background: data.colors.accent, margin: '0 auto 16px', opacity: 0.8 }} />
-        <div style={{ color: data.colors.secondary, fontSize: '9px', lineHeight: 1.9, opacity: 0.72, letterSpacing: '0.02em' }}>
+        <div style={{ color: data.colors.secondary, fontSize: `${9 + _d}px`, lineHeight: 1.9, opacity: 0.72, letterSpacing: '0.02em' }}>
           {data.description}
         </div>
       </div>

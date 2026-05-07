@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template28({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -51,7 +52,7 @@ export default function Template28({ data }: { data: TemplateData }) {
 
         <div className="flex items-center gap-2 w-full mt-1">
           <div className="flex-1 h-px" style={{ backgroundColor: data.colors.primary, opacity: 0.3 }} />
-          <span style={{ color: data.colors.primary, fontSize: 10, opacity: 0.6 }}>❀</span>
+          <span style={{ color: data.colors.primary, fontSize: 10 + _d, opacity: 0.6 }}>❀</span>
           <div className="flex-1 h-px" style={{ backgroundColor: data.colors.primary, opacity: 0.3 }} />
         </div>
 

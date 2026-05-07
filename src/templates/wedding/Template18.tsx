@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template18({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: '280px', height: '400px',
@@ -41,8 +42,8 @@ export default function Template18({ data }: { data: TemplateData }) {
       <div style={{ position: 'absolute', top: '42%', left: '50%', transform: 'translate(-50%,-50%)', width: 180, height: 180, borderRadius: '50%', background: `radial-gradient(circle, ${data.colors.primary}44 0%, transparent 65%)`, pointerEvents: 'none' }} />
 
       <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 28px' }}>
-        <div style={{ color: data.colors.accent, fontSize: '7px', letterSpacing: '0.32em', marginBottom: '16px', opacity: 0.75, fontFamily: 'serif' }}>دعوة زفاف ملكية</div>
-        <div style={{ color: data.colors.accent, fontSize: '30px', fontWeight: 700, lineHeight: 1.2, textShadow: `0 0 16px ${data.colors.accent}88` }}>{data.title}</div>
+        <div style={{ color: data.colors.accent, fontSize: `${7 + _d}px`, letterSpacing: '0.32em', marginBottom: '16px', opacity: 0.75, fontFamily: 'serif' }}>دعوة زفاف ملكية</div>
+        <div style={{ color: data.colors.accent, fontSize: `${30 + _d}px`, fontWeight: 700, lineHeight: 1.2, textShadow: `0 0 16px ${data.colors.accent}88` }}>{data.title}</div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '10px 0', justifyContent: 'center' }}>
           <div style={{ flex: 1, height: '0.5px', background: `linear-gradient(to left, ${data.colors.accent}88, transparent)` }} />
@@ -50,9 +51,9 @@ export default function Template18({ data }: { data: TemplateData }) {
           <div style={{ flex: 1, height: '0.5px', background: `linear-gradient(to right, ${data.colors.accent}88, transparent)` }} />
         </div>
 
-        <div style={{ color: data.colors.accent, fontSize: '30px', fontWeight: 700, lineHeight: 1.2, textShadow: `0 0 16px ${data.colors.accent}88`, marginBottom: '16px' }}>{data.subtitle}</div>
+        <div style={{ color: data.colors.accent, fontSize: `${30 + _d}px`, fontWeight: 700, lineHeight: 1.2, textShadow: `0 0 16px ${data.colors.accent}88`, marginBottom: '16px' }}>{data.subtitle}</div>
         <div style={{ width: '36px', height: '1px', background: data.colors.accent, margin: '0 auto 12px', opacity: 0.7 }} />
-        <div style={{ color: `${data.colors.accent}aa`, fontSize: '9px', lineHeight: 2, letterSpacing: '0.03em' }}>{data.description}</div>
+        <div style={{ color: `${data.colors.accent}aa`, fontSize: `${9 + _d}px`, lineHeight: 2, letterSpacing: '0.03em' }}>{data.description}</div>
       </div>
     </div>
   );

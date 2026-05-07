@@ -3,6 +3,7 @@ import type { TemplateData } from '../../types/template';
 export default function Template10({ data }: { data: TemplateData }) {
   const couples = data.description ? data.description.split('\n').filter(Boolean) : [];
 
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div
       id="template-preview"
@@ -31,7 +32,7 @@ export default function Template10({ data }: { data: TemplateData }) {
           style={{
             border: `1px solid ${data.colors.primary}`,
             color: data.colors.primary,
-            fontSize: '6.5px',
+            fontSize: `${6.5 + _d}px`,
             letterSpacing: '0.15em',
           }}
         >
@@ -43,7 +44,7 @@ export default function Template10({ data }: { data: TemplateData }) {
           className="text-center leading-tight mb-1 font-bold"
           style={{
             color: data.colors.secondary,
-            fontSize: '14px',
+            fontSize: `${14 + _d}px`,
             letterSpacing: '-0.01em',
           }}
         >
@@ -58,19 +59,19 @@ export default function Template10({ data }: { data: TemplateData }) {
         </div>
 
         {/* Subtitle (date/location) */}
-        <div className="text-center mb-4" style={{ color: data.colors.secondary, fontSize: '7.5px', opacity: 0.7, lineHeight: 1.7, letterSpacing: '0.04em' }}>
+        <div className="text-center mb-4" style={{ color: data.colors.secondary, fontSize: `${7.5 + _d}px`, opacity: 0.7, lineHeight: 1.7, letterSpacing: '0.04em' }}>
           {data.subtitle}
         </div>
 
         {/* Separator */}
         <div className="w-full flex items-center gap-2 mb-3">
           <div style={{ flex: 1, height: '0.5px', backgroundColor: `${data.colors.primary}44` }} />
-          <span style={{ color: data.colors.primary, fontSize: '8px' }}>✦</span>
+          <span style={{ color: data.colors.primary, fontSize: `${8 + _d}px` }}>✦</span>
           <div style={{ flex: 1, height: '0.5px', backgroundColor: `${data.colors.primary}44` }} />
         </div>
 
         {/* Couples list label */}
-        <div className="text-center mb-2" style={{ color: data.colors.primary, fontSize: '7px', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+        <div className="text-center mb-2" style={{ color: data.colors.primary, fontSize: `${7 + _d}px`, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
           العرسان الكرام
         </div>
 
@@ -93,7 +94,7 @@ export default function Template10({ data }: { data: TemplateData }) {
                   height: '14px',
                   border: `0.5px solid ${data.colors.primary}`,
                   color: data.colors.primary,
-                  fontSize: '6px',
+                  fontSize: `${6 + _d}px`,
                   borderRadius: '2px',
                 }}
               >
@@ -104,7 +105,7 @@ export default function Template10({ data }: { data: TemplateData }) {
                 className="flex-1 text-right"
                 style={{
                   color: data.colors.secondary,
-                  fontSize: '8px',
+                  fontSize: `${8 + _d}px`,
                   lineHeight: 1.3,
                   fontWeight: i % 2 === 0 ? '500' : '400',
                 }}
@@ -121,9 +122,9 @@ export default function Template10({ data }: { data: TemplateData }) {
         {(data.phone || data.email || data.website) && (
           <div className="flex flex-col items-center gap-0.5 mt-auto">
             <div style={{ width: '40px', height: '0.5px', backgroundColor: `${data.colors.primary}55` }} className="mb-1" />
-            {data.phone && <span style={{ color: data.colors.secondary, fontSize: '6.5px', opacity: 0.6 }}>{data.phone}</span>}
-            {data.email && <span style={{ color: data.colors.secondary, fontSize: '6.5px', opacity: 0.6 }}>{data.email}</span>}
-            {data.website && <span style={{ color: data.colors.secondary, fontSize: '6.5px', opacity: 0.6 }}>{data.website}</span>}
+            {data.phone && <span style={{ color: data.colors.secondary, fontSize: `${6.5 + _d}px`, opacity: 0.6 }}>{data.phone}</span>}
+            {data.email && <span style={{ color: data.colors.secondary, fontSize: `${6.5 + _d}px`, opacity: 0.6 }}>{data.email}</span>}
+            {data.website && <span style={{ color: data.colors.secondary, fontSize: `${6.5 + _d}px`, opacity: 0.6 }}>{data.website}</span>}
           </div>
         )}
       </div>

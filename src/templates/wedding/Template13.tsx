@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template13({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{ width: '280px', height: '400px', position: 'relative', overflow: 'hidden', fontFamily: "'Georgia', serif", direction: 'rtl', background: `linear-gradient(165deg, ${data.colors.bg} 0%, ${data.colors.primary}18 100%)` }}>
       {/* Stars */}
@@ -20,18 +21,18 @@ export default function Template13({ data }: { data: TemplateData }) {
       ))}
 
       <div style={{ position: 'relative', zIndex: 1, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px 20px', textAlign: 'center' }}>
-        <div style={{ color: data.colors.accent, fontSize: '20px', marginBottom: '8px', opacity: 0.85 }}>✦</div>
-        <div style={{ color: data.colors.primary, fontSize: '7px', letterSpacing: '0.22em', marginBottom: '14px', opacity: 0.7 }}>يسعدهم دعوتكم</div>
+        <div style={{ color: data.colors.accent, fontSize: `${20 + _d}px`, marginBottom: '8px', opacity: 0.85 }}>✦</div>
+        <div style={{ color: data.colors.primary, fontSize: `${7 + _d}px`, letterSpacing: '0.22em', marginBottom: '14px', opacity: 0.7 }}>يسعدهم دعوتكم</div>
 
-        <div style={{ color: data.colors.primary, fontSize: '28px', lineHeight: 1.25, marginBottom: '5px' }}>{data.title}</div>
-        <div style={{ color: data.colors.accent, fontSize: '11px', fontStyle: 'italic', marginBottom: '5px' }}>و</div>
-        <div style={{ color: data.colors.primary, fontSize: '28px', lineHeight: 1.25, marginBottom: '14px' }}>{data.subtitle}</div>
+        <div style={{ color: data.colors.primary, fontSize: `${28 + _d}px`, lineHeight: 1.25, marginBottom: '5px' }}>{data.title}</div>
+        <div style={{ color: data.colors.accent, fontSize: `${11 + _d}px`, fontStyle: 'italic', marginBottom: '5px' }}>و</div>
+        <div style={{ color: data.colors.primary, fontSize: `${28 + _d}px`, lineHeight: 1.25, marginBottom: '14px' }}>{data.subtitle}</div>
 
         <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', marginBottom: '14px' }}>
           {[0,1,2].map(i => <div key={i} style={{ width: i===1?'20px':'8px', height: '1.5px', background: data.colors.accent, opacity: 0.6 }} />)}
         </div>
 
-        <div style={{ color: data.colors.secondary, fontSize: '10px', lineHeight: 2, opacity: 0.75 }}>{data.description}</div>
+        <div style={{ color: data.colors.secondary, fontSize: `${10 + _d}px`, lineHeight: 2, opacity: 0.75 }}>{data.description}</div>
       </div>
     </div>
   );

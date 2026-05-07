@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template12({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{ width: '280px', height: '400px', position: 'relative', overflow: 'hidden', fontFamily: "'Georgia', serif", direction: 'rtl', backgroundColor: data.colors.bg }}>
       {/* Botanical leaf top-right */}
@@ -21,21 +22,21 @@ export default function Template12({ data }: { data: TemplateData }) {
       <div style={{ position: 'absolute', inset: '12px', border: `0.5px solid ${data.colors.primary}44`, pointerEvents: 'none' }} />
 
       <div style={{ position: 'relative', zIndex: 1, padding: '20px 18px', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <div style={{ color: data.colors.primary, fontSize: '7.5px', letterSpacing: '0.2em', marginBottom: '12px', opacity: 0.7 }}>🌿 دعوة زفاف 🌿</div>
+        <div style={{ color: data.colors.primary, fontSize: `${7.5 + _d}px`, letterSpacing: '0.2em', marginBottom: '12px', opacity: 0.7 }}>🌿 دعوة زفاف 🌿</div>
 
-        <div style={{ color: data.colors.primary, fontSize: '28px', fontWeight: 'bold', textAlign: 'center', lineHeight: 1.2, marginBottom: '6px' }}>{data.title}</div>
+        <div style={{ color: data.colors.primary, fontSize: `${28 + _d}px`, fontWeight: 'bold', textAlign: 'center', lineHeight: 1.2, marginBottom: '6px' }}>{data.title}</div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '6px 0' }}>
           <div style={{ flex: 1, height: '0.5px', background: `${data.colors.primary}55` }} />
-          <span style={{ color: data.colors.accent, fontSize: '14px' }}>♡</span>
+          <span style={{ color: data.colors.accent, fontSize: `${14 + _d}px` }}>♡</span>
           <div style={{ flex: 1, height: '0.5px', background: `${data.colors.primary}55` }} />
         </div>
 
-        <div style={{ color: data.colors.primary, fontSize: '28px', fontWeight: 'bold', textAlign: 'center', lineHeight: 1.2, marginBottom: '14px' }}>{data.subtitle}</div>
+        <div style={{ color: data.colors.primary, fontSize: `${28 + _d}px`, fontWeight: 'bold', textAlign: 'center', lineHeight: 1.2, marginBottom: '14px' }}>{data.subtitle}</div>
 
         <div style={{ width: '60px', height: '1px', background: `linear-gradient(to left, transparent, ${data.colors.primary}, transparent)`, marginBottom: '12px' }} />
 
-        <div style={{ color: data.colors.secondary, fontSize: '10px', textAlign: 'center', lineHeight: 1.9, opacity: 0.8 }}>{data.description}</div>
+        <div style={{ color: data.colors.secondary, fontSize: `${10 + _d}px`, textAlign: 'center', lineHeight: 1.9, opacity: 0.8 }}>{data.description}</div>
       </div>
     </div>
   );

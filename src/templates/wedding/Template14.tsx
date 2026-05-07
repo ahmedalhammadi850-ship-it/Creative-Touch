@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template14({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{ width: '280px', height: '400px', position: 'relative', overflow: 'hidden', fontFamily: "'Georgia', serif", direction: 'rtl', backgroundColor: data.colors.bg }}>
       {/* Top half gradient */}
@@ -22,10 +23,10 @@ export default function Template14({ data }: { data: TemplateData }) {
       <div style={{ position: 'relative', zIndex: 1, height: '100%', display: 'flex', flexDirection: 'column' }}>
         {/* Top section */}
         <div style={{ flex: '0 0 50%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-          <div style={{ color: data.colors.accent, fontSize: '7px', letterSpacing: '0.25em', marginBottom: '8px' }}>WEDDING INVITATION</div>
-          <div style={{ color: '#ffffff', fontSize: '28px', textAlign: 'center', lineHeight: 1.2, textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>{data.title}</div>
-          <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: '12px', fontStyle: 'italic', margin: '4px 0' }}>&</div>
-          <div style={{ color: '#ffffff', fontSize: '28px', textAlign: 'center', lineHeight: 1.2, textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>{data.subtitle}</div>
+          <div style={{ color: data.colors.accent, fontSize: `${7 + _d}px`, letterSpacing: '0.25em', marginBottom: '8px' }}>WEDDING INVITATION</div>
+          <div style={{ color: '#ffffff', fontSize: `${28 + _d}px`, textAlign: 'center', lineHeight: 1.2, textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>{data.title}</div>
+          <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: `${12 + _d}px`, fontStyle: 'italic', margin: '4px 0' }}>&</div>
+          <div style={{ color: '#ffffff', fontSize: `${28 + _d}px`, textAlign: 'center', lineHeight: 1.2, textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>{data.subtitle}</div>
         </div>
 
         {/* Bottom section */}
@@ -33,7 +34,7 @@ export default function Template14({ data }: { data: TemplateData }) {
           <div style={{ display: 'flex', gap: '4px', marginBottom: '14px' }}>
             {[0,1,2,3,4].map(i => <div key={i} style={{ width: '4px', height: '4px', borderRadius: '50%', background: data.colors.primary, opacity: 0.3 + i*0.12 }} />)}
           </div>
-          <div style={{ color: data.colors.secondary, fontSize: '10.5px', textAlign: 'center', lineHeight: 2, opacity: 0.8 }}>{data.description}</div>
+          <div style={{ color: data.colors.secondary, fontSize: `${10.5 + _d}px`, textAlign: 'center', lineHeight: 2, opacity: 0.8 }}>{data.description}</div>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import type { TemplateData } from '../../types/template';
 
 export default function Template16({ data }: { data: TemplateData }) {
+  const _d = (data.fontSize ?? 21) - 21;
   return (
     <div id="template-preview" style={{
       width: '280px', height: '400px',
@@ -23,25 +24,25 @@ export default function Template16({ data }: { data: TemplateData }) {
       <div style={{ position: 'absolute', inset: '10px', border: `1px solid ${data.colors.accent}33` }} />
 
       <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 26px' }}>
-        <div style={{ color: data.colors.accent, fontSize: '16px', marginBottom: '10px', opacity: 0.8 }}>✦</div>
-        <div style={{ color: data.colors.accent, fontSize: '6.5px', letterSpacing: '0.3em', marginBottom: '14px', opacity: 0.8 }}>دعوة زفاف</div>
+        <div style={{ color: data.colors.accent, fontSize: `${16 + _d}px`, marginBottom: '10px', opacity: 0.8 }}>✦</div>
+        <div style={{ color: data.colors.accent, fontSize: `${6.5 + _d}px`, letterSpacing: '0.3em', marginBottom: '14px', opacity: 0.8 }}>دعوة زفاف</div>
 
-        <div style={{ color: data.colors.secondary, fontSize: '30px', fontWeight: 700, lineHeight: 1.2, marginBottom: '6px', textShadow: `0 0 20px ${data.colors.primary}66` }}>
+        <div style={{ color: data.colors.secondary, fontSize: `${30 + _d}px`, fontWeight: 700, lineHeight: 1.2, marginBottom: '6px', textShadow: `0 0 20px ${data.colors.primary}66` }}>
           {data.title}
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '8px 0', justifyContent: 'center' }}>
           <div style={{ width: '22px', height: '0.5px', background: `${data.colors.accent}88` }} />
-          <span style={{ color: data.colors.accent, fontSize: '14px', opacity: 0.8 }}>❧</span>
+          <span style={{ color: data.colors.accent, fontSize: `${14 + _d}px`, opacity: 0.8 }}>❧</span>
           <div style={{ width: '22px', height: '0.5px', background: `${data.colors.accent}88` }} />
         </div>
 
-        <div style={{ color: data.colors.secondary, fontSize: '30px', fontWeight: 700, lineHeight: 1.2, marginBottom: '14px', textShadow: `0 0 20px ${data.colors.primary}66` }}>
+        <div style={{ color: data.colors.secondary, fontSize: `${30 + _d}px`, fontWeight: 700, lineHeight: 1.2, marginBottom: '14px', textShadow: `0 0 20px ${data.colors.primary}66` }}>
           {data.subtitle}
         </div>
 
         <div style={{ width: '46px', height: '1px', background: `linear-gradient(to left, transparent, ${data.colors.accent}, transparent)`, margin: '0 auto 12px' }} />
-        <div style={{ color: `${data.colors.secondary}bb`, fontSize: '9px', lineHeight: 2.1, letterSpacing: '0.03em' }}>
+        <div style={{ color: `${data.colors.secondary}bb`, fontSize: `${9 + _d}px`, lineHeight: 2.1, letterSpacing: '0.03em' }}>
           {data.description}
         </div>
       </div>
