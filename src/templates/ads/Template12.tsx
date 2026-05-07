@@ -35,8 +35,9 @@ export default function Template12({ data }: { data: TemplateData }) {
             border: `1.5px solid ${data.colors.accent}`,
             borderRadius: '30px', padding: '9px 26px',
             boxShadow: `0 0 18px ${data.colors.accent}55, inset 0 0 12px ${data.colors.accent}11`,
+            whiteSpace: 'nowrap',
           }}>
-            <span style={{ color: data.colors.accent, fontSize: '12px', fontWeight: 800, textShadow: `0 0 10px ${data.colors.accent}` }} dir="ltr">{data.phone}</span>
+            <span style={{ color: data.colors.accent, fontSize: '12px', fontWeight: 800, textShadow: `0 0 10px ${data.colors.accent}`, whiteSpace: 'nowrap' }} dir="ltr">{data.phone}</span>
           </div>
         )}
       </div>

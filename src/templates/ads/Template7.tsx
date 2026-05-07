@@ -24,7 +24,7 @@ export default function Template7({ data }: { data: TemplateData }) {
 
         {/* CTA button */}
         {data.phone && (
-          <div style={{ background: `linear-gradient(135deg, ${data.colors.primary}, ${data.colors.secondary})`, color: '#ffffff', padding: '10px 28px', borderRadius: '30px', fontSize: '13px', fontWeight: '800', boxShadow: `0 4px 16px ${data.colors.primary}44` }} dir="ltr">
+          <div style={{ background: `linear-gradient(135deg, ${data.colors.primary}, ${data.colors.secondary})`, color: '#ffffff', padding: '10px 28px', borderRadius: '30px', fontSize: '13px', fontWeight: '800', boxShadow: `0 4px 16px ${data.colors.primary}44`, whiteSpace: 'nowrap' }} dir="ltr">
             {data.phone}
           </div>
         )}

@@ -37,8 +37,9 @@ export default function Template8({ data }: { data: TemplateData }) {
             padding: '9px 22px', borderRadius: '28px',
             fontSize: '11px', fontWeight: 800,
             boxShadow: `0 4px 16px ${data.colors.accent}55`,
+            whiteSpace: 'nowrap',
           }}>
-            <span dir="ltr">{data.phone}</span>
+            <span dir="ltr" style={{ whiteSpace: 'nowrap' }}>{data.phone}</span>
           </div>
         )}
       </div>

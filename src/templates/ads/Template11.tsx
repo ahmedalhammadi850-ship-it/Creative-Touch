@@ -49,8 +49,9 @@ export default function Template11({ data }: { data: TemplateData }) {
             background: `linear-gradient(135deg, ${data.colors.primary}, ${data.colors.secondary})`,
             borderRadius: '30px', padding: '9px 26px',
             boxShadow: `0 4px 18px ${data.colors.primary}55`,
+            whiteSpace: 'nowrap',
           }}>
-            <span style={{ color: '#fff', fontSize: '12px', fontWeight: 800 }} dir="ltr">{data.phone}</span>
+            <span style={{ color: '#fff', fontSize: '12px', fontWeight: 800, whiteSpace: 'nowrap' }} dir="ltr">{data.phone}</span>
           </div>
         )}
       </div>

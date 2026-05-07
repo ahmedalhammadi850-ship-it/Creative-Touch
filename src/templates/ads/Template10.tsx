@@ -42,8 +42,9 @@ export default function Template10({ data }: { data: TemplateData }) {
             border: `1px solid ${data.colors.primary}`,
             borderRadius: '30px', padding: '9px 24px',
             boxShadow: `0 4px 20px ${data.colors.primary}55`,
+            whiteSpace: 'nowrap',
           }}>
-            <span style={{ color: '#fff', fontSize: '11px', fontWeight: 700 }} dir="ltr">{data.phone}</span>
+            <span style={{ color: '#fff', fontSize: '11px', fontWeight: 700, whiteSpace: 'nowrap' }} dir="ltr">{data.phone}</span>
           </div>
         )}
       </div>
