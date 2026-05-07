@@ -1,12 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { useAuthStore } from '../store/useAuthStore';
-import { Eye, EyeOff, UserPlus, LayoutTemplate, Mail, RefreshCw, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, UserPlus, LayoutTemplate } from 'lucide-react';
 import {
   auth,
   firebaseReady,
   createUserWithEmailAndPassword,
-  sendEmailVerification,
   updateProfile,
   signOut,
   getFirebaseErrorMessage,
@@ -22,57 +21,6 @@ export default function RegisterPage() {
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [verificationSent, setVerificationSent] = useState(false);
-  const [resending, setResending] = useState(false);
-  const [resendCooldown, setResendCooldown] = useState(0);
-  const [checking, setChecking] = useState(false);
-  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const startCooldown = () => {
-    setResendCooldown(60);
-    const interval = setInterval(() => {
-      setResendCooldown(prev => {
-        if (prev <= 1) { clearInterval(interval); return 0; }
-        return prev - 1;
-      });
-    }, 1000);
-  };
-
-  const startPolling = () => {
-    if (pollRef.current) clearInterval(pollRef.current);
-    pollRef.current = setInterval(async () => {
-      try {
-        const user = auth.currentUser;
-        if (!user) return;
-        await user.reload();
-        if (user.emailVerified) {
-          if (pollRef.current) clearInterval(pollRef.current);
-          const localUser = getUserByEmail(user.email || '');
-          if (localUser) {
-            setCurrentUser(localUser);
-          } else {
-            setCurrentUser({
-              id: user.uid,
-              name: user.displayName || user.email?.split('@')[0] || '',
-              email: (user.email || '').toLowerCase(),
-              plan: 'free',
-              planStatus: null,
-              createdAt: new Date().toISOString(),
-            });
-          }
-          await signOut(auth);
-          setLocation('/dashboard');
-        }
-      } catch {
-      }
-    }, 3000);
-  };
-
-  useEffect(() => {
-    return () => {
-      if (pollRef.current) clearInterval(pollRef.current);
-    };
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,18 +36,23 @@ export default function RegisterPage() {
     try {
       const credential = await createUserWithEmailAndPassword(auth, email.trim(), password);
       await updateProfile(credential.user, { displayName: name.trim() });
-      await sendEmailVerification(credential.user);
-      addUser({
-        id: credential.user.uid,
-        name: name.trim(),
-        email: email.toLowerCase().trim(),
-        plan: 'free',
-        planStatus: null,
-        createdAt: new Date().toISOString(),
-      });
-      setVerificationSent(true);
-      startCooldown();
-      startPolling();
+      const localUser = getUserByEmail(email.trim());
+      if (localUser) {
+        setCurrentUser(localUser);
+      } else {
+        const newUser = {
+          id: credential.user.uid,
+          name: name.trim(),
+          email: email.toLowerCase().trim(),
+          plan: 'free' as const,
+          planStatus: null,
+          createdAt: new Date().toISOString(),
+        };
+        addUser(newUser);
+        setCurrentUser(newUser);
+      }
+      await signOut(auth);
+      setLocation('/dashboard');
     } catch (err: unknown) {
       const code = (err as { code?: string }).code || '';
       setError(getFirebaseErrorMessage(code));
@@ -108,112 +61,11 @@ export default function RegisterPage() {
     }
   };
 
-  const handleResend = async () => {
-    if (resendCooldown > 0) return;
-    setResending(true);
-    try {
-      const user = auth.currentUser;
-      if (user && !user.emailVerified) {
-        await sendEmailVerification(user);
-        startCooldown();
-      }
-    } catch {
-    } finally {
-      setResending(false);
-    }
-  };
-
-  const handleManualCheck = async () => {
-    setChecking(true);
-    try {
-      const user = auth.currentUser;
-      if (!user) return;
-      await user.reload();
-      if (user.emailVerified) {
-        if (pollRef.current) clearInterval(pollRef.current);
-        const localUser = getUserByEmail(user.email || '');
-        if (localUser) {
-          setCurrentUser(localUser);
-        } else {
-          setCurrentUser({
-            id: user.uid,
-            name: user.displayName || user.email?.split('@')[0] || '',
-            email: (user.email || '').toLowerCase(),
-            plan: 'free',
-            planStatus: null,
-            createdAt: new Date().toISOString(),
-          });
-        }
-        await signOut(auth);
-        setLocation('/dashboard');
-      } else {
-        setError('لم يتم التحقق من البريد الإلكتروني بعد. يرجى التحقق من بريدك والمحاولة مجدداً.');
-      }
-    } catch {
-      setError('حدث خطأ أثناء التحقق. يرجى المحاولة مرة أخرى.');
-    } finally {
-      setChecking(false);
-    }
-  };
-
   const inp: React.CSSProperties = {
     width: '100%', padding: '11px 14px', borderRadius: 12,
     border: '2px solid #e2e8f0', fontSize: 14, outline: 'none',
     boxSizing: 'border-box', fontFamily: "'Cairo',sans-serif", transition: 'border-color 0.2s',
   };
-
-  if (verificationSent) {
-    return (
-      <div dir="rtl" style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#f8f7ff 0%,#eef2ff 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, fontFamily: "'Cairo',sans-serif" }}>
-        <div style={{ width: '100%', maxWidth: 440 }}>
-          <div style={{ background: '#fff', borderRadius: 24, padding: '40px 32px', boxShadow: '0 8px 40px rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.1)', textAlign: 'center' }}>
-            <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'linear-gradient(135deg,#eef2ff,#f0fdf4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', border: '2px solid #c7d2fe' }}>
-              <Mail size={34} color="#6366f1" />
-            </div>
-            <h2 style={{ color: '#1e1b4b', fontSize: 22, fontWeight: 900, margin: '0 0 12px' }}>تحقق من بريدك الإلكتروني</h2>
-            <p style={{ color: '#64748b', fontSize: 14, lineHeight: 1.8, margin: '0 0 8px' }}>
-              أرسلنا رسالة تحقق إلى
-            </p>
-            <p style={{ color: '#6366f1', fontSize: 15, fontWeight: 800, margin: '0 0 8px', direction: 'ltr' }}>{email}</p>
-            <p style={{ color: '#64748b', fontSize: 13, lineHeight: 1.8, margin: '0 0 4px' }}>
-              انقر على رابط التحقق في بريدك وسيتم توجيهك للداشبورد تلقائياً.
-            </p>
-            <p style={{ color: '#94a3b8', fontSize: 12, margin: '0 0 28px' }}>
-              نراقب البريد تلقائياً... تأكد من مراجعة مجلد Spam إذا لم تجد الرسالة.
-            </p>
-
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 20, color: '#6366f1', fontSize: 13, fontWeight: 600 }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#6366f1', display: 'inline-block', animation: 'pulse 1.5s infinite' }} />
-              جاري المراقبة التلقائية...
-            </div>
-
-            {error && (
-              <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '10px 14px', color: '#dc2626', fontSize: 13, fontWeight: 600, marginBottom: 16 }}>
-                {error}
-              </div>
-            )}
-
-            <button
-              onClick={handleManualCheck}
-              disabled={checking}
-              style={{ width: '100%', padding: '13px', borderRadius: 14, background: checking ? '#e2e8f0' : 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: checking ? 'not-allowed' : 'pointer', color: checking ? '#94a3b8' : '#fff', fontSize: 15, fontWeight: 800, fontFamily: "'Cairo',sans-serif", boxShadow: checking ? 'none' : '0 6px 20px rgba(99,102,241,0.35)', marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-              <CheckCircle size={17} />
-              {checking ? 'جاري التحقق...' : 'لقد تحققت من بريدي — دخول للداشبورد'}
-            </button>
-
-            <button
-              onClick={handleResend}
-              disabled={resendCooldown > 0 || resending}
-              style={{ width: '100%', padding: '11px', borderRadius: 14, background: 'transparent', border: '2px solid #e2e8f0', cursor: resendCooldown > 0 ? 'not-allowed' : 'pointer', color: resendCooldown > 0 ? '#94a3b8' : '#6366f1', fontSize: 14, fontWeight: 700, fontFamily: "'Cairo',sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-              <RefreshCw size={15} />
-              {resending ? 'جاري الإرسال...' : resendCooldown > 0 ? `إعادة الإرسال بعد ${resendCooldown}ث` : 'إعادة إرسال رسالة التحقق'}
-            </button>
-          </div>
-        </div>
-        <style>{`@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }`}</style>
-      </div>
-    );
-  }
 
   return (
     <div dir="rtl" style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#f8f7ff 0%,#eef2ff 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, fontFamily: "'Cairo',sans-serif" }}>
