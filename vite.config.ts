@@ -31,6 +31,13 @@ export default defineConfig({
     fs: {
       strict: true,
     },
+    watch: {
+      ignored: [
+        "**/.local/**",
+        "**/node_modules/**",
+        "**/.git/**",
+      ],
+    },
   },
   preview: {
     port,
