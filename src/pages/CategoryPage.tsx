@@ -1,68 +1,239 @@
-import { Link, useRoute } from 'wouter';
+import { useRoute, useLocation } from 'wouter';
 import { categories } from '../data/categories';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChevronRight } from 'lucide-react';
 import { TemplateRenderer } from '../components/TemplateRenderer';
+import { useAuthStore, isPlanActive, getSelectedTemplatesCount } from '../store/useAuthStore';
+import { ChevronRight, Lock, Zap, LayoutTemplate } from 'lucide-react';
+
+const MAX_FREE_TEMPLATES = 7;
 
 export default function CategoryPage() {
   const [, params] = useRoute('/category/:id');
+  const [, setLocation] = useLocation();
   const categoryId = params?.id;
-  
+  const { user, addSelectedTemplate } = useAuthStore();
+
   const category = categories.find(c => c.id === categoryId);
-  
+
   if (!category) {
-    return <div className="p-20 text-center text-xl">الفئة غير موجودة</div>;
+    return <div style={{ padding: 80, textAlign: 'center', fontSize: 20, fontFamily: "'Cairo',sans-serif" }}>الفئة غير موجودة</div>;
   }
 
-  const getScale = () => {
-    if (categoryId === 'business-card') return 'scale-[0.5] origin-center';
-    if (categoryId === 'ads') return 'scale-[0.5] origin-center';
-    return 'scale-[0.5] origin-center';
+  const isActivePaidPlan = isPlanActive(user);
+  const selectedCount = getSelectedTemplatesCount(user);
+  const selectedTemplates = user?.selectedTemplates || [];
+  const activatedTemplates = user?.activatedTemplates || [];
+
+  const canSelectMore = isActivePaidPlan || selectedCount < MAX_FREE_TEMPLATES;
+  const remaining = Math.max(0, MAX_FREE_TEMPLATES - selectedCount);
+
+  const handleTemplateClick = (templateId: string) => {
+    const key = `${categoryId}/${templateId}`;
+    const alreadySelected = selectedTemplates.includes(key) || activatedTemplates.includes(key);
+
+    if (!alreadySelected && !isActivePaidPlan) {
+      if (selectedCount >= MAX_FREE_TEMPLATES) {
+        return;
+      }
+      if (user) {
+        addSelectedTemplate(user.id, key);
+      }
+    }
+
+    setLocation(`/editor/${categoryId}/${templateId}`);
+  };
+
+  const isTemplateLocked = (templateId: string): boolean => {
+    if (isActivePaidPlan) return false;
+    const key = `${categoryId}/${templateId}`;
+    const alreadySelected = selectedTemplates.includes(key) || activatedTemplates.includes(key);
+    if (alreadySelected) return false;
+    return selectedCount >= MAX_FREE_TEMPLATES;
   };
 
   const getContainerHeight = () => {
-    if (categoryId === 'business-card') return 'h-40';
-    if (categoryId === 'ads') return 'h-64';
-    return 'h-64';
+    if (categoryId === 'business-card') return 160;
+    if (categoryId === 'ads') return 220;
+    return 220;
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      <header className="bg-white border-b px-6 py-4 flex items-center gap-4 sticky top-0 z-10">
-        <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">
-          <ChevronRight className="w-6 h-6" />
-        </Link>
-        <div>
-          <h1 className="text-xl font-bold font-sans">{category.name}</h1>
-          <p className="text-sm text-muted-foreground">{category.description}</p>
+    <div dir="rtl" style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: "'Cairo',sans-serif" }}>
+
+      {/* Header */}
+      <header style={{ background: '#fff', borderBottom: '1px solid #f1f5f9', padding: '16px 24px', display: 'flex', alignItems: 'center', gap: 14, position: 'sticky', top: 0, zIndex: 10, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+        <button
+          onClick={() => setLocation('/')}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 38, height: 38, borderRadius: 10, border: '1.5px solid #e2e8f0', background: '#fff', cursor: 'pointer', color: '#64748b', transition: 'all 0.15s', flexShrink: 0 }}
+          onMouseEnter={e => { e.currentTarget.style.background = '#f8fafc'; e.currentTarget.style.borderColor = '#c7d2fe'; e.currentTarget.style.color = '#6366f1'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = '#e2e8f0'; e.currentTarget.style.color = '#64748b'; }}
+        >
+          <ChevronRight size={20} />
+        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
+          <div style={{ width: 40, height: 40, borderRadius: 12, background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <LayoutTemplate size={18} color="#fff" />
+          </div>
+          <div>
+            <h1 style={{ color: '#1e1b4b', fontSize: 18, fontWeight: 900, margin: 0 }}>{category.name}</h1>
+            <p style={{ color: '#94a3b8', fontSize: 12, margin: 0 }}>{category.description}</p>
+          </div>
         </div>
+
+        {/* Counter Badge */}
+        {!isActivePaidPlan && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            background: remaining === 0 ? 'linear-gradient(135deg,#fef2f2,#fee2e2)' : remaining <= 2 ? 'linear-gradient(135deg,#fef9ee,#fef3c7)' : 'linear-gradient(135deg,#eef2ff,#f5f3ff)',
+            border: `2px solid ${remaining === 0 ? '#fecaca' : remaining <= 2 ? '#fde68a' : '#c7d2fe'}`,
+            borderRadius: 14,
+            padding: '8px 16px',
+          }}>
+            <div style={{
+              width: 32, height: 32, borderRadius: '50%',
+              background: remaining === 0 ? '#fee2e2' : remaining <= 2 ? '#fef3c7' : '#e0e7ff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 14, fontWeight: 900,
+              color: remaining === 0 ? '#dc2626' : remaining <= 2 ? '#d97706' : '#6366f1',
+            }}>
+              {remaining}
+            </div>
+            <div>
+              <p style={{ margin: 0, fontSize: 12, fontWeight: 800, color: remaining === 0 ? '#dc2626' : remaining <= 2 ? '#d97706' : '#6366f1' }}>
+                قوالب متبقية
+              </p>
+              <p style={{ margin: 0, fontSize: 11, color: '#94a3b8', fontWeight: 600 }}>
+                {selectedCount}/{MAX_FREE_TEMPLATES} مختار
+              </p>
+            </div>
+          </div>
+        )}
+
+        {isActivePaidPlan && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#ecfdf5', border: '1.5px solid #6ee7b7', borderRadius: 14, padding: '8px 14px' }}>
+            <Zap size={15} color="#10b981" fill="#10b981" />
+            <span style={{ color: '#065f46', fontSize: 13, fontWeight: 800 }}>وصول كامل</span>
+          </div>
+        )}
       </header>
 
-      <main className="container max-w-6xl mx-auto px-4 pt-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {category.templates.map(template => (
-            <Link key={template.id} href={`/editor/${category.id}/${template.id}`} className="group block focus:outline-none">
-              <Card className="overflow-hidden border-0 shadow-sm hover:shadow-xl transition-all duration-300 transform group-hover:-translate-y-1 bg-white h-full flex flex-col">
-                <div className={`bg-gray-100 flex items-center justify-center border-b relative overflow-hidden ${getContainerHeight()}`}>
-                  <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex items-center justify-center">
-                    <span className="bg-white text-black px-4 py-2 rounded-full text-sm font-semibold shadow-lg">استخدام القالب</span>
+      {/* Limit Warning Banner */}
+      {!isActivePaidPlan && remaining === 0 && (
+        <div style={{ background: 'linear-gradient(135deg,#fef2f2,#fff5f5)', borderBottom: '1px solid #fecaca', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fee2e2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Lock size={16} color="#dc2626" />
+            </div>
+            <div>
+              <p style={{ color: '#991b1b', fontSize: 14, fontWeight: 900, margin: 0 }}>وصلت للحد الأقصى من القوالب المجانية</p>
+              <p style={{ color: '#dc2626', fontSize: 12, margin: 0, fontWeight: 600 }}>قم بترقية اشتراكك للوصول لجميع القوالب بدون حدود</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setLocation('/')}
+            style={{ display: 'flex', alignItems: 'center', gap: 7, background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 13, fontWeight: 800, padding: '10px 20px', borderRadius: 12, fontFamily: "'Cairo',sans-serif", whiteSpace: 'nowrap', boxShadow: '0 4px 14px rgba(99,102,241,0.35)' }}
+          >
+            <Zap size={14} />ترقية الاشتراك
+          </button>
+        </div>
+      )}
+
+      {/* Templates Grid */}
+      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '28px 24px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 20 }}>
+          {category.templates.map(template => {
+            const key = `${categoryId}/${template.id}`;
+            const alreadySelected = selectedTemplates.includes(key) || activatedTemplates.includes(key);
+            const locked = isTemplateLocked(template.id);
+            const containerH = getContainerHeight();
+
+            return (
+              <div
+                key={template.id}
+                onClick={() => !locked && handleTemplateClick(template.id)}
+                style={{
+                  background: '#fff',
+                  borderRadius: 20,
+                  overflow: 'hidden',
+                  border: locked ? '2px solid #fecaca' : alreadySelected ? '2px solid #6ee7b7' : '1.5px solid #f1f5f9',
+                  boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
+                  cursor: locked ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.2s',
+                  opacity: locked ? 0.75 : 1,
+                  position: 'relative',
+                }}
+                onMouseEnter={e => {
+                  if (!locked) {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = '0 12px 32px rgba(99,102,241,0.18)';
+                    e.currentTarget.style.borderColor = alreadySelected ? '#6ee7b7' : '#c7d2fe';
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!locked) {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 2px 12px rgba(0,0,0,0.05)';
+                    e.currentTarget.style.borderColor = alreadySelected ? '#6ee7b7' : '#f1f5f9';
+                  }
+                }}
+              >
+                {/* Template Preview */}
+                <div style={{ background: '#f8fafc', height: containerH, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                  <div style={{ transform: 'scale(0.48)', transformOrigin: 'center', pointerEvents: 'none', userSelect: 'none' }}>
+                    <TemplateRenderer
+                      categoryId={category.id}
+                      templateId={template.id}
+                      data={template.defaultData}
+                    />
                   </div>
-                  <div className={getScale()}>
-                    <div className="pointer-events-none select-none">
-                      <TemplateRenderer 
-                        categoryId={category.id} 
-                        templateId={template.id} 
-                        data={template.defaultData} 
-                      />
+
+                  {/* Hover overlay */}
+                  {!locked && (
+                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(99,102,241,0.0)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.12)'; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(99,102,241,0)'; }}
+                    >
+                      <span style={{ background: '#fff', color: '#6366f1', padding: '8px 18px', borderRadius: 20, fontSize: 12, fontWeight: 800, boxShadow: '0 4px 14px rgba(0,0,0,0.12)', opacity: 0, transition: 'opacity 0.2s', fontFamily: "'Cairo',sans-serif" }}
+                        onMouseEnter={e => { e.currentTarget.style.opacity = '1'; }}
+                      >
+                        استخدام القالب
+                      </span>
                     </div>
-                  </div>
+                  )}
+
+                  {/* Locked overlay */}
+                  {locked && (
+                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(254,242,242,0.85)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+                      <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#fecaca', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Lock size={20} color="#dc2626" />
+                      </div>
+                      <span style={{ color: '#dc2626', fontSize: 12, fontWeight: 800, fontFamily: "'Cairo',sans-serif", textAlign: 'center', padding: '0 12px' }}>
+                        قم بترقية اشتراكك
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Already selected badge */}
+                  {alreadySelected && !locked && (
+                    <div style={{ position: 'absolute', top: 10, left: 10, background: '#10b981', color: '#fff', fontSize: 10, fontWeight: 800, padding: '3px 9px', borderRadius: 20, fontFamily: "'Cairo',sans-serif" }}>
+                      ✓ مختار
+                    </div>
+                  )}
                 </div>
-                <CardHeader className="py-4 px-5">
-                  <CardTitle className="text-lg text-center group-hover:text-primary transition-colors">{template.name}</CardTitle>
-                </CardHeader>
-              </Card>
-            </Link>
-          ))}
+
+                {/* Template name */}
+                <div style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <p style={{ color: '#1e1b4b', fontSize: 14, fontWeight: 800, margin: 0 }}>{template.name}</p>
+                  {locked && (
+                    <div style={{ background: '#fee2e2', borderRadius: 8, padding: '3px 8px' }}>
+                      <Lock size={12} color="#dc2626" />
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </main>
     </div>

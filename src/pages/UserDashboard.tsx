@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { useLocation } from 'wouter';
-import { useAuthStore } from '../store/useAuthStore';
+import { useAuthStore, isPlanActive, getTimeRemaining, getSelectedTemplatesCount } from '../store/useAuthStore';
 import { useRequestStore } from '../store/useRequestStore';
 import { usePricingStore } from '../store/usePricingStore';
 import {
   LayoutTemplate, LogOut, Crown, Clock, CheckCircle, XCircle,
-  User, Zap, Star, ChevronLeft, Bell, RefreshCw, ExternalLink
+  User, Zap, Star, ChevronLeft, Bell, RefreshCw, ExternalLink,
+  AlertTriangle, CalendarClock, ShieldCheck
 } from 'lucide-react';
+
+const MAX_FREE_TEMPLATES = 7;
 
 const ALL_CATEGORIES = [
   { id: 'congrats',      name: 'بطاقات التهنئة',  desc: 'بطاقات للأفراح والمناسبات',       emoji: '🎊', color: '#f59e0b', bg: '#fffbeb', border: '#fde68a', count: 29 },
@@ -44,6 +47,134 @@ const REQUEST_STATUS: Record<string, { label: string; color: string; bg: string;
 
 type ActiveView = 'home' | 'explore' | 'requests';
 
+function SubscriptionStatusCard({ user }: { user: NonNullable<ReturnType<typeof useAuthStore>['user']> }) {
+  const planColor = PLAN_COLORS[user.plan] || PLAN_COLORS.free;
+  const timeLeft = getTimeRemaining(user);
+  const active = isPlanActive(user);
+  const selectedCount = getSelectedTemplatesCount(user);
+  const remaining = Math.max(0, MAX_FREE_TEMPLATES - selectedCount);
+  const inp: React.CSSProperties = { fontFamily: "'Cairo',sans-serif" };
+
+  if (user.plan === 'free') {
+    return (
+      <div style={{ background: '#fff', borderRadius: 20, padding: '22px 24px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: '1.5px solid #e2e8f0', marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+          <div style={{ width: 40, height: 40, borderRadius: 12, background: '#f1f5f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <CalendarClock size={20} color="#64748b" />
+          </div>
+          <div>
+            <h3 style={{ color: '#1e1b4b', fontSize: 15, fontWeight: 900, margin: 0 }}>حالة الاشتراك</h3>
+            <p style={{ color: '#94a3b8', fontSize: 12, margin: 0 }}>الخطة المجانية</p>
+          </div>
+        </div>
+
+        <div style={{ background: '#f8fafc', borderRadius: 14, padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap', marginBottom: 14 }}>
+          <div>
+            <p style={{ color: '#94a3b8', fontSize: 12, fontWeight: 600, margin: '0 0 4px' }}>القوالب المختارة</p>
+            <p style={{ color: '#1e1b4b', fontSize: 22, fontWeight: 900, margin: 0 }}>{selectedCount} <span style={{ fontSize: 14, color: '#94a3b8', fontWeight: 600 }}>/ {MAX_FREE_TEMPLATES}</span></p>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ width: 56, height: 56, borderRadius: '50%', border: `4px solid ${remaining === 0 ? '#fecaca' : remaining <= 2 ? '#fde68a' : '#c7d2fe'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', background: remaining === 0 ? '#fef2f2' : remaining <= 2 ? '#fef9ee' : '#eef2ff' }}>
+              <span style={{ fontSize: 16, fontWeight: 900, color: remaining === 0 ? '#dc2626' : remaining <= 2 ? '#d97706' : '#6366f1' }}>{remaining}</span>
+            </div>
+            <p style={{ color: '#94a3b8', fontSize: 10, fontWeight: 600, margin: '4px 0 0', textAlign: 'center' }}>متبقي</p>
+          </div>
+        </div>
+        {remaining === 0 && (
+          <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 12, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 8, ...inp }}>
+            <AlertTriangle size={15} color="#dc2626" />
+            <span style={{ color: '#dc2626', fontSize: 12, fontWeight: 700 }}>لقد استنفدت حصتك المجانية — قم بالترقية للمزيد</span>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (user.plan === 'starter') {
+    return (
+      <div style={{ background: '#fff', borderRadius: 20, padding: '22px 24px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: `1.5px solid ${planColor.border}`, marginBottom: 20 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+          <div style={{ width: 40, height: 40, borderRadius: 12, background: planColor.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <ShieldCheck size={20} color={planColor.from} />
+          </div>
+          <div>
+            <h3 style={{ color: '#1e1b4b', fontSize: 15, fontWeight: 900, margin: 0 }}>حالة الاشتراك</h3>
+            <p style={{ color: planColor.from, fontSize: 12, fontWeight: 700, margin: 0 }}>باقة 7 قوالب — دائمة</p>
+          </div>
+          <div style={{ marginRight: 'auto', background: `linear-gradient(135deg,${planColor.from},${planColor.to})`, borderRadius: 20, padding: '4px 12px', display: 'flex', alignItems: 'center', gap: 5 }}>
+            <Crown size={11} color="#fff" />
+            <span style={{ color: '#fff', fontSize: 11, fontWeight: 800 }}>نشط</span>
+          </div>
+        </div>
+        <div style={{ background: planColor.bg, borderRadius: 14, padding: '14px 16px' }}>
+          <p style={{ color: planColor.text, fontSize: 13, fontWeight: 700, margin: 0 }}>✓ لديك صلاحية دائمة لـ 7 قوالب محددة مسبقاً</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (timeLeft === null) return null;
+
+  const isExpired = timeLeft.expired;
+  const isUrgent = !isExpired && timeLeft.days === 0 && timeLeft.hours < 24;
+
+  return (
+    <div style={{ background: '#fff', borderRadius: 20, padding: '22px 24px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: `1.5px solid ${isExpired ? '#fecaca' : isUrgent ? '#fde68a' : planColor.border}`, marginBottom: 20 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+        <div style={{ width: 40, height: 40, borderRadius: 12, background: isExpired ? '#fef2f2' : isUrgent ? '#fef9ee' : planColor.bg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <CalendarClock size={20} color={isExpired ? '#dc2626' : isUrgent ? '#d97706' : planColor.from} />
+        </div>
+        <div>
+          <h3 style={{ color: '#1e1b4b', fontSize: 15, fontWeight: 900, margin: 0 }}>حالة الاشتراك</h3>
+          <p style={{ color: isExpired ? '#dc2626' : planColor.from, fontSize: 12, fontWeight: 700, margin: 0 }}>
+            {PLAN_LABELS[user.plan]} — {isExpired ? 'منتهي الصلاحية' : active ? 'نشط' : 'غير نشط'}
+          </p>
+        </div>
+        {!isExpired && active && (
+          <div style={{ marginRight: 'auto', background: `linear-gradient(135deg,${planColor.from},${planColor.to})`, borderRadius: 20, padding: '4px 12px', display: 'flex', alignItems: 'center', gap: 5 }}>
+            <Crown size={11} color="#fff" />
+            <span style={{ color: '#fff', fontSize: 11, fontWeight: 800 }}>نشط</span>
+          </div>
+        )}
+      </div>
+
+      {isExpired ? (
+        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 14, padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <AlertTriangle size={18} color="#dc2626" />
+          <div>
+            <p style={{ color: '#991b1b', fontSize: 13, fontWeight: 800, margin: '0 0 2px' }}>انتهت صلاحية اشتراكك</p>
+            <p style={{ color: '#dc2626', fontSize: 12, margin: 0 }}>قم بتجديد الاشتراك للاستمرار في الوصول للقوالب</p>
+          </div>
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div style={{ background: isUrgent ? '#fef9ee' : planColor.bg, borderRadius: 14, padding: '14px 16px', textAlign: 'center', border: isUrgent ? '1.5px solid #fde68a' : 'none' }}>
+            <p style={{ color: isUrgent ? '#d97706' : planColor.from, fontSize: 32, fontWeight: 900, margin: '0 0 4px' }}>{timeLeft.days}</p>
+            <p style={{ color: '#94a3b8', fontSize: 12, fontWeight: 600, margin: 0 }}>يوم متبقي</p>
+          </div>
+          <div style={{ background: isUrgent ? '#fef9ee' : planColor.bg, borderRadius: 14, padding: '14px 16px', textAlign: 'center', border: isUrgent ? '1.5px solid #fde68a' : 'none' }}>
+            <p style={{ color: isUrgent ? '#d97706' : planColor.from, fontSize: 32, fontWeight: 900, margin: '0 0 4px' }}>{timeLeft.hours}</p>
+            <p style={{ color: '#94a3b8', fontSize: 12, fontWeight: 600, margin: 0 }}>ساعة متبقية</p>
+          </div>
+        </div>
+      )}
+
+      {isUrgent && !isExpired && (
+        <div style={{ marginTop: 12, background: '#fef9ee', border: '1px solid #fde68a', borderRadius: 12, padding: '9px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
+          <AlertTriangle size={14} color="#d97706" />
+          <span style={{ color: '#92400e', fontSize: 12, fontWeight: 700 }}>اشتراكك سينتهي خلال أقل من 24 ساعة — جدد الآن</span>
+        </div>
+      )}
+
+      {user.planExpiresAt && !isExpired && (
+        <p style={{ color: '#94a3b8', fontSize: 11, fontWeight: 600, margin: '12px 0 0', textAlign: 'center' }}>
+          تاريخ الانتهاء: {new Date(user.planExpiresAt).toLocaleDateString('ar-YE', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function UserDashboard() {
   const [, setLocation] = useLocation();
   const { user, logout } = useAuthStore();
@@ -62,6 +193,8 @@ export default function UserDashboard() {
 
   const planColor = PLAN_COLORS[user.plan] || PLAN_COLORS.free;
   const activePlan = plans.find(p => p.id === user.plan);
+  const active = isPlanActive(user);
+  const selectedCount = getSelectedTemplatesCount(user);
 
   const handleLogout = () => { logout(); setLocation('/'); };
 
@@ -95,7 +228,6 @@ export default function UserDashboard() {
               <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 10, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.email}</p>
             </div>
           </div>
-          {/* Plan badge */}
           <div style={{ background: `linear-gradient(135deg,${planColor.from},${planColor.to})`, borderRadius: 10, padding: '5px 10px', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
             <Crown size={11} color="#fff" />
             <span style={{ color: '#fff', fontSize: 11, fontWeight: 800 }}>{PLAN_LABELS[user.plan]}</span>
@@ -138,8 +270,8 @@ export default function UserDashboard() {
               <h1 style={{ color: '#fff', fontSize: 24, fontWeight: 900, margin: '0 0 6px' }}>أهلاً، {user.name.split(' ')[0]} 👋</h1>
               <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, margin: 0 }}>
                 {user.plan === 'free'
-                  ? 'أنت على الخطة المجانية — قم بالترقية للوصول لجميع القوالب'
-                  : user.planStatus === 'active'
+                  ? `أنت على الخطة المجانية — استخدمت ${selectedCount}/${MAX_FREE_TEMPLATES} قوالب`
+                  : active
                     ? `اشتراكك نشط — استمتع بكامل مميزات ${PLAN_LABELS[user.plan]}`
                     : user.planStatus === 'pending'
                       ? 'طلب ترقيتك قيد المراجعة من الإدارة'
@@ -172,7 +304,10 @@ export default function UserDashboard() {
             ))}
           </div>
 
-          {/* Plan card + upgrade */}
+          {/* Subscription Status Card */}
+          <SubscriptionStatusCard user={user} />
+
+          {/* Plan card + upgrade/quick access */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 28 }}>
             <div style={{ background: '#fff', borderRadius: 20, padding: '24px', boxShadow: '0 2px 12px rgba(0,0,0,0.05)', border: `2px solid ${planColor.border}` }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -198,9 +333,20 @@ export default function UserDashboard() {
                 </ul>
               )}
               {user.plan === 'free' && (
-                <p style={{ color: '#94a3b8', fontSize: 13, margin: 0, lineHeight: 1.7 }}>
-                  حقلين قابلين للتعديل (العنوان والعنوان الفرعي) مجاناً.<br />قم بالترقية للوصول الكامل.
-                </p>
+                <div>
+                  <p style={{ color: '#94a3b8', fontSize: 13, margin: '0 0 12px', lineHeight: 1.7 }}>
+                    أنت على الخطة المجانية — يمكنك اختيار {MAX_FREE_TEMPLATES} قوالب فقط.
+                  </p>
+                  <div style={{ background: '#f8fafc', borderRadius: 12, padding: '10px 14px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                      <span style={{ color: '#94a3b8', fontSize: 12, fontWeight: 600 }}>القوالب المستخدمة</span>
+                      <span style={{ color: '#1e1b4b', fontSize: 12, fontWeight: 800 }}>{selectedCount}/{MAX_FREE_TEMPLATES}</span>
+                    </div>
+                    <div style={{ background: '#e2e8f0', borderRadius: 20, height: 6, overflow: 'hidden' }}>
+                      <div style={{ background: selectedCount >= MAX_FREE_TEMPLATES ? '#ef4444' : 'linear-gradient(90deg,#6366f1,#a855f7)', height: '100%', width: `${Math.min(100, (selectedCount / MAX_FREE_TEMPLATES) * 100)}%`, borderRadius: 20, transition: 'width 0.4s' }} />
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
 
@@ -362,8 +508,7 @@ export default function UserDashboard() {
                         {canOpenTemplate && (
                           <button
                             onClick={() => setLocation(`/editor/${req.categoryId}/${req.templateId}`)}
-                            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg,#10b981,#059669)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 13, fontWeight: 800, padding: '7px 16px', borderRadius: 20, ...inp, boxShadow: '0 4px 12px rgba(16,185,129,0.35)', whiteSpace: 'nowrap' }}
-                          >
+                            style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg,#10b981,#059669)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 13, fontWeight: 800, padding: '7px 16px', borderRadius: 20, ...inp, boxShadow: '0 4px 12px rgba(16,185,129,0.35)', whiteSpace: 'nowrap' }}>
                             <ExternalLink size={14} />
                             افتح القالب
                           </button>

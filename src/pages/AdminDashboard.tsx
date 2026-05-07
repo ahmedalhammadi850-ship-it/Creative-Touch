@@ -3,11 +3,12 @@ import { useLocation } from 'wouter';
 import { useAdminStore } from '../store/useAdminStore';
 import { usePricingStore } from '../store/usePricingStore';
 import { useRequestStore } from '../store/useRequestStore';
-import { useAuthStore } from '../store/useAuthStore';
+import { useAuthStore, getTimeRemaining } from '../store/useAuthStore';
 import type { User } from '../store/useAuthStore';
 import {
   ShieldCheck, LogOut, DollarSign, Users, Clock, CheckCircle, XCircle,
-  Edit3, Save, X, Plus, Trash2, LayoutTemplate, Bell, RotateCcw, ChevronDown
+  Edit3, Save, X, Plus, Trash2, LayoutTemplate, Bell, RotateCcw, ChevronDown,
+  AlertTriangle, CalendarClock, Infinity
 } from 'lucide-react';
 import type { AppRequest } from '../store/useRequestStore';
 import type { PricingPlan } from '../store/usePricingStore';
@@ -445,6 +446,46 @@ export default function AdminDashboard() {
                       <span style={{ background: STATUS_LABEL[u.planStatus]?.bg, color: STATUS_LABEL[u.planStatus]?.color, fontSize: 12, fontWeight: 800, padding: '4px 12px', borderRadius: 20 }}>{STATUS_LABEL[u.planStatus]?.label}</span>
                     )}
                     <span style={{ color: '#94a3b8', fontSize: 11 }}>{new Date(u.createdAt).toLocaleDateString('ar-YE')}</span>
+
+                    {/* Time Remaining Column */}
+                    {(() => {
+                      const timeLeft = getTimeRemaining(u);
+                      if (u.plan === 'free') {
+                        return (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 10, padding: '5px 10px' }}>
+                            <CalendarClock size={13} color="#94a3b8" />
+                            <span style={{ color: '#94a3b8', fontSize: 11, fontWeight: 700 }}>مجاني</span>
+                          </div>
+                        );
+                      }
+                      if (u.plan === 'starter') {
+                        return (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#ecfdf5', border: '1px solid #6ee7b7', borderRadius: 10, padding: '5px 10px' }}>
+                            <Infinity size={13} color="#10b981" />
+                            <span style={{ color: '#065f46', fontSize: 11, fontWeight: 700 }}>دائم</span>
+                          </div>
+                        );
+                      }
+                      if (!timeLeft) return null;
+                      if (timeLeft.expired) {
+                        return (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 5, background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '5px 10px' }}>
+                            <AlertTriangle size={13} color="#dc2626" />
+                            <span style={{ color: '#dc2626', fontSize: 11, fontWeight: 800 }}>منتهي</span>
+                          </div>
+                        );
+                      }
+                      const isUrgent = timeLeft.days === 0;
+                      return (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 5, background: isUrgent ? '#fef2f2' : '#eef2ff', border: `1px solid ${isUrgent ? '#fecaca' : '#c7d2fe'}`, borderRadius: 10, padding: '5px 10px' }}>
+                          <Clock size={13} color={isUrgent ? '#dc2626' : '#6366f1'} />
+                          <span style={{ color: isUrgent ? '#dc2626' : '#3730a3', fontSize: 11, fontWeight: 800 }}>
+                            {timeLeft.days > 0 ? `${timeLeft.days}ي ${timeLeft.hours}س` : `${timeLeft.hours} ساعة`}
+                          </span>
+                          {isUrgent && <AlertTriangle size={12} color="#dc2626" />}
+                        </div>
+                      );
+                    })()}
 
                     {/* Direct plan change */}
                     <div style={{ position: 'relative' }}>

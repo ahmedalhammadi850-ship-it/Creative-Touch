@@ -10,6 +10,7 @@ export interface User {
   planExpiresAt?: string;
   createdAt: string;
   activatedTemplates?: string[];
+  selectedTemplates?: string[];
 }
 
 interface AuthState {
@@ -21,15 +22,33 @@ interface AuthState {
   logout: () => void;
   updateUserPlan: (userId: string, plan: User['plan'], status: User['planStatus'], expiresAt?: string) => void;
   addActivatedTemplate: (userId: string, templateKey: string) => void;
+  addSelectedTemplate: (userId: string, templateKey: string) => void;
   refreshCurrentUser: () => void;
 }
 
 export function isPlanActive(user: User | null): boolean {
   if (!user || user.plan === 'free' || user.planStatus !== 'active') return false;
+  if (user.plan === 'starter') return true;
   if (user.planExpiresAt) {
     return new Date(user.planExpiresAt) > new Date();
   }
   return true;
+}
+
+export function getTimeRemaining(user: User | null): { days: number; hours: number; expired: boolean } | null {
+  if (!user || !user.planExpiresAt || user.plan === 'free' || user.plan === 'starter') return null;
+  const now = new Date().getTime();
+  const end = new Date(user.planExpiresAt).getTime();
+  const diff = end - now;
+  if (diff <= 0) return { days: 0, hours: 0, expired: true };
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  return { days, hours, expired: false };
+}
+
+export function getSelectedTemplatesCount(user: User | null): number {
+  if (!user) return 0;
+  return (user.selectedTemplates || []).length;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -80,6 +99,21 @@ export const useAuthStore = create<AuthState>()(
               ? { ...state.user, activatedTemplates: [...new Set([...(state.user.activatedTemplates || []), templateKey])] }
               : state.user,
         }));
+      },
+
+      addSelectedTemplate: (userId, templateKey) => {
+        set((state) => {
+          const updateUser = (u: User): User => {
+            if (u.id !== userId) return u;
+            const current = u.selectedTemplates || [];
+            if (current.includes(templateKey)) return u;
+            return { ...u, selectedTemplates: [...current, templateKey] };
+          };
+          return {
+            users: state.users.map(updateUser),
+            user: state.user?.id === userId ? updateUser(state.user) : state.user,
+          };
+        });
       },
 
       refreshCurrentUser: () => {
