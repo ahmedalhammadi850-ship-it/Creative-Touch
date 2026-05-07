@@ -4,6 +4,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import { Eye, EyeOff, UserPlus, LayoutTemplate, Mail, RefreshCw, CheckCircle } from 'lucide-react';
 import {
   auth,
+  firebaseReady,
   createUserWithEmailAndPassword,
   sendEmailVerification,
   updateProfile,
@@ -79,6 +80,10 @@ export default function RegisterPage() {
     if (!name.trim()) { setError('يرجى إدخال الاسم الكامل'); return; }
     if (password !== confirm) { setError('كلمتا المرور غير متطابقتين'); return; }
     if (password.length < 6) { setError('كلمة المرور يجب أن تكون 6 أحرف على الأقل'); return; }
+    if (!firebaseReady) {
+      setError('خدمة إنشاء الحساب غير متاحة حالياً. يرجى التواصل مع الدعم.');
+      return;
+    }
     setLoading(true);
     try {
       const credential = await createUserWithEmailAndPassword(auth, email.trim(), password);

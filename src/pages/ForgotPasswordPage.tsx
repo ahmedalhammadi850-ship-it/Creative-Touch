@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { Mail, LayoutTemplate, CheckCircle } from 'lucide-react';
-import { auth, sendPasswordResetEmail, getFirebaseErrorMessage } from '../lib/firebase';
+import { auth, firebaseReady, sendPasswordResetEmail, getFirebaseErrorMessage } from '../lib/firebase';
 
 export default function ForgotPasswordPage() {
   const [, setLocation] = useLocation();
@@ -13,6 +13,10 @@ export default function ForgotPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    if (!firebaseReady) {
+      setError('خدمة استعادة كلمة المرور غير متاحة حالياً. يرجى التواصل مع الدعم.');
+      return;
+    }
     setLoading(true);
     try {
       await sendPasswordResetEmail(auth, email.trim());

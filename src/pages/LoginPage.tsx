@@ -4,6 +4,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import { Eye, EyeOff, LogIn, LayoutTemplate, Mail, RefreshCw } from 'lucide-react';
 import {
   auth,
+  firebaseReady,
   signInWithEmailAndPassword,
   sendEmailVerification,
   signOut,
@@ -26,6 +27,10 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     setNotVerified(false);
+    if (!firebaseReady) {
+      setError('خدمة تسجيل الدخول غير متاحة حالياً. يرجى التواصل مع الدعم.');
+      return;
+    }
     setLoading(true);
     try {
       const credential = await signInWithEmailAndPassword(auth, email.trim(), password);

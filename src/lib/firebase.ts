@@ -21,8 +21,19 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+let auth: ReturnType<typeof getAuth>;
+let firebaseReady = false;
+
+try {
+  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  firebaseReady = true;
+} catch (e) {
+  console.warn('Firebase initialization failed. Auth features will be unavailable.', e);
+  auth = {} as ReturnType<typeof getAuth>;
+}
+
+export { auth, firebaseReady };
 
 export {
   createUserWithEmailAndPassword,
@@ -55,6 +66,8 @@ export function getFirebaseErrorMessage(code: string): string {
       return 'خطأ في الاتصال بالإنترنت';
     case 'auth/user-disabled':
       return 'تم تعطيل هذا الحساب';
+    case 'auth/invalid-api-key':
+      return 'إعدادات التطبيق غير مكتملة. يرجى التواصل مع الدعم';
     default:
       return 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى';
   }
