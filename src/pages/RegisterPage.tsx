@@ -1,19 +1,26 @@
 import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { useAuthStore } from '../store/useAuthStore';
-import { Eye, EyeOff, UserPlus, LayoutTemplate } from 'lucide-react';
+import { Eye, EyeOff, UserPlus, LayoutTemplate, Mail, CheckCircle, RefreshCw } from 'lucide-react';
 import {
   auth,
   firebaseReady,
   createUserWithEmailAndPassword,
+  sendEmailVerification,
   updateProfile,
   signOut,
   getFirebaseErrorMessage,
 } from '../lib/firebase';
 
+type Step = 'form' | 'verify';
+
 export default function RegisterPage() {
   const [, setLocation] = useLocation();
-  const { addUser, setCurrentUser, getUserByEmail } = useAuthStore();
+  const { addUser } = useAuthStore();
+
+  const [step, setStep] = useState<Step>('form');
+  const [verifyEmail, setVerifyEmail] = useState('');
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,6 +28,8 @@ export default function RegisterPage() {
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resent, setResent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,31 +37,27 @@ export default function RegisterPage() {
     if (!name.trim()) { setError('يرجى إدخال الاسم الكامل'); return; }
     if (password !== confirm) { setError('كلمتا المرور غير متطابقتين'); return; }
     if (password.length < 6) { setError('كلمة المرور يجب أن تكون 6 أحرف على الأقل'); return; }
-    if (!firebaseReady) {
-      setError('خدمة إنشاء الحساب غير متاحة حالياً.');
-      return;
-    }
+    if (!firebaseReady) { setError('خدمة إنشاء الحساب غير متاحة حالياً.'); return; }
+
     setLoading(true);
     try {
       const credential = await createUserWithEmailAndPassword(auth, email.trim(), password);
       await updateProfile(credential.user, { displayName: name.trim() });
-      const localUser = getUserByEmail(email.trim());
-      if (localUser) {
-        setCurrentUser(localUser);
-      } else {
-        const newUser = {
-          id: credential.user.uid,
-          name: name.trim(),
-          email: email.toLowerCase().trim(),
-          plan: 'free' as const,
-          planStatus: null,
-          createdAt: new Date().toISOString(),
-        };
-        addUser(newUser);
-        setCurrentUser(newUser);
-      }
+
+      await sendEmailVerification(credential.user);
+
+      addUser({
+        id: credential.user.uid,
+        name: name.trim(),
+        email: email.toLowerCase().trim(),
+        plan: 'free',
+        planStatus: null,
+        createdAt: new Date().toISOString(),
+      });
+
+      setVerifyEmail(email.trim());
       await signOut(auth);
-      setLocation('/dashboard');
+      setStep('verify');
     } catch (err: unknown) {
       const code = (err as { code?: string }).code || '';
       setError(getFirebaseErrorMessage(code));
@@ -61,212 +66,168 @@ export default function RegisterPage() {
     }
   };
 
-  const inputStyle: React.CSSProperties = {
-    width: '100%',
-    padding: '12px 14px',
-    borderRadius: 12,
-    border: '2px solid #e2e8f0',
-    fontSize: 15,
-    outline: 'none',
-    boxSizing: 'border-box',
-    fontFamily: "'Cairo',sans-serif",
-    transition: 'border-color 0.2s',
+  const handleResend = async () => {
+    setResending(true);
+    setResent(false);
+    try {
+      const { signInWithEmailAndPassword: fbSignIn } = await import('../lib/firebase');
+      const cred = await fbSignIn(auth, verifyEmail, password);
+      await sendEmailVerification(cred.user);
+      await signOut(auth);
+      setResent(true);
+    } catch {
+    } finally {
+      setResending(false);
+    }
   };
 
-  const labelStyle: React.CSSProperties = {
-    display: 'block',
-    color: '#374151',
-    fontSize: 13,
-    fontWeight: 700,
-    marginBottom: 7,
+  const inp: React.CSSProperties = {
+    width: '100%', padding: '12px 14px', borderRadius: 12,
+    border: '2px solid #e2e8f0', fontSize: 15, outline: 'none',
+    boxSizing: 'border-box', fontFamily: "'Cairo',sans-serif", transition: 'border-color 0.2s',
   };
+  const lbl: React.CSSProperties = { display: 'block', color: '#374151', fontSize: 13, fontWeight: 700, marginBottom: 7 };
+
+  if (step === 'verify') {
+    return (
+      <div dir="rtl" style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#f8f7ff 0%,#eef2ff 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px 16px', fontFamily: "'Cairo',sans-serif" }}>
+        <div style={{ width: '100%', maxWidth: 440 }}>
+
+          <div style={{ background: '#fff', borderRadius: 24, padding: 'clamp(28px,6vw,44px) clamp(20px,6vw,40px)', boxShadow: '0 12px 50px rgba(99,102,241,0.14)', border: '1px solid rgba(99,102,241,0.1)', textAlign: 'center' }}>
+
+            <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', boxShadow: '0 10px 30px rgba(99,102,241,0.4)' }}>
+              <Mail size={38} color="#fff" />
+            </div>
+
+            <h2 style={{ color: '#1e1b4b', fontSize: 22, fontWeight: 900, margin: '0 0 10px' }}>
+              تحقق من بريدك الإلكتروني
+            </h2>
+            <p style={{ color: '#64748b', fontSize: 14, lineHeight: 1.8, margin: '0 0 6px' }}>
+              أرسلنا رابط تفعيل إلى
+            </p>
+            <p style={{ color: '#6366f1', fontSize: 15, fontWeight: 800, margin: '0 0 20px', direction: 'ltr', wordBreak: 'break-all' }}>
+              {verifyEmail}
+            </p>
+
+            <div style={{ background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 14, padding: '14px 16px', marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                <CheckCircle size={18} color="#16a34a" style={{ marginTop: 2, flexShrink: 0 }} />
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ color: '#15803d', fontSize: 13, fontWeight: 800, margin: '0 0 4px' }}>الخطوات التالية:</p>
+                  <p style={{ color: '#166534', fontSize: 13, lineHeight: 1.8, margin: 0 }}>
+                    ١. افتح بريدك الإلكتروني<br />
+                    ٢. انقر على رابط "تحقق من بريدك الإلكتروني"<br />
+                    ٣. ارجع هنا وسجّل دخولك
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {resent && (
+              <div style={{ background: '#ecfdf5', border: '1px solid #6ee7b7', borderRadius: 10, padding: '10px 14px', color: '#059669', fontSize: 13, fontWeight: 700, marginBottom: 16 }}>
+                تم إعادة إرسال رابط التحقق بنجاح
+              </div>
+            )}
+
+            <button
+              onClick={() => setLocation('/login')}
+              style={{ width: '100%', padding: '13px', borderRadius: 14, background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 15, fontWeight: 800, fontFamily: "'Cairo',sans-serif", boxShadow: '0 6px 20px rgba(99,102,241,0.35)', marginBottom: 12 }}
+            >
+              تسجيل الدخول بعد التحقق
+            </button>
+
+            <button
+              onClick={handleResend}
+              disabled={resending}
+              style={{ width: '100%', padding: '11px', borderRadius: 14, background: 'transparent', border: '2px solid #e2e8f0', cursor: resending ? 'not-allowed' : 'pointer', color: '#64748b', fontSize: 14, fontWeight: 700, fontFamily: "'Cairo',sans-serif", display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7 }}
+            >
+              <RefreshCw size={15} style={{ animation: resending ? 'spin 1s linear infinite' : 'none' }} />
+              {resending ? 'جاري الإرسال...' : 'إعادة إرسال الرابط'}
+            </button>
+
+            <p style={{ color: '#94a3b8', fontSize: 12, marginTop: 16, lineHeight: 1.7 }}>
+              تحقق من مجلد Spam إذا لم تجد الرسالة
+            </p>
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: 16 }}>
+            <button onClick={() => setLocation('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', fontSize: 13, fontWeight: 600 }}>
+              ← العودة للرئيسية
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div
-      dir="rtl"
-      style={{
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg,#f8f7ff 0%,#eef2ff 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '20px 16px',
-        fontFamily: "'Cairo',sans-serif",
-        boxSizing: 'border-box',
-      }}
-    >
+    <div dir="rtl" style={{ minHeight: '100vh', background: 'linear-gradient(135deg,#f8f7ff 0%,#eef2ff 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px 16px', fontFamily: "'Cairo',sans-serif", boxSizing: 'border-box' }}>
       <div style={{ width: '100%', maxWidth: 420 }}>
 
-        {/* Logo + title */}
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <div style={{
-            width: 56, height: 56, borderRadius: 18,
-            background: 'linear-gradient(135deg,#6366f1,#a855f7)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 14px',
-            boxShadow: '0 8px 25px rgba(99,102,241,0.35)',
-          }}>
+          <div style={{ width: 56, height: 56, borderRadius: 18, background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px', boxShadow: '0 8px 25px rgba(99,102,241,0.35)' }}>
             <LayoutTemplate size={26} color="#fff" />
           </div>
-          <h1 style={{ color: '#1e1b4b', fontSize: 24, fontWeight: 900, margin: '0 0 6px' }}>
-            إنشاء حساب
-          </h1>
-          <p style={{ color: '#64748b', fontSize: 14, margin: 0 }}>
-            انضم إلى ستوديو القوالب مجاناً
-          </p>
+          <h1 style={{ color: '#1e1b4b', fontSize: 24, fontWeight: 900, margin: '0 0 6px' }}>إنشاء حساب</h1>
+          <p style={{ color: '#64748b', fontSize: 14, margin: 0 }}>انضم إلى ستوديو القوالب مجاناً</p>
         </div>
 
-        {/* Card */}
-        <div style={{
-          background: '#fff',
-          borderRadius: 20,
-          padding: 'clamp(20px, 5vw, 36px) clamp(16px, 5vw, 32px)',
-          boxShadow: '0 8px 40px rgba(99,102,241,0.12)',
-          border: '1px solid rgba(99,102,241,0.1)',
-        }}>
+        <div style={{ background: '#fff', borderRadius: 20, padding: 'clamp(20px,5vw,36px) clamp(16px,5vw,32px)', boxShadow: '0 8px 40px rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.1)' }}>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-            {/* Full name */}
             <div>
-              <label style={labelStyle}>الاسم الكامل</label>
-              <input
-                value={name}
-                onChange={e => setName(e.target.value)}
-                placeholder="أدخل اسمك الكامل"
-                required
-                autoComplete="name"
-                style={inputStyle}
-                onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')}
-                onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')}
-              />
+              <label style={lbl}>الاسم الكامل</label>
+              <input value={name} onChange={e => setName(e.target.value)} placeholder="أدخل اسمك الكامل" required autoComplete="name" style={inp}
+                onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
             </div>
 
-            {/* Email */}
             <div>
-              <label style={labelStyle}>البريد الإلكتروني</label>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="example@email.com"
-                dir="ltr"
-                required
-                autoComplete="email"
-                inputMode="email"
-                style={inputStyle}
-                onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')}
-                onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')}
-              />
+              <label style={lbl}>البريد الإلكتروني</label>
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="example@email.com" dir="ltr" required autoComplete="email" inputMode="email" style={inp}
+                onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
             </div>
 
-            {/* Password */}
             <div>
-              <label style={labelStyle}>كلمة المرور</label>
+              <label style={lbl}>كلمة المرور</label>
               <div style={{ position: 'relative' }}>
-                <input
-                  type={showPass ? 'text' : 'password'}
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  placeholder="6 أحرف على الأقل"
-                  required
-                  autoComplete="new-password"
-                  style={{ ...inputStyle, padding: '12px 44px 12px 14px' }}
-                  onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')}
-                  onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPass(v => !v)}
-                  style={{
-                    position: 'absolute', left: 12, top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'none', border: 'none', cursor: 'pointer',
-                    color: '#94a3b8', padding: 4,
-                  }}
-                >
+                <input type={showPass ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} placeholder="6 أحرف على الأقل" required autoComplete="new-password"
+                  style={{ ...inp, padding: '12px 44px 12px 14px' }}
+                  onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
+                <button type="button" onClick={() => setShowPass(v => !v)}
+                  style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: 4 }}>
                   {showPass ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
 
-            {/* Confirm password */}
             <div>
-              <label style={labelStyle}>تأكيد كلمة المرور</label>
-              <input
-                type={showPass ? 'text' : 'password'}
-                value={confirm}
-                onChange={e => setConfirm(e.target.value)}
-                placeholder="أعد كتابة كلمة المرور"
-                required
-                autoComplete="new-password"
-                style={inputStyle}
-                onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')}
-                onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')}
-              />
+              <label style={lbl}>تأكيد كلمة المرور</label>
+              <input type={showPass ? 'text' : 'password'} value={confirm} onChange={e => setConfirm(e.target.value)} placeholder="أعد كتابة كلمة المرور" required autoComplete="new-password" style={inp}
+                onFocus={e => (e.currentTarget.style.borderColor = '#6366f1')} onBlur={e => (e.currentTarget.style.borderColor = '#e2e8f0')} />
             </div>
 
-            {/* Error */}
             {error && (
-              <div style={{
-                background: '#fef2f2', border: '1px solid #fecaca',
-                borderRadius: 10, padding: '10px 14px',
-                color: '#dc2626', fontSize: 13, fontWeight: 600,
-              }}>
+              <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 10, padding: '10px 14px', color: '#dc2626', fontSize: 13, fontWeight: 600 }}>
                 {error}
               </div>
             )}
 
-            {/* Submit */}
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                width: '100%', padding: '13px', borderRadius: 14,
-                background: loading ? '#e2e8f0' : 'linear-gradient(135deg,#6366f1,#a855f7)',
-                border: 'none', cursor: loading ? 'not-allowed' : 'pointer',
-                color: loading ? '#94a3b8' : '#fff',
-                fontSize: 15, fontWeight: 800,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                boxShadow: loading ? 'none' : '0 6px 20px rgba(99,102,241,0.35)',
-                fontFamily: "'Cairo',sans-serif",
-                marginTop: 4,
-                WebkitTapHighlightColor: 'transparent',
-              }}
-            >
+            <button type="submit" disabled={loading}
+              style={{ width: '100%', padding: '13px', borderRadius: 14, background: loading ? '#e2e8f0' : 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: loading ? 'not-allowed' : 'pointer', color: loading ? '#94a3b8' : '#fff', fontSize: 15, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxShadow: loading ? 'none' : '0 6px 20px rgba(99,102,241,0.35)', fontFamily: "'Cairo',sans-serif", marginTop: 4, WebkitTapHighlightColor: 'transparent' }}>
               {loading ? 'جاري الإنشاء...' : <><UserPlus size={17} /> إنشاء حساب</>}
             </button>
           </form>
 
-          {/* Switch to login */}
           <div style={{ textAlign: 'center', marginTop: 20, paddingTop: 18, borderTop: '1px solid #f1f5f9' }}>
             <span style={{ color: '#64748b', fontSize: 13 }}>لديك حساب بالفعل؟ </span>
-            <button
-              onClick={() => setLocation('/login')}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6366f1', fontSize: 13, fontWeight: 800, padding: 0 }}
-            >
+            <button onClick={() => setLocation('/login')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6366f1', fontSize: 13, fontWeight: 800, padding: 0 }}>
               تسجيل الدخول
             </button>
           </div>
         </div>
 
-        {/* Notice: local accounts */}
-        <div style={{
-          marginTop: 14, padding: '10px 14px',
-          background: 'rgba(99,102,241,0.06)',
-          borderRadius: 12, border: '1px solid rgba(99,102,241,0.15)',
-          textAlign: 'center',
-        }}>
-          <p style={{ color: '#6366f1', fontSize: 12, margin: 0, fontWeight: 600, lineHeight: 1.6 }}>
-            ⚠️ الحسابات محفوظة على هذا الجهاز والمتصفح فقط
-          </p>
-        </div>
-
-        {/* Back */}
         <div style={{ textAlign: 'center', marginTop: 14 }}>
-          <button
-            onClick={() => setLocation('/')}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', fontSize: 13, fontWeight: 600 }}
-          >
+          <button onClick={() => setLocation('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', fontSize: 13, fontWeight: 600 }}>
             ← العودة للرئيسية
           </button>
         </div>
