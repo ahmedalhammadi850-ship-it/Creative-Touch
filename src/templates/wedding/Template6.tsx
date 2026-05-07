@@ -53,7 +53,7 @@ export default function WeddingTemplate6({ data }: Props) {
       }}>
         <p style={{ color: colors.accent, fontSize: 9 + _d, margin: 0, letterSpacing: 2, fontWeight: 700 }}>{email || '✦ دعوة زفاف ✦'}</p>
         <h1 style={{ color: '#ffffff', fontSize: 24 + _d, fontWeight: 900, margin: 0, lineHeight: 1.0, textShadow: `0 2px 12px ${colors.primary}` }}>{title || 'عبدالله'}</h1>
-        <p style={{ color: colors.accent, fontSize: 13 + _d, fontWeight: 700, margin: 0 }}>{subtitle || '& نورة'}</p>
+        <p style={{ color: colors.accent, fontSize: 13 + _d, fontWeight: 700, margin: 0 }}>{subtitle || '& سعادة'}</p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, justifyContent: 'center' }}>
           <div style={{ flex: 1, height: 1, background: `linear-gradient(to right, transparent, ${colors.accent}88)` }} />
           <div style={{ width: 4, height: 4, borderRadius: '50%', background: colors.accent }} />
