@@ -17,13 +17,13 @@ export interface PricingPlan {
 const defaultPlans: PricingPlan[] = [
   {
     id: 'starter',
-    name: 'باقة 7 قوالب',
+    name: 'باقة 3 قوالب',
     description: 'مثالية لمن يريد تصميماً واحداً محدداً',
     priceYER: 1000,
     priceUSD: 2,
     period: 'مرة واحدة',
     features: [
-      'اختر 7 قوالب من أي قائمة',
+      'اختر 3 قوالب من أي قائمة',
       'من جميع الفئات المتاحة',
       'تصدير PNG بجودة عالية',
       'تخصيص ألوان ونصوص وصور',

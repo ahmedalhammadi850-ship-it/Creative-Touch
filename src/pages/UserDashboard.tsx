@@ -9,7 +9,7 @@ import {
   AlertTriangle, CalendarClock, ShieldCheck, Lock as LockIcon
 } from 'lucide-react';
 
-const MAX_FREE_TEMPLATES = 7;
+const MAX_FREE_TEMPLATES = 3;
 
 const ALL_CATEGORIES = [
   { id: 'congrats',      name: 'بطاقات التهنئة',  desc: 'بطاقات للأفراح والمناسبات',       emoji: '🎊', color: '#f59e0b', bg: '#fffbeb', border: '#fde68a', count: 29 },
@@ -22,7 +22,7 @@ const ALL_CATEGORIES = [
 
 const PLAN_LABELS: Record<string, string> = {
   free: 'مجاني',
-  starter: 'باقة 7 قوالب',
+  starter: 'باقة 3 قوالب',
   weekly: 'أسبوعي',
   monthly: 'شهري',
 };
@@ -91,7 +91,7 @@ function SubscriptionStatusCard({ user }: { user: NonNullable<ReturnType<typeof 
           </div>
           <div>
             <h3 style={{ color: '#1e1b4b', fontSize: 15, fontWeight: 900, margin: 0 }}>حالة الاشتراك</h3>
-            <p style={{ color: planColor.from, fontSize: 12, fontWeight: 700, margin: 0 }}>باقة 7 قوالب — دائمة</p>
+            <p style={{ color: planColor.from, fontSize: 12, fontWeight: 700, margin: 0 }}>باقة 3 قوالب — دائمة</p>
           </div>
           <div style={{ marginRight: 'auto', background: `linear-gradient(135deg,${planColor.from},${planColor.to})`, borderRadius: 20, padding: '4px 12px', display: 'flex', alignItems: 'center', gap: 5 }}>
             <Crown size={11} color="#fff" />
@@ -99,7 +99,7 @@ function SubscriptionStatusCard({ user }: { user: NonNullable<ReturnType<typeof 
           </div>
         </div>
         <div style={{ background: planColor.bg, borderRadius: 14, padding: '14px 16px' }}>
-          <p style={{ color: planColor.text, fontSize: 13, fontWeight: 700, margin: 0 }}>✓ لديك صلاحية دائمة لـ 7 قوالب محددة مسبقاً</p>
+          <p style={{ color: planColor.text, fontSize: 13, fontWeight: 700, margin: 0 }}>✓ لديك صلاحية دائمة لـ 3 قوالب محددة مسبقاً</p>
         </div>
       </div>
     );

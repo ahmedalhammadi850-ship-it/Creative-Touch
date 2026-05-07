@@ -5,7 +5,7 @@ import { useAuthStore, isPlanActive, getSelectedTemplatesCount } from '../store/
 import { ChevronRight, Lock as LockIcon, Zap, LayoutTemplate, ShieldCheck } from 'lucide-react';
 
 const FREE_CATEGORY = 'business-card';
-const MAX_STARTER_TEMPLATES = 7;
+const MAX_STARTER_TEMPLATES = 3;
 
 export default function CategoryPage() {
   const [, params] = useRoute('/category/:id');
@@ -149,8 +149,8 @@ export default function CategoryPage() {
               <LockIcon size={16} color="#dc2626" />
             </div>
             <div>
-              <p style={{ color: '#991b1b', fontSize: 14, fontWeight: 900, margin: 0 }}>استنفدت قوالبك السبعة</p>
-              <p style={{ color: '#dc2626', fontSize: 12, margin: 0, fontWeight: 600 }}>قم بشراء باقة جديدة (1,000 ريال) للحصول على 7 قوالب إضافية</p>
+              <p style={{ color: '#991b1b', fontSize: 14, fontWeight: 900, margin: 0 }}>استنفدت قوالبك الثلاثة</p>
+              <p style={{ color: '#dc2626', fontSize: 12, margin: 0, fontWeight: 600 }}>قم بشراء باقة جديدة (1,000 ريال) للحصول على 3 قوالب إضافية</p>
             </div>
           </div>
           <button

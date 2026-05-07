@@ -669,7 +669,7 @@ export function InlineEditor({ categoryId, templateId, data, onChange, backCardM
                       باقي الحقول تتطلب الدفع
                     </p>
                     <p style={{ color: '#6366f1', fontSize: 12, margin: 0, fontFamily: "'Cairo', sans-serif" }}>
-                      1000 ريال يمني ≈ 2$ • 7 قوالب
+                      1000 ريال يمني ≈ 2$ • 3 قوالب
                     </p>
                   </div>
                 </div>

@@ -22,6 +22,7 @@ interface AuthState {
   logout: () => void;
   updateUserPlan: (userId: string, plan: User['plan'], status: User['planStatus'], expiresAt?: string) => void;
   addActivatedTemplate: (userId: string, templateKey: string) => void;
+  addActivatedTemplates: (userId: string, templateKeys: string[]) => void;
   addSelectedTemplate: (userId: string, templateKey: string) => void;
   refreshCurrentUser: () => void;
 }
@@ -99,6 +100,22 @@ export const useAuthStore = create<AuthState>()(
               ? { ...state.user, activatedTemplates: [...new Set([...(state.user.activatedTemplates || []), templateKey])] }
               : state.user,
         }));
+      },
+
+      // Activate multiple templates at once (used for adjacent template logic)
+      addActivatedTemplates: (userId, templateKeys) => {
+        set((state) => {
+          const updateUser = (u: User): User => {
+            if (u.id !== userId) return u;
+            const current = u.activatedTemplates || [];
+            const merged = [...new Set([...current, ...templateKeys])];
+            return { ...u, activatedTemplates: merged };
+          };
+          return {
+            users: state.users.map(updateUser),
+            user: state.user?.id === userId ? updateUser(state.user) : state.user,
+          };
+        });
       },
 
       addSelectedTemplate: (userId, templateKey) => {

@@ -4,6 +4,7 @@ import { useAdminStore } from '../store/useAdminStore';
 import { usePricingStore } from '../store/usePricingStore';
 import { useRequestStore } from '../store/useRequestStore';
 import { useAuthStore, getTimeRemaining } from '../store/useAuthStore';
+import { categories } from '../data/categories';
 import type { User } from '../store/useAuthStore';
 import {
   ShieldCheck, LogOut, DollarSign, Users, Clock, CheckCircle, XCircle,
@@ -29,19 +30,20 @@ const TYPE_LABEL: Record<string, string> = {
 };
 
 const PLAN_ID_MAP: Record<string, User['plan']> = {
-  starter:        'starter',
-  weekly:         'weekly',
-  monthly:        'monthly',
-  'باقة 7 قوالب':   'starter',
+  starter:           'starter',
+  weekly:            'weekly',
+  monthly:           'monthly',
+  'باقة 3 قوالب':    'starter',
+  'باقة 7 قوالب':    'starter',
   'الخطة الأسبوعية': 'weekly',
   'الخطة الشهرية':   'monthly',
-  'اشتراك شهري':   'monthly',
-  'اشتراك أسبوعي': 'weekly',
+  'اشتراك شهري':     'monthly',
+  'اشتراك أسبوعي':   'weekly',
 };
 
 const PLAN_LABELS: Record<string, string> = {
   free:    'مجاني',
-  starter: 'باقة 7 قوالب',
+  starter: 'باقة 3 قوالب',
   weekly:  'أسبوعي',
   monthly: 'شهري',
 };
@@ -58,7 +60,7 @@ export default function AdminDashboard() {
   const { logout } = useAdminStore();
   const { plans, updatePlan, updateFeature, addFeature, removeFeature, resetToDefault } = usePricingStore();
   const { requests, updateStatus } = useRequestStore();
-  const { users, updateUserPlan, addActivatedTemplate } = useAuthStore();
+  const { users, updateUserPlan, addActivatedTemplate, addActivatedTemplates } = useAuthStore();
 
   const [tab, setTab] = useState<Tab>('requests');
   const [editingPlan, setEditingPlan] = useState<string | null>(null);
@@ -94,11 +96,26 @@ export default function AdminDashboard() {
     return true;
   });
 
+  // Get adjacent template keys for a given category+template (prev, selected, next)
+  const getAdjacentTemplateKeys = (categoryId: string, templateId: string): string[] => {
+    const cat = categories.find(c => c.id === categoryId);
+    if (!cat) return [`${categoryId}/${templateId}`];
+    const idx = cat.templates.findIndex(t => t.id === templateId);
+    if (idx === -1) return [`${categoryId}/${templateId}`];
+    const keys: string[] = [];
+    if (idx > 0) keys.push(`${categoryId}/${cat.templates[idx - 1].id}`);
+    keys.push(`${categoryId}/${templateId}`);
+    if (idx < cat.templates.length - 1) keys.push(`${categoryId}/${cat.templates[idx + 1].id}`);
+    return keys;
+  };
+
   const handleApprove = (req: AppRequest, overridePlan?: User['plan'], expiresAt?: string) => {
     updateStatus(req.id, 'approved');
     if (req.userId) {
       if (req.type === 'activation' && req.categoryId && req.templateId) {
-        addActivatedTemplate(req.userId, `${req.categoryId}/${req.templateId}`);
+        // Activate selected template + the one before + the one after
+        const keys = getAdjacentTemplateKeys(req.categoryId, req.templateId);
+        addActivatedTemplates(req.userId, keys);
       } else {
         const plan = overridePlan ?? resolvePlanId(req);
         updateUserPlan(req.userId, plan, 'active', expiresAt);
@@ -214,7 +231,7 @@ export default function AdminDashboard() {
               {([
                 { id: 'all',        label: 'الجميع',        color: '#6366f1', activeColor: '#6366f1' },
                 { id: 'activation', label: '🔓 تفعيل قالب',  color: '#f59e0b', activeColor: '#f59e0b' },
-                { id: 'starter',    label: '📦 باقة 7 قوالب', color: '#10b981', activeColor: '#10b981' },
+                { id: 'starter',    label: '📦 باقة 3 قوالب', color: '#10b981', activeColor: '#10b981' },
                 { id: 'weekly',     label: '📅 الخطة الأسبوعية', color: '#6366f1', activeColor: '#6366f1' },
                 { id: 'monthly',    label: '⭐ الخطة الشهرية', color: '#a855f7', activeColor: '#a855f7' },
               ] as const).map(f => {
@@ -543,15 +560,15 @@ export default function AdminDashboard() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
 
-              {/* باقة 7 قوالب */}
+              {/* باقة 3 قوالب */}
               <button
                 onClick={() => handlePlanSelect('starter')}
                 style={{ width: '100%', padding: '16px 18px', borderRadius: 16, border: '2px solid #6ee7b7', background: 'linear-gradient(135deg,#ecfdf5,#f0fdf4)', cursor: 'pointer', textAlign: 'right', fontFamily: "'Cairo',sans-serif", transition: 'all 0.15s' }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div>
-                    <p style={{ color: '#065f46', fontSize: 15, fontWeight: 900, margin: '0 0 4px' }}>📦 باقة 7 قوالب</p>
-                    <p style={{ color: '#059669', fontSize: 12, margin: 0 }}>يختار المستخدم 7 قوالب — صلاحية دائمة</p>
+                    <p style={{ color: '#065f46', fontSize: 15, fontWeight: 900, margin: '0 0 4px' }}>📦 باقة 3 قوالب</p>
+                    <p style={{ color: '#059669', fontSize: 12, margin: 0 }}>يختار المستخدم 3 قوالب — صلاحية دائمة</p>
                   </div>
                   <span style={{ background: '#059669', color: '#fff', fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 20 }}>دائم</span>
                 </div>
