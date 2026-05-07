@@ -16,16 +16,14 @@ export default function Template20({ data }: { data: TemplateData }) {
         style={{ border: `1px solid ${data.colors.accent}`, background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%)' }} />
       <div className="absolute right-24 -top-4 w-20 h-20 rounded-full opacity-10" style={{ border: `1px solid ${data.colors.accent}` }} />
 
-      <div className="relative z-10 flex flex-col justify-between p-5 w-[55%] border-r border-white/10">
-        <div>
-          <p className="tracking-[0.2em] uppercase mb-1" style={{ color: data.colors.accent, fontSize: (ffs.company ?? 8) + _d }}>
-            {data.description || 'COMPANY NAME'}
-          </p>
-          <div className="w-8 h-px" style={{ backgroundColor: data.colors.accent }} />
-        </div>
+      <div className="relative z-10 flex flex-col justify-center p-5 w-[55%] border-r border-white/10">
+        <p className="tracking-[0.2em] uppercase mb-1" style={{ color: data.colors.accent, fontSize: (ffs.company ?? 8) + _d }}>
+          {data.description || 'COMPANY NAME'}
+        </p>
+        <div className="w-8 h-px" style={{ backgroundColor: data.colors.accent }} />
       </div>
 
-      <div className="relative z-10 flex flex-col justify-between p-5 w-[45%]">
+      <div className="relative z-10 flex flex-col justify-center p-5 w-[45%] gap-3">
         <div>
           <h2 className="font-bold tracking-wide leading-tight" style={{ color: '#ffffff', fontSize: (ffs.name ?? 14) + _d }}>
             {data.title}
