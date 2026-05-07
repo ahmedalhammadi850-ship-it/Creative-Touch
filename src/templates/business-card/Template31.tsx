@@ -8,7 +8,7 @@ export default function Template31({ data }: { data: TemplateData }) {
       className="relative overflow-hidden w-[340px] h-[220px] flex shadow-lg"
       style={{ backgroundColor: '#ffffff' }}
     >
-      <div className="relative flex-1 flex flex-col justify-between p-5 z-10">
+      <div className="relative flex-1 flex flex-col justify-center p-5 gap-3 z-10">
         <div>
           <div
             className="inline-block px-3 py-1 text-white font-bold" style={{ backgroundColor: data.colors.primary, fontSize: 13 + _d }}

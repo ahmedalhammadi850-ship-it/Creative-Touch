@@ -46,7 +46,7 @@ export default function Template37({ data }: { data: TemplateData }) {
       </div>
 
       {/* White right panel — dark text for max contrast */}
-      <div className="relative z-10 flex-1 flex flex-col justify-between py-5 px-5">
+      <div className="relative z-10 flex-1 flex flex-col justify-center py-5 px-5 gap-3">
         <div>
           <h2 className="font-extrabold leading-tight" style={{ color: '#111111', fontSize: 18 + _d }}>{data.title}</h2>
           <p className="font-semibold tracking-wider mt-1 uppercase" style={{ color: data.colors.primary, fontSize: 9 + _d }}>{data.subtitle}</p>

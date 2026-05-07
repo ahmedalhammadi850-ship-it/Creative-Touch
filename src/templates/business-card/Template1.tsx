@@ -6,7 +6,7 @@ export default function Template1({ data }: { data: TemplateData }) {
   return (
     <div
       id="template-preview"
-      className="relative overflow-hidden w-[340px] h-[220px] flex flex-col justify-between p-6 shadow-sm"
+      className="relative overflow-hidden w-[340px] h-[220px] flex flex-col justify-center p-6 gap-4 shadow-sm"
       style={{ backgroundColor: data.colors.bg, color: data.colors.accent }}
     >
       <div
@@ -23,7 +23,7 @@ export default function Template1({ data }: { data: TemplateData }) {
         <p className="opacity-90 mt-1" style={{ color: data.colors.secondary, fontSize: (ffs.jobTitle ?? 14) + _d }}>{data.subtitle}</p>
       </div>
 
-      <div className="z-10 space-y-1 mt-auto">
+      <div className="z-10 space-y-1">
         <p className="font-bold mb-2" style={{ fontSize: (ffs.company ?? 10) + _d }}>{data.description}</p>
         {data.phone && <p dir="ltr" className="text-right opacity-80" style={{ fontSize: (ffs.contact ?? 10) + _d }}>{data.phone}</p>}
         {data.email && <p dir="ltr" className="text-right opacity-80" style={{ fontSize: (ffs.contact ?? 10) + _d }}>{data.email}</p>}

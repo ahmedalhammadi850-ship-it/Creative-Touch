@@ -6,7 +6,7 @@ export default function Template17({ data }: { data: TemplateData }) {
   return (
     <div
       id="template-preview"
-      className="relative overflow-hidden w-[340px] h-[220px] flex flex-col justify-between p-6 shadow-sm"
+      className="relative overflow-hidden w-[340px] h-[220px] flex flex-col justify-center p-6 gap-4 shadow-sm"
       style={{ background: `linear-gradient(135deg, ${data.colors.bg} 0%, ${data.colors.primary}22 100%)` }}
     >
       <div className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-20 -translate-y-8 translate-x-8" style={{ backgroundColor: data.colors.primary }} />

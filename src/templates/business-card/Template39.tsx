@@ -30,7 +30,7 @@ export default function Template39({ data }: { data: TemplateData }) {
       style={{ backgroundColor: '#ffffff' }}
     >
       {/* White content area (left 210px) — all text here for maximum contrast */}
-      <div className="relative z-10 w-[210px] flex flex-col justify-between py-5 px-5">
+      <div className="relative z-10 w-[210px] flex flex-col justify-center py-5 px-5 gap-3">
         <div>
           <h2 className="font-extrabold leading-tight" style={{ color: '#111111', fontSize: 18 + _d }}>{data.title}</h2>
           <p className="font-semibold tracking-wider mt-1 uppercase" style={{ color: data.colors.primary, fontSize: 9 + _d }}>{data.subtitle}</p>

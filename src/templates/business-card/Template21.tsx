@@ -21,7 +21,7 @@ export default function Template21({ data }: { data: TemplateData }) {
 
       </div>
 
-      <div className="flex-1 flex flex-col justify-between p-5">
+      <div className="flex-1 flex flex-col justify-center p-5 gap-3">
         <div>
           <h2
             className="font-bold leading-tight" style={{ color: data.colors.primary, fontSize: 18 + _d }}
