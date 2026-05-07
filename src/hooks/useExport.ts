@@ -118,15 +118,14 @@ function showPdfInIOSWindow(iosWin: Window, pdfDataUri: string) {
 
 /* ──────────────────── capture: MOBILE ──────────────────── */
 /**
- * Clones #export-target into a position:fixed wrapper appended to document.body
- * — completely outside the scaled (.editor-template-preview) container.
- * html2canvas captures it at its natural size with no transform distortion.
+ * Mobile capture using html-to-image (SVG-based) to avoid the html2canvas
+ * RTL text-mirroring bug on mobile browsers.
  *
- * Key options:
- *   allowTaint: true  → cross-origin images are drawn (canvas will be "tainted"
- *                        but modern Android Chrome still allows toDataURL())
- *   useCORS: true     → attempt CORS fetch first so canvas stays clean if server
- *                        sends the right headers
+ * html2canvas renders Arabic text mirrored on mobile because it mishandles
+ * the RTL canvas text direction. html-to-image uses SVG foreignObject which
+ * preserves RTL text correctly.
+ *
+ * html2canvas is kept only as a last-resort fallback.
  */
 async function captureElementMobile(el: HTMLElement): Promise<string> {
   await document.fonts.ready;
@@ -134,7 +133,8 @@ async function captureElementMobile(el: HTMLElement): Promise<string> {
   const naturalW = el.offsetWidth;
   const naturalH = el.offsetHeight;
 
-  // Off-screen wrapper — position:fixed keeps it outside any ancestor transforms
+  // Temporarily reset any ancestor transform so html-to-image sees the
+  // element at its natural size and position.
   const wrapper = document.createElement('div');
   wrapper.style.cssText =
     `position:fixed;top:-${naturalH + 400}px;left:0;` +
@@ -148,24 +148,68 @@ async function captureElementMobile(el: HTMLElement): Promise<string> {
     `transform:none;transform-origin:top left;` +
     `position:relative;overflow:hidden;margin:0;padding:0;`;
 
+  // Preserve the RTL direction on the clone so text renders correctly
+  clone.setAttribute('dir', el.getAttribute('dir') || 'rtl');
+
   wrapper.appendChild(clone);
   document.body.appendChild(wrapper);
 
-  // Small delay to let the browser paint the clone before capturing
-  await new Promise(r => setTimeout(r, 120));
+  // Let the browser paint the clone
+  await new Promise(r => setTimeout(r, 150));
 
   try {
-    const canvas = await html2canvas(clone, {
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,       // include cross-origin images even if canvas gets tainted
-      backgroundColor: '#ffffff',
+    // Primary: html-to-image preserves RTL text direction correctly
+    const opts = {
+      pixelRatio: 2,
+      cacheBust: true,
       width: naturalW,
       height: naturalH,
-      imageTimeout: 15000,   // wait up to 15s for images to load
-      logging: false,
-    });
+      skipAutoScale: true,
+      style: {
+        overflow: 'hidden',
+        transform: 'none',
+        transformOrigin: 'top left',
+        direction: 'rtl',
+      } as Partial<CSSStyleDeclaration>,
+    };
+
+    // Two warm-up passes so fonts/images are cached
+    await toPng(clone, opts).catch(() => null);
+    const png = await toPng(clone, opts);
+
+    // Stamp onto white canvas for a solid background
+    const img = new Image();
+    img.src = png;
+    await new Promise<void>((res, rej) => { img.onload = () => res(); img.onerror = rej; });
+
+    const canvas = document.createElement('canvas');
+    canvas.width = naturalW * 2;
+    canvas.height = naturalH * 2;
+    const ctx = canvas.getContext('2d')!;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     return canvas.toDataURL('image/png');
+
+  } catch (primaryErr) {
+    console.warn('html-to-image failed on mobile, falling back to html2canvas:', primaryErr);
+
+    // Fallback: html2canvas (may have RTL issues on some browsers)
+    try {
+      const canvas = await html2canvas(clone, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        width: naturalW,
+        height: naturalH,
+        imageTimeout: 15000,
+        logging: false,
+      });
+      return canvas.toDataURL('image/png');
+    } finally {
+      // wrapper is removed in the outer finally
+    }
   } finally {
     if (document.body.contains(wrapper)) document.body.removeChild(wrapper);
   }

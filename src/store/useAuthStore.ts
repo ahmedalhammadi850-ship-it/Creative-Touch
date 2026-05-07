@@ -77,6 +77,18 @@ export const useAuthStore = create<AuthState>()(
 
       logout: () => set({ user: null }),
 
+      cancelSubscription: (userId) => {
+        set((state) => ({
+          users: state.users.map((u) =>
+            u.id === userId ? { ...u, plan: 'free', planStatus: null, planExpiresAt: undefined } : u
+          ),
+          user:
+            state.user?.id === userId
+              ? { ...state.user, plan: 'free', planStatus: null, planExpiresAt: undefined }
+              : state.user,
+        }));
+      },
+
       updateUserPlan: (userId, plan, status, expiresAt) => {
         set((state) => ({
           users: state.users.map((u) =>
