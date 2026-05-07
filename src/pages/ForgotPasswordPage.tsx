@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'wouter';
 import { Mail, LayoutTemplate, CheckCircle } from 'lucide-react';
+import { auth, firebaseReady, sendPasswordResetEmail, getFirebaseErrorMessage } from '../lib/firebase';
 
 export default function ForgotPasswordPage() {
   const [, setLocation] = useLocation();
@@ -12,10 +13,20 @@ export default function ForgotPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    if (!firebaseReady) {
+      setError('خدمة استعادة كلمة المرور غير متاحة حالياً. يرجى التواصل مع الدعم.');
+      return;
+    }
     setLoading(true);
-    await new Promise(r => setTimeout(r, 500));
-    setSent(true);
-    setLoading(false);
+    try {
+      await sendPasswordResetEmail(auth, email.trim());
+      setSent(true);
+    } catch (err: unknown) {
+      const code = (err as { code?: string }).code || '';
+      setError(getFirebaseErrorMessage(code));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inp: React.CSSProperties = {
@@ -43,10 +54,12 @@ export default function ForgotPasswordPage() {
               </div>
               <h3 style={{ color: '#1e1b4b', fontSize: 20, fontWeight: 900, marginBottom: 10 }}>تم إرسال الرابط!</h3>
               <p style={{ color: '#64748b', fontSize: 13, lineHeight: 1.8, marginBottom: 8 }}>
-                إذا كان البريد الإلكتروني مسجلاً لدينا، ستصلك رسالة إعادة تعيين كلمة المرور.
+                أرسلنا رابط إعادة تعيين كلمة المرور إلى
               </p>
               <p style={{ color: '#6366f1', fontSize: 14, fontWeight: 800, marginBottom: 20, direction: 'ltr' }}>{email}</p>
               <p style={{ color: '#94a3b8', fontSize: 12, lineHeight: 1.8, marginBottom: 28 }}>
+                افتح بريدك وانقر على الرابط لإعادة تعيين كلمة المرور.
+                <br />
                 تأكد من مراجعة مجلد Spam إذا لم تجد الرسالة.
               </p>
               <button onClick={() => setLocation('/login')}
