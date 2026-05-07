@@ -189,6 +189,7 @@ export default function UserDashboard() {
   const selectedCount = getSelectedTemplatesCount(user);
 
   const handleLogout = () => { logout(); setLocation('/'); };
+  const handleGoHome = () => setLocation('/');
 
   const inp: React.CSSProperties = { fontFamily: "'Cairo',sans-serif" };
 
@@ -242,6 +243,10 @@ export default function UserDashboard() {
           ))}
         </nav>
 
+        <button onClick={handleGoHome}
+          style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 14px', borderRadius: 12, border: 'none', cursor: 'pointer', background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.6)', fontSize: 13, fontWeight: 700, ...inp, marginBottom: 8 }}>
+          <ChevronLeft size={17} />الصفحة الرئيسية
+        </button>
         <button onClick={handleLogout}
           style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 14px', borderRadius: 12, border: 'none', cursor: 'pointer', background: 'rgba(239,68,68,0.15)', color: '#fca5a5', fontSize: 13, fontWeight: 700, ...inp }}>
           <LogOut size={17} />تسجيل الخروج
