@@ -23,11 +23,11 @@ export default function SpecializedTemplate12({ data }: Props) {
       <div style={{ position: 'absolute', bottom: -20, left: '20%', width: 140, height: 140, borderRadius: '50%', background: `radial-gradient(circle, ${colors.accent}44 0%, ${colors.accent}18 50%, transparent 70%)`, pointerEvents: 'none' }} />
 
       <div style={{ flex: 1, padding: '16px 22px 14px', position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column' }}>
-        <div style={{ color: colors.accent, fontSize: '8px', letterSpacing: '0.2em', fontWeight: 700, marginBottom: '6px', textShadow: `0 0 10px ${colors.accent}` }}>
+        <div style={{ color: colors.accent, fontSize: `${8 + _d}px`, letterSpacing: '0.2em', fontWeight: 700, marginBottom: '6px', textShadow: `0 0 10px ${colors.accent}` }}>
           ★ خدماتنا ★
         </div>
-        <div style={{ color: colors.secondary, fontSize: '22px', fontWeight: 900, lineHeight: 1.2, marginBottom: '3px', textShadow: `0 0 20px ${colors.primary}88` }}>{title}</div>
-        <div style={{ color: `${colors.secondary}aa`, fontSize: '10px', marginBottom: '14px' }}>{subtitle}</div>
+        <div style={{ color: colors.secondary, fontSize: `${22 + _d}px`, fontWeight: 900, lineHeight: 1.2, marginBottom: '3px', textShadow: `0 0 20px ${colors.primary}88` }}>{title}</div>
+        <div style={{ color: `${colors.secondary}aa`, fontSize: `${10 + _d}px`, marginBottom: '14px' }}>{subtitle}</div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '7px', flex: 1 }}>
           {services.slice(0, 4).map((s, i) => (
@@ -40,7 +40,7 @@ export default function SpecializedTemplate12({ data }: Props) {
               boxShadow: `0 0 8px ${i % 2 === 0 ? colors.primary : colors.accent}22`,
             }}>
               <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: i % 2 === 0 ? colors.primary : colors.accent, boxShadow: `0 0 6px ${i % 2 === 0 ? colors.primary : colors.accent}`, flexShrink: 0 }} />
-              <span style={{ color: colors.secondary, fontSize: '10px', fontWeight: 600 }}>{s}</span>
+              <span style={{ color: colors.secondary, fontSize: `${10 + _d}px`, fontWeight: 600 }}>{s}</span>
             </div>
           ))}
         </div>
@@ -53,7 +53,7 @@ export default function SpecializedTemplate12({ data }: Props) {
             borderRadius: '10px', padding: '10px 16px', textAlign: 'center',
             boxShadow: `0 0 16px ${colors.primary}44`,
           }}>
-            <span style={{ color: colors.accent, fontSize: '13px', fontWeight: 800, textShadow: `0 0 8px ${colors.accent}88` }} dir="ltr">{phone}</span>
+            <span style={{ color: colors.accent, fontSize: `${13 + _d}px`, fontWeight: 800, textShadow: `0 0 8px ${colors.accent}88` }} dir="ltr">{phone}</span>
           </div>
         )}
       </div>

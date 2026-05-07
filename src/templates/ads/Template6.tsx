@@ -26,20 +26,20 @@ export default function Template6({ data }: { data: TemplateData }) {
       <div style={{ position: 'relative', zIndex: 1, padding: '28px 36px 28px 28px', height: '100%', display: 'flex', flexDirection: 'column' }}>
         {/* Header */}
         <div style={{ marginBottom: '18px' }}>
-          <div style={{ color: data.colors.accent, fontSize: '9px', letterSpacing: '0.2em', marginBottom: '4px' }}>خدماتنا المميزة</div>
-          <div style={{ color: data.colors.primary, fontSize: '26px', fontWeight: '900', lineHeight: 1.1 }}>{data.title}</div>
+          <div style={{ color: data.colors.accent, fontSize: `${9 + _d}px`, letterSpacing: '0.2em', marginBottom: '4px' }}>خدماتنا المميزة</div>
+          <div style={{ color: data.colors.primary, fontSize: `${26 + _d}px`, fontWeight: '900', lineHeight: 1.1 }}>{data.title}</div>
           <div style={{ width: '40px', height: '3px', background: data.colors.accent, borderRadius: '2px', marginTop: '6px' }} />
         </div>
 
         {/* Subtitle */}
-        <div style={{ color: data.colors.secondary, fontSize: '12px', marginBottom: '16px', opacity: 0.8 }}>{data.subtitle}</div>
+        <div style={{ color: data.colors.secondary, fontSize: `${12 + _d}px`, marginBottom: '16px', opacity: 0.8 }}>{data.subtitle}</div>
 
         {/* Service list */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {(services.length > 0 ? services : ['خدمة شاملة ومتكاملة', 'أسعار مناسبة', 'فريق محترف']).map((s, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: data.colors.accent, flexShrink: 0 }} />
-              <span style={{ color: data.colors.secondary, fontSize: '12px', opacity: 0.85 }}>{s}</span>
+              <span style={{ color: data.colors.secondary, fontSize: `${12 + _d}px`, opacity: 0.85 }}>{s}</span>
             </div>
           ))}
         </div>
@@ -47,8 +47,8 @@ export default function Template6({ data }: { data: TemplateData }) {
         {/* CTA */}
         {data.phone && (
           <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: `1px solid ${data.colors.primary}22` }}>
-            <div style={{ color: data.colors.accent, fontSize: '10px', marginBottom: '4px' }}>تواصل معنا</div>
-            <div style={{ color: data.colors.primary, fontSize: '15px', fontWeight: '800' }} dir="ltr">{data.phone}</div>
+            <div style={{ color: data.colors.accent, fontSize: `${10 + _d}px`, marginBottom: '4px' }}>تواصل معنا</div>
+            <div style={{ color: data.colors.primary, fontSize: `${15 + _d}px`, fontWeight: '800' }} dir="ltr">{data.phone}</div>
           </div>
         )}
       </div>

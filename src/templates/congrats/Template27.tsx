@@ -54,14 +54,14 @@ export default function CongratsTemplate27({ data }: Props) {
         }}>
           {image
             ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
-            : <span style={{ fontSize: '30px', opacity: 0.5 }}>👤</span>
+            : <span style={{ fontSize: `${30 + _d}px`, opacity: 0.5 }}>👤</span>
           }
         </div>
 
-        <div style={{ color: colors.accent, fontSize: '7px', letterSpacing: '0.3em', fontWeight: 600, marginBottom: '8px', textShadow: `0 0 8px ${colors.accent}` }}>
+        <div style={{ color: colors.accent, fontSize: `${7 + _d}px`, letterSpacing: '0.3em', fontWeight: 600, marginBottom: '8px', textShadow: `0 0 8px ${colors.accent}` }}>
           ✦ ألف مبروك ✦
         </div>
-        <div style={{ color: colors.accent, fontSize: '30px', fontWeight: 900, lineHeight: 1.2, textShadow: `0 0 20px ${colors.accent}88`, marginBottom: '4px' }}>{title}</div>
+        <div style={{ color: colors.accent, fontSize: `${30 + _d}px`, fontWeight: 900, lineHeight: 1.2, textShadow: `0 0 20px ${colors.accent}88`, marginBottom: '4px' }}>{title}</div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '8px 0', justifyContent: 'center', width: '100%' }}>
           <div style={{ flex: 1, height: '0.5px', background: `linear-gradient(to left, ${colors.accent}88, transparent)` }} />
@@ -69,15 +69,15 @@ export default function CongratsTemplate27({ data }: Props) {
           <div style={{ flex: 1, height: '0.5px', background: `linear-gradient(to right, ${colors.accent}88, transparent)` }} />
         </div>
 
-        <div style={{ color: `${colors.accent}cc`, fontSize: '11px', fontWeight: 600, marginBottom: '10px' }}>{subtitle}</div>
+        <div style={{ color: `${colors.accent}cc`, fontSize: `${11 + _d}px`, fontWeight: 600, marginBottom: '10px' }}>{subtitle}</div>
 
         {lines.map((line, i) => (
-          <div key={i} style={{ color: `${colors.accent}88`, fontSize: '10px', lineHeight: 1.85 }}>{line}</div>
+          <div key={i} style={{ color: `${colors.accent}88`, fontSize: `${10 + _d}px`, lineHeight: 1.85 }}>{line}</div>
         ))}
 
         {email && (
           <div style={{ marginTop: '12px', background: `${colors.accent}15`, border: `1px solid ${colors.accent}44`, borderRadius: '20px', padding: '4px 14px' }}>
-            <span style={{ color: colors.accent, fontSize: '9px', fontWeight: 700, textShadow: `0 0 6px ${colors.accent}` }}>{email}</span>
+            <span style={{ color: colors.accent, fontSize: `${9 + _d}px`, fontWeight: 700, textShadow: `0 0 6px ${colors.accent}` }}>{email}</span>
           </div>
         )}
       </div>

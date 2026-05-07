@@ -47,12 +47,12 @@ export default function CongratsTemplate26({ data }: Props) {
         }}>
           {image
             ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
-            : <span style={{ fontSize: '28px', opacity: 0.48 }}>👤</span>
+            : <span style={{ fontSize: `${28 + _d}px`, opacity: 0.48 }}>👤</span>
           }
         </div>
 
-        <div style={{ color: colors.accent, fontSize: '7px', letterSpacing: '0.28em', fontWeight: 600, marginBottom: '8px', opacity: 0.85 }}>تهانينا القلبية</div>
-        <div style={{ color: colors.secondary, fontSize: '28px', fontWeight: 700, lineHeight: 1.2, marginBottom: '4px', textShadow: `0 0 20px ${colors.primary}88` }}>
+        <div style={{ color: colors.accent, fontSize: `${7 + _d}px`, letterSpacing: '0.28em', fontWeight: 600, marginBottom: '8px', opacity: 0.85 }}>تهانينا القلبية</div>
+        <div style={{ color: colors.secondary, fontSize: `${28 + _d}px`, fontWeight: 700, lineHeight: 1.2, marginBottom: '4px', textShadow: `0 0 20px ${colors.primary}88` }}>
           {title}
         </div>
 
@@ -62,15 +62,15 @@ export default function CongratsTemplate26({ data }: Props) {
           <div style={{ width: '28px', height: '0.5px', background: `linear-gradient(to right, ${colors.accent}99, transparent)` }} />
         </div>
 
-        <div style={{ color: `${colors.secondary}99`, fontSize: '10px', fontWeight: 600, marginBottom: '10px' }}>{subtitle}</div>
+        <div style={{ color: `${colors.secondary}99`, fontSize: `${10 + _d}px`, fontWeight: 600, marginBottom: '10px' }}>{subtitle}</div>
 
         {lines.map((line, i) => (
-          <div key={i} style={{ color: `${colors.secondary}bb`, fontSize: '10px', lineHeight: 1.9 }}>{line}</div>
+          <div key={i} style={{ color: `${colors.secondary}bb`, fontSize: `${10 + _d}px`, lineHeight: 1.9 }}>{line}</div>
         ))}
 
         {email && (
           <div style={{ marginTop: '12px', background: `${colors.accent}15`, border: `1px solid ${colors.accent}33`, borderRadius: '20px', padding: '4px 14px', display: 'inline-block' }}>
-            <span style={{ color: colors.accent, fontSize: '9px', fontWeight: 600 }}>{email}</span>
+            <span style={{ color: colors.accent, fontSize: `${9 + _d}px`, fontWeight: 600 }}>{email}</span>
           </div>
         )}
       </div>

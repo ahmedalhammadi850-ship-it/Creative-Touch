@@ -22,9 +22,9 @@ export default function SpecializedTemplate8({ data }: Props) {
       }}>
         <div style={{ position: 'absolute', top: -15, right: -15, width: 80, height: 80, borderRadius: '50%', background: 'rgba(255,255,255,0.08)' }} />
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ color: colors.accent, fontSize: '8px', letterSpacing: '0.15em', marginBottom: '4px', fontWeight: 700 }}>خدمات احترافية</div>
-          <div style={{ color: '#fff', fontSize: '18px', fontWeight: 900, lineHeight: 1.25 }}>{title}</div>
-          <div style={{ color: 'rgba(255,255,255,0.82)', fontSize: '10px', marginTop: '3px' }}>{subtitle}</div>
+          <div style={{ color: colors.accent, fontSize: `${8 + _d}px`, letterSpacing: '0.15em', marginBottom: '4px', fontWeight: 700 }}>خدمات احترافية</div>
+          <div style={{ color: '#fff', fontSize: `${18 + _d}px`, fontWeight: 900, lineHeight: 1.25 }}>{title}</div>
+          <div style={{ color: 'rgba(255,255,255,0.82)', fontSize: `${10 + _d}px`, marginTop: '3px' }}>{subtitle}</div>
         </div>
       </div>
       <svg width="360" height="13" viewBox="0 0 360 13" style={{ display: 'block', marginTop: '-1px' }}>
@@ -42,7 +42,7 @@ export default function SpecializedTemplate8({ data }: Props) {
               }}>
                 <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: colors.accent }} />
               </div>
-              <span style={{ color: colors.secondary, fontSize: '11px', fontWeight: 600 }}>{s}</span>
+              <span style={{ color: colors.secondary, fontSize: `${11 + _d}px`, fontWeight: 600 }}>{s}</span>
             </div>
           ))}
         </div>
@@ -53,7 +53,7 @@ export default function SpecializedTemplate8({ data }: Props) {
             borderRadius: '10px', padding: '10px 16px',
             boxShadow: `0 4px 16px ${colors.primary}44`,
           }}>
-            <span style={{ color: '#fff', fontSize: '12px', fontWeight: 800 }} dir="ltr">{phone}</span>
+            <span style={{ color: '#fff', fontSize: `${12 + _d}px`, fontWeight: 800 }} dir="ltr">{phone}</span>
           </div>
         )}
       </div>

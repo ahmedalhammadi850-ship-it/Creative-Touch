@@ -22,10 +22,10 @@ export default function SpecializedTemplate5({ data }: { data: TemplateData }) {
         {/* Logo area */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
           <div>
-            <div style={{ color: data.colors.primary, fontSize: '22px', fontWeight: '900', lineHeight: 1.1 }}>{data.title}</div>
-            <div style={{ color: data.colors.accent, fontSize: '11px', fontWeight: '700', marginTop: '2px' }}>{data.subtitle}</div>
+            <div style={{ color: data.colors.primary, fontSize: `${22 + _d}px`, fontWeight: '900', lineHeight: 1.1 }}>{data.title}</div>
+            <div style={{ color: data.colors.accent, fontSize: `${11 + _d}px`, fontWeight: '700', marginTop: '2px' }}>{data.subtitle}</div>
           </div>
-          <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: `linear-gradient(135deg, ${data.colors.primary}33, ${data.colors.accent}44)`, border: `2px solid ${data.colors.primary}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px' }}>✂️</div>
+          <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: `linear-gradient(135deg, ${data.colors.primary}33, ${data.colors.accent}44)`, border: `2px solid ${data.colors.primary}44`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: `${22 + _d}px` }}>✂️</div>
         </div>
 
         {/* Pink divider */}
@@ -36,7 +36,7 @@ export default function SpecializedTemplate5({ data }: { data: TemplateData }) {
           {(services.length > 0 ? services : ['قص وتصفيف', 'صبغ شعر', 'عناية بالبشرة', 'مانيكير']).slice(0,4).map((s, i) => (
             <div key={i} style={{ background: `${data.colors.primary}12`, borderRadius: '8px', padding: '8px 10px', border: `1px solid ${data.colors.primary}22`, display: 'flex', alignItems: 'center', gap: '6px' }}>
               <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: data.colors.accent, flexShrink: 0 }} />
-              <span style={{ color: data.colors.secondary, fontSize: '10px', fontWeight: '600' }}>{s}</span>
+              <span style={{ color: data.colors.secondary, fontSize: `${10 + _d}px`, fontWeight: '600' }}>{s}</span>
             </div>
           ))}
         </div>
@@ -44,8 +44,8 @@ export default function SpecializedTemplate5({ data }: { data: TemplateData }) {
         {/* Phone CTA */}
         {data.phone && (
           <div style={{ marginTop: '14px', background: `linear-gradient(135deg, ${data.colors.primary}, ${data.colors.accent})`, borderRadius: '8px', padding: '10px', textAlign: 'center' }}>
-            <div style={{ color: '#fff', fontSize: '13px', fontWeight: '800' }} dir="ltr">{data.phone}</div>
-            <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '9px', marginTop: '2px' }}>احجزي موعدك الآن</div>
+            <div style={{ color: '#fff', fontSize: `${13 + _d}px`, fontWeight: '800' }} dir="ltr">{data.phone}</div>
+            <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: `${9 + _d}px`, marginTop: '2px' }}>احجزي موعدك الآن</div>
           </div>
         )}
       </div>

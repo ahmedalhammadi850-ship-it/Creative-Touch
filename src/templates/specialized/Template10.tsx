@@ -21,9 +21,9 @@ export default function SpecializedTemplate10({ data }: Props) {
       <div style={{ height: '3px', background: `linear-gradient(to left, ${colors.accent}, ${colors.primary}, ${colors.secondary})` }} />
 
       <div style={{ padding: '16px 22px 10px', position: 'relative', zIndex: 1 }}>
-        <div style={{ color: colors.accent, fontSize: '8px', letterSpacing: '0.22em', fontWeight: 700, marginBottom: '6px' }}>✦ خدمات متميزة ✦</div>
-        <div style={{ color: colors.secondary, fontSize: '20px', fontWeight: 900, lineHeight: 1.25, textShadow: `0 0 20px ${colors.primary}66`, marginBottom: '3px' }}>{title}</div>
-        <div style={{ color: colors.primary, fontSize: '10px', opacity: 0.85, marginBottom: '14px' }}>{subtitle}</div>
+        <div style={{ color: colors.accent, fontSize: `${8 + _d}px`, letterSpacing: '0.22em', fontWeight: 700, marginBottom: '6px' }}>✦ خدمات متميزة ✦</div>
+        <div style={{ color: colors.secondary, fontSize: `${20 + _d}px`, fontWeight: 900, lineHeight: 1.25, textShadow: `0 0 20px ${colors.primary}66`, marginBottom: '3px' }}>{title}</div>
+        <div style={{ color: colors.primary, fontSize: `${10 + _d}px`, opacity: 0.85, marginBottom: '14px' }}>{subtitle}</div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
           {services.slice(0, 5).map((s, i) => (
             <span key={i} style={{
@@ -31,7 +31,7 @@ export default function SpecializedTemplate10({ data }: Props) {
               color: i % 2 === 0 ? colors.secondary : colors.accent,
               border: `1px solid ${i % 2 === 0 ? colors.primary : colors.accent}55`,
               borderRadius: '20px', padding: '4px 12px',
-              fontSize: '10px', fontWeight: 600,
+              fontSize: `${10 + _d}px`, fontWeight: 600,
             }}>{s}</span>
           ))}
         </div>
@@ -46,8 +46,8 @@ export default function SpecializedTemplate10({ data }: Props) {
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           position: 'relative', zIndex: 1,
         }}>
-          <span style={{ color: colors.accent, fontSize: '9px', fontWeight: 700 }}>تواصل الآن</span>
-          <span style={{ color: colors.secondary, fontSize: '13px', fontWeight: 800 }} dir="ltr">{phone}</span>
+          <span style={{ color: colors.accent, fontSize: `${9 + _d}px`, fontWeight: 700 }}>تواصل الآن</span>
+          <span style={{ color: colors.secondary, fontSize: `${13 + _d}px`, fontWeight: 800 }} dir="ltr">{phone}</span>
         </div>
       )}
     </div>

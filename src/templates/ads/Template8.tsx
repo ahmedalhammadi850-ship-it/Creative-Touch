@@ -21,22 +21,22 @@ export default function Template8({ data }: { data: TemplateData }) {
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
         boxShadow: `0 4px 20px ${data.colors.accent}66`,
       }}>
-        <span style={{ color: data.colors.primary, fontSize: '8px', fontWeight: 900, textAlign: 'center', lineHeight: 1.2 }}>عرض<br/>محدود</span>
+        <span style={{ color: data.colors.primary, fontSize: `${8 + _d}px`, fontWeight: 900, textAlign: 'center', lineHeight: 1.2 }}>عرض<br/>محدود</span>
       </div>
 
       <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 28px' }}>
-        <div style={{ color: data.colors.accent, fontSize: '56px', fontWeight: 900, lineHeight: 1, textShadow: `0 4px 20px ${data.colors.accent}55`, marginBottom: '4px' }}>
+        <div style={{ color: data.colors.accent, fontSize: `${56 + _d}px`, fontWeight: 900, lineHeight: 1, textShadow: `0 4px 20px ${data.colors.accent}55`, marginBottom: '4px' }}>
           {data.title}
         </div>
-        <div style={{ color: '#fff', fontSize: '14px', fontWeight: 700, marginBottom: '8px', opacity: 0.95 }}>{data.subtitle}</div>
+        <div style={{ color: '#fff', fontSize: `${14 + _d}px`, fontWeight: 700, marginBottom: '8px', opacity: 0.95 }}>{data.subtitle}</div>
         <div style={{ width: '46px', height: '2px', background: data.colors.accent, margin: '0 auto 10px', borderRadius: '1px' }} />
-        <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: '11px', lineHeight: 1.65, marginBottom: '18px', maxWidth: '240px' }}>{data.description}</div>
+        <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: `${11 + _d}px`, lineHeight: 1.65, marginBottom: '18px', maxWidth: '240px' }}>{data.description}</div>
         {data.phone && (
           <div style={{
             display: 'inline-block',
             background: data.colors.accent, color: data.colors.primary,
             padding: '9px 22px', borderRadius: '28px',
-            fontSize: '11px', fontWeight: 800,
+            fontSize: `${11 + _d}px`, fontWeight: 800,
             boxShadow: `0 4px 16px ${data.colors.accent}55`,
             whiteSpace: 'nowrap',
           }}>

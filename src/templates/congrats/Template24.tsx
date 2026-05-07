@@ -43,22 +43,22 @@ export default function CongratsTemplate24({ data }: Props) {
         }}>
           {image
             ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
-            : <span style={{ fontSize: '34px', opacity: 0.55 }}>👤</span>
+            : <span style={{ fontSize: `${34 + _d}px`, opacity: 0.55 }}>👤</span>
           }
         </div>
       </div>
 
       <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 24px', flex: 1 }}>
-        <div style={{ color: colors.accent, fontSize: '8px', letterSpacing: '0.25em', fontWeight: 700, marginBottom: '8px' }}>✨ ألف مبروك ✨</div>
-        <div style={{ color: '#fff', fontSize: '30px', fontWeight: 900, lineHeight: 1.2, textShadow: '0 4px 16px rgba(0,0,0,0.3)', marginBottom: '4px' }}>{title}</div>
-        <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '11px', fontWeight: 600, marginBottom: '12px' }}>{subtitle}</div>
+        <div style={{ color: colors.accent, fontSize: `${8 + _d}px`, letterSpacing: '0.25em', fontWeight: 700, marginBottom: '8px' }}>✨ ألف مبروك ✨</div>
+        <div style={{ color: '#fff', fontSize: `${30 + _d}px`, fontWeight: 900, lineHeight: 1.2, textShadow: '0 4px 16px rgba(0,0,0,0.3)', marginBottom: '4px' }}>{title}</div>
+        <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: `${11 + _d}px`, fontWeight: 600, marginBottom: '12px' }}>{subtitle}</div>
         <div style={{ width: '46px', height: '1px', background: `linear-gradient(to left, transparent, ${colors.accent}, transparent)`, margin: '0 auto 12px' }} />
         {lines.map((line, i) => (
-          <div key={i} style={{ color: 'rgba(255,255,255,0.87)', fontSize: '10.5px', lineHeight: 1.85, fontWeight: i === 0 ? 700 : 400 }}>{line}</div>
+          <div key={i} style={{ color: 'rgba(255,255,255,0.87)', fontSize: `${10.5 + _d}px`, lineHeight: 1.85, fontWeight: i === 0 ? 700 : 400 }}>{line}</div>
         ))}
         {email && (
           <div style={{ marginTop: '12px', background: 'rgba(255,255,255,0.15)', borderRadius: '20px', padding: '4px 14px', display: 'inline-block' }}>
-            <span style={{ color: colors.accent, fontSize: '9px', fontWeight: 700 }}>{email}</span>
+            <span style={{ color: colors.accent, fontSize: `${9 + _d}px`, fontWeight: 700 }}>{email}</span>
           </div>
         )}
       </div>

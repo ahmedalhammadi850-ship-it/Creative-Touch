@@ -28,24 +28,24 @@ export default function CongratsTemplate25({ data }: Props) {
           }}>
             {image
               ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
-              : <span style={{ fontSize: '26px', opacity: 0.38 }}>👤</span>
+              : <span style={{ fontSize: `${26 + _d}px`, opacity: 0.38 }}>👤</span>
             }
           </div>
           <div>
-            <div style={{ color: colors.secondary, fontSize: '7px', letterSpacing: '0.25em', marginBottom: '4px', opacity: 0.55 }}>تهنئة بمناسبة</div>
-            <div style={{ color: colors.primary, fontSize: '24px', fontWeight: 900, lineHeight: 1.15 }}>{title}</div>
+            <div style={{ color: colors.secondary, fontSize: `${7 + _d}px`, letterSpacing: '0.25em', marginBottom: '4px', opacity: 0.55 }}>تهنئة بمناسبة</div>
+            <div style={{ color: colors.primary, fontSize: `${24 + _d}px`, fontWeight: 900, lineHeight: 1.15 }}>{title}</div>
             <div style={{ width: '28px', height: '2px', background: colors.accent, marginTop: '5px', borderRadius: '1px' }} />
           </div>
         </div>
 
         <div style={{ height: '1px', background: `linear-gradient(to left, transparent, ${colors.primary}44, transparent)`, marginBottom: '13px' }} />
-        <div style={{ color: colors.secondary, fontSize: '11px', fontWeight: 600, marginBottom: '10px', opacity: 0.78 }}>{subtitle}</div>
+        <div style={{ color: colors.secondary, fontSize: `${11 + _d}px`, fontWeight: 600, marginBottom: '10px', opacity: 0.78 }}>{subtitle}</div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
           {lines.map((line, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
               <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: colors.accent, marginTop: '5px', flexShrink: 0 }} />
-              <span style={{ color: colors.secondary, fontSize: '10.5px', lineHeight: 1.6, opacity: 0.85 }}>{line}</span>
+              <span style={{ color: colors.secondary, fontSize: `${10.5 + _d}px`, lineHeight: 1.6, opacity: 0.85 }}>{line}</span>
             </div>
           ))}
         </div>
@@ -57,7 +57,7 @@ export default function CongratsTemplate25({ data }: Props) {
             borderRight: `3px solid ${colors.accent}`,
             borderRadius: '0 8px 8px 0',
           }}>
-            <span style={{ color: colors.primary, fontSize: '10px', fontWeight: 700 }}>{email}</span>
+            <span style={{ color: colors.primary, fontSize: `${10 + _d}px`, fontWeight: 700 }}>{email}</span>
           </div>
         )}
       </div>

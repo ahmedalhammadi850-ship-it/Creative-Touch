@@ -23,21 +23,21 @@ export default function CongratsTemplate21({ data }: { data: TemplateData }) {
       <div style={{ position: 'relative', margin: '22px auto 0', width: '120px', height: '120px', borderRadius: '50%', border: `4px solid ${colors.accent}`, overflow: 'hidden', boxShadow: `0 0 0 4px ${colors.primary}, 0 0 0 7px ${colors.accent}55` }}>
         {image
           ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <div style={{ width: '100%', height: '100%', background: `linear-gradient(180deg, ${colors.secondary}88, ${colors.primary})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '44px' }}>🏅</div>
+          : <div style={{ width: '100%', height: '100%', background: `linear-gradient(180deg, ${colors.secondary}88, ${colors.primary})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: `${44 + _d}px` }}>🏅</div>
         }
       </div>
 
       {/* Content */}
       <div style={{ padding: '16px 22px', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-        <div style={{ color: colors.accent, fontSize: '10px', letterSpacing: '0.15em', marginBottom: '4px' }}>✦ تهانينا ✦</div>
-        <h1 style={{ color: '#ffffff', fontSize: '30px', fontWeight: '900', margin: '4px 0', textShadow: `0 2px 10px ${colors.primary}88` }}>{title}</h1>
-        <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px', margin: '2px 0 10px' }}>{subtitle}</p>
+        <div style={{ color: colors.accent, fontSize: `${10 + _d}px`, letterSpacing: '0.15em', marginBottom: '4px' }}>✦ تهانينا ✦</div>
+        <h1 style={{ color: '#ffffff', fontSize: `${30 + _d}px`, fontWeight: '900', margin: '4px 0', textShadow: `0 2px 10px ${colors.primary}88` }}>{title}</h1>
+        <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: `${12 + _d}px`, margin: '2px 0 10px' }}>{subtitle}</p>
         <div style={{ width: '60%', height: '2px', background: `linear-gradient(to right, transparent, ${colors.accent}, transparent)`, margin: '0 auto 12px' }} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
           {lines.length > 0 ? lines.map((l, i) => (
-            <p key={i} style={{ color: 'rgba(255,255,255,0.9)', fontSize: '11px', margin: 0, lineHeight: 1.6 }}>{l}</p>
+            <p key={i} style={{ color: 'rgba(255,255,255,0.9)', fontSize: `${11 + _d}px`, margin: 0, lineHeight: 1.6 }}>{l}</p>
           )) : (
-            <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '12px', margin: 0 }}>ألف مبروك وعقبال المزيد</p>
+            <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: `${12 + _d}px`, margin: 0 }}>ألف مبروك وعقبال المزيد</p>
           )}
         </div>
       </div>

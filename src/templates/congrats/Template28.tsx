@@ -27,8 +27,8 @@ export default function CongratsTemplate28({ data }: Props) {
         <div style={{ position: 'absolute', top: -10, left: -20, width: 80, height: 80, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
 
         <div style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-          <div style={{ color: colors.accent, fontSize: '7px', letterSpacing: '0.26em', fontWeight: 700, marginBottom: '5px', opacity: 0.9 }}>✦ تهنئة خاصة ✦</div>
-          <div style={{ color: '#fff', fontSize: '9px', fontWeight: 400, opacity: 0.75 }}>{subtitle}</div>
+          <div style={{ color: colors.accent, fontSize: `${7 + _d}px`, letterSpacing: '0.26em', fontWeight: 700, marginBottom: '5px', opacity: 0.9 }}>✦ تهنئة خاصة ✦</div>
+          <div style={{ color: '#fff', fontSize: `${9 + _d}px`, fontWeight: 400, opacity: 0.75 }}>{subtitle}</div>
         </div>
 
         {/* Circular photo - overlapping */}
@@ -44,7 +44,7 @@ export default function CongratsTemplate28({ data }: Props) {
         }}>
           {image
             ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
-            : <span style={{ fontSize: '26px', opacity: 0.5 }}>👤</span>
+            : <span style={{ fontSize: `${26 + _d}px`, opacity: 0.5 }}>👤</span>
           }
         </div>
       </div>
@@ -72,12 +72,12 @@ export default function CongratsTemplate28({ data }: Props) {
 
       {/* Content */}
       <div style={{ flex: 1, padding: '28px 26px 18px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-        <div style={{ color: colors.secondary, fontSize: '28px', fontWeight: 900, lineHeight: 1.2, marginBottom: '6px' }}>{title}</div>
+        <div style={{ color: colors.secondary, fontSize: `${28 + _d}px`, fontWeight: 900, lineHeight: 1.2, marginBottom: '6px' }}>{title}</div>
         <div style={{ width: '46px', height: '2px', background: `linear-gradient(to left, transparent, ${colors.accent}, transparent)`, margin: '0 auto 12px', borderRadius: '1px' }} />
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '100%', flex: 1 }}>
           {lines.map((line, i) => (
-            <div key={i} style={{ color: `${colors.secondary}cc`, fontSize: '10.5px', lineHeight: 1.75, fontWeight: i === 0 ? 700 : 400 }}>{line}</div>
+            <div key={i} style={{ color: `${colors.secondary}cc`, fontSize: `${10.5 + _d}px`, lineHeight: 1.75, fontWeight: i === 0 ? 700 : 400 }}>{line}</div>
           ))}
         </div>
 
@@ -89,7 +89,7 @@ export default function CongratsTemplate28({ data }: Props) {
             borderRadius: '12px', padding: '9px 16px',
             display: 'flex', justifyContent: 'center',
           }}>
-            <span style={{ color: colors.primary, fontSize: '10px', fontWeight: 700 }}>{email}</span>
+            <span style={{ color: colors.primary, fontSize: `${10 + _d}px`, fontWeight: 700 }}>{email}</span>
           </div>
         )}
       </div>

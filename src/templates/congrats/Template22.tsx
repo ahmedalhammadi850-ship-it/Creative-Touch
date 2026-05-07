@@ -34,14 +34,14 @@ export default function CongratsTemplate22({ data }: { data: TemplateData }) {
         <div style={{ width: '100px', height: '100px', borderRadius: '4px', overflow: 'hidden', border: `2px solid ${colors.primary}66`, boxShadow: `4px 4px 0 ${colors.primary}33`, marginBottom: '12px' }}>
           {image
             ? <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            : <div style={{ width: '100%', height: '100%', background: `linear-gradient(180deg, ${colors.secondary}77, ${colors.bg})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '38px' }}>🎖️</div>
+            : <div style={{ width: '100%', height: '100%', background: `linear-gradient(180deg, ${colors.secondary}77, ${colors.bg})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: `${38 + _d}px` }}>🎖️</div>
           }
         </div>
 
         {/* Ornate heading */}
-        <div style={{ color: colors.accent, fontSize: '11px', textAlign: 'center', letterSpacing: '0.14em', marginBottom: '4px' }}>— تقديم أحر التهاني —</div>
-        <h1 style={{ color: colors.primary, fontSize: '28px', fontWeight: '900', textAlign: 'center', margin: '4px 0', lineHeight: 1.2 }}>{title}</h1>
-        <p style={{ color: colors.secondary, fontSize: '11px', textAlign: 'center', margin: '2px 0 10px', opacity: 0.75 }}>{subtitle}</p>
+        <div style={{ color: colors.accent, fontSize: `${11 + _d}px`, textAlign: 'center', letterSpacing: '0.14em', marginBottom: '4px' }}>— تقديم أحر التهاني —</div>
+        <h1 style={{ color: colors.primary, fontSize: `${28 + _d}px`, fontWeight: '900', textAlign: 'center', margin: '4px 0', lineHeight: 1.2 }}>{title}</h1>
+        <p style={{ color: colors.secondary, fontSize: `${11 + _d}px`, textAlign: 'center', margin: '2px 0 10px', opacity: 0.75 }}>{subtitle}</p>
 
         {/* Serif divider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '80%', marginBottom: '12px' }}>
@@ -53,11 +53,11 @@ export default function CongratsTemplate22({ data }: { data: TemplateData }) {
         {/* Body text */}
         <div style={{ textAlign: 'center' }}>
           {lines.length > 0 ? lines.map((l, i) => (
-            <p key={i} style={{ color: colors.secondary, fontSize: '11px', margin: '0 0 4px', lineHeight: 1.7 }}>{l}</p>
+            <p key={i} style={{ color: colors.secondary, fontSize: `${11 + _d}px`, margin: '0 0 4px', lineHeight: 1.7 }}>{l}</p>
           )) : (
             <>
-              <p style={{ color: colors.secondary, fontSize: '11px', margin: '0 0 4px', lineHeight: 1.7 }}>بمناسبة هذا الإنجاز المبارك</p>
-              <p style={{ color: colors.primary, fontSize: '13px', fontWeight: '700', margin: 0 }}>ألف ألف مبروك</p>
+              <p style={{ color: colors.secondary, fontSize: `${11 + _d}px`, margin: '0 0 4px', lineHeight: 1.7 }}>بمناسبة هذا الإنجاز المبارك</p>
+              <p style={{ color: colors.primary, fontSize: `${13 + _d}px`, fontWeight: '700', margin: 0 }}>ألف ألف مبروك</p>
             </>
           )}
         </div>

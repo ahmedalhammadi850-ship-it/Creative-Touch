@@ -16,21 +16,21 @@ export default function Template5({ data }: { data: TemplateData }) {
 
       <div style={{ position: 'relative', zIndex: 1, padding: '28px 24px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
         {/* Tag label */}
-        <div style={{ display: 'inline-flex', alignSelf: 'flex-start', background: data.colors.accent, color: data.colors.primary, padding: '3px 12px', borderRadius: '2px', fontSize: '10px', fontWeight: '800', letterSpacing: '0.08em' }}>
+        <div style={{ display: 'inline-flex', alignSelf: 'flex-start', background: data.colors.accent, color: data.colors.primary, padding: '3px 12px', borderRadius: '2px', fontSize: `${10 + _d}px`, fontWeight: '800', letterSpacing: '0.08em' }}>
           عرض محدود
         </div>
 
         {/* Main title */}
         <div style={{ textAlign: 'center' }}>
-          <div style={{ color: '#ffffff', fontSize: '32px', fontWeight: '900', lineHeight: 1.05, textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>{data.title}</div>
-          <div style={{ color: data.colors.accent, fontSize: '15px', fontWeight: '700', marginTop: '4px' }}>{data.subtitle}</div>
+          <div style={{ color: '#ffffff', fontSize: `${32 + _d}px`, fontWeight: '900', lineHeight: 1.05, textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>{data.title}</div>
+          <div style={{ color: data.colors.accent, fontSize: `${15 + _d}px`, fontWeight: '700', marginTop: '4px' }}>{data.subtitle}</div>
         </div>
 
         {/* Bottom info card */}
         <div style={{ background: 'rgba(255,255,255,0.07)', border: `1px solid ${data.colors.primary}44`, borderRadius: '6px', padding: '12px 16px' }}>
-          <div style={{ color: data.colors.secondary, fontSize: '11px', lineHeight: 1.6, marginBottom: '8px' }}>{data.description}</div>
+          <div style={{ color: data.colors.secondary, fontSize: `${11 + _d}px`, lineHeight: 1.6, marginBottom: '8px' }}>{data.description}</div>
           {data.phone && (
-            <div style={{ display: 'inline-block', background: data.colors.accent, color: data.colors.bg, padding: '6px 18px', borderRadius: '4px', fontSize: '12px', fontWeight: '800' }} dir="ltr">{data.phone}</div>
+            <div style={{ display: 'inline-block', background: data.colors.accent, color: data.colors.bg, padding: '6px 18px', borderRadius: '4px', fontSize: `${12 + _d}px`, fontWeight: '800' }} dir="ltr">{data.phone}</div>
           )}
         </div>
       </div>

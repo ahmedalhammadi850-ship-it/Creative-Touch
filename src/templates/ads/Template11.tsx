@@ -29,17 +29,17 @@ export default function Template11({ data }: { data: TemplateData }) {
 
       <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 28px', width: '100%' }}>
         <div style={{ display: 'inline-block', background: `${data.colors.primary}22`, border: `1px solid ${data.colors.primary}66`, borderRadius: '4px', padding: '3px 14px', marginBottom: '12px' }}>
-          <span style={{ color: data.colors.primary, fontSize: '9px', letterSpacing: '0.18em', fontWeight: 700 }}>خدمات احترافية</span>
+          <span style={{ color: data.colors.primary, fontSize: `${9 + _d}px`, letterSpacing: '0.18em', fontWeight: 700 }}>خدمات احترافية</span>
         </div>
 
-        <div style={{ color: data.colors.secondary, fontSize: '26px', fontWeight: 900, lineHeight: 1.2, marginBottom: '6px' }}>{data.title}</div>
-        <div style={{ color: data.colors.primary, fontSize: '11px', fontWeight: 700, marginBottom: '14px' }}>{data.subtitle}</div>
+        <div style={{ color: data.colors.secondary, fontSize: `${26 + _d}px`, fontWeight: 900, lineHeight: 1.2, marginBottom: '6px' }}>{data.title}</div>
+        <div style={{ color: data.colors.primary, fontSize: `${11 + _d}px`, fontWeight: 700, marginBottom: '14px' }}>{data.subtitle}</div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '7px', textAlign: 'right', marginBottom: '16px' }}>
           {services.slice(0, 4).map((s, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 8px', background: `${data.colors.primary}12`, borderRadius: '6px' }}>
               <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: data.colors.accent, flexShrink: 0 }} />
-              <span style={{ color: data.colors.secondary, fontSize: '10px', fontWeight: 600 }}>{s}</span>
+              <span style={{ color: data.colors.secondary, fontSize: `${10 + _d}px`, fontWeight: 600 }}>{s}</span>
             </div>
           ))}
         </div>
@@ -52,7 +52,7 @@ export default function Template11({ data }: { data: TemplateData }) {
             boxShadow: `0 4px 18px ${data.colors.primary}55`,
             whiteSpace: 'nowrap',
           }}>
-            <span style={{ color: '#fff', fontSize: '12px', fontWeight: 800, whiteSpace: 'nowrap' }} dir="ltr">{data.phone}</span>
+            <span style={{ color: '#fff', fontSize: `${12 + _d}px`, fontWeight: 800, whiteSpace: 'nowrap' }} dir="ltr">{data.phone}</span>
           </div>
         )}
       </div>
