@@ -311,7 +311,7 @@ export default function HomePage() {
             <p style={{ color: '#64748b', fontSize: 18, lineHeight: 1.8, maxWidth: 540, margin: '0 auto 42px' }}>
               أكثر من 80 قالب احترافي للتهنئة والأعراس والبطاقات التجارية — خصّص وصدّر مجاناً
             </p>
-            <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div className="hero-buttons" style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
               <button onClick={() => setLocation('/category/congrats')}
                 style={{ display: 'inline-flex', alignItems: 'center', gap: 9, background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 16, fontWeight: 700, padding: '15px 36px', borderRadius: 16, boxShadow: '0 8px 30px rgba(99,102,241,0.4)', transition: 'transform 0.2s, box-shadow 0.2s' }}
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 14px 40px rgba(99,102,241,0.5)'; }}

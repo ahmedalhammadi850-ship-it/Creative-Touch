@@ -197,7 +197,7 @@ export default function UserDashboard() {
     <div dir="rtl" style={{ minHeight: '100vh', background: '#f1f5f9', fontFamily: "'Cairo',sans-serif" }}>
 
       {/* ── Sidebar ── */}
-      <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 240, background: 'linear-gradient(180deg,#1e1b4b 0%,#0f172a 100%)', zIndex: 50, display: 'flex', flexDirection: 'column', padding: '28px 16px' }}>
+      <div className="dash-sidebar" style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 240, background: 'linear-gradient(180deg,#1e1b4b 0%,#0f172a 100%)', zIndex: 50, display: 'flex', flexDirection: 'column', padding: '28px 16px' }}>
 
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 36, padding: '0 8px' }}>
@@ -253,8 +253,26 @@ export default function UserDashboard() {
         </button>
       </div>
 
+      {/* ── Mobile bottom nav ── */}
+      <div className="dash-mobile-nav" style={{ fontFamily: "'Cairo',sans-serif" }}>
+        {([
+          { icon: User,           label: 'لوحتي',   view: 'home'     as ActiveView },
+          { icon: LayoutTemplate, label: 'القوالب',  view: 'explore'  as ActiveView },
+          { icon: Bell,           label: 'طلباتي',   view: 'requests' as ActiveView, badge: pendingCount || undefined },
+          { icon: LogOut,         label: 'خروج',     view: null as unknown as ActiveView },
+        ] as { icon: typeof User; label: string; view: ActiveView; badge?: number }[]).map(({ icon: Icon, label, view, badge }) => (
+          <button key={label}
+            onClick={() => view ? setActiveView(view) : handleLogout()}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: '6px 12px', background: 'transparent', border: 'none', cursor: 'pointer', color: view && activeView === view ? '#a5b4fc' : view === null ? '#fca5a5' : 'rgba(255,255,255,0.45)', fontFamily: "'Cairo',sans-serif", position: 'relative' }}>
+            <Icon size={20} />
+            <span style={{ fontSize: 10, fontWeight: 700 }}>{label}</span>
+            {!!badge && <span style={{ position: 'absolute', top: 2, right: 8, background: '#ef4444', color: '#fff', borderRadius: 20, padding: '1px 5px', fontSize: 9, fontWeight: 800 }}>{badge}</span>}
+          </button>
+        ))}
+      </div>
+
       {/* ── Main Content ── */}
-      <div style={{ marginRight: 240, padding: '32px 28px', minHeight: '100vh' }}>
+      <div className="dash-main" style={{ marginRight: 240, padding: '32px 28px', minHeight: '100vh' }}>
 
         {/* ── VIEW: لوحتي ── */}
         {activeView === 'home' && <>

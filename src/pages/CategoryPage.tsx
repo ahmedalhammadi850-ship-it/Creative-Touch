@@ -58,7 +58,7 @@ export default function CategoryPage() {
     <div dir="rtl" style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: "'Cairo',sans-serif" }}>
 
       {/* Header */}
-      <header style={{ background: '#fff', borderBottom: '1px solid #f1f5f9', padding: '16px 24px', display: 'flex', alignItems: 'center', gap: 14, position: 'sticky', top: 0, zIndex: 10, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+      <header className="category-header-inner" style={{ background: '#fff', borderBottom: '1px solid #f1f5f9', padding: '16px 24px', display: 'flex', alignItems: 'center', gap: 14, position: 'sticky', top: 0, zIndex: 10, boxShadow: '0 2px 8px rgba(0,0,0,0.04)', flexWrap: 'wrap' }}>
         <button
           onClick={() => window.history.back()}
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 38, height: 38, borderRadius: 10, border: '1.5px solid #e2e8f0', background: '#fff', cursor: 'pointer', color: '#64748b', flexShrink: 0 }}
@@ -80,7 +80,7 @@ export default function CategoryPage() {
 
         {/* Free badge for business-card */}
         {isFreeCategory && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#ecfdf5', border: '1.5px solid #6ee7b7', borderRadius: 14, padding: '8px 14px' }}>
+          <div className="category-header-badges" style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#ecfdf5', border: '1.5px solid #6ee7b7', borderRadius: 14, padding: '8px 14px' }}>
             <ShieldCheck size={15} color="#10b981" />
             <span style={{ color: '#065f46', fontSize: 13, fontWeight: 800 }}>مجاني بالكامل</span>
           </div>
@@ -88,7 +88,7 @@ export default function CategoryPage() {
 
         {/* Preview-only badge for free user in non-free category */}
         {isFreeUser && !isFreeCategory && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fef9ee', border: '1.5px solid #fde68a', borderRadius: 14, padding: '8px 14px' }}>
+          <div className="category-header-badges" style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#fef9ee', border: '1.5px solid #fde68a', borderRadius: 14, padding: '8px 14px' }}>
             <LockIcon size={14} color="#d97706" />
             <span style={{ color: '#92400e', fontSize: 13, fontWeight: 800 }}>معاينة محدودة</span>
           </div>
@@ -96,7 +96,7 @@ export default function CategoryPage() {
 
         {/* Starter counter badge */}
         {isStarterPlan && (
-          <div style={{
+          <div className="category-header-badges" style={{
             display: 'flex', alignItems: 'center', gap: 8,
             background: remaining === 0 ? 'linear-gradient(135deg,#fef2f2,#fee2e2)' : remaining <= 2 ? 'linear-gradient(135deg,#fef9ee,#fef3c7)' : 'linear-gradient(135deg,#eef2ff,#f5f3ff)',
             border: `2px solid ${remaining === 0 ? '#fecaca' : remaining <= 2 ? '#fde68a' : '#c7d2fe'}`,
@@ -114,7 +114,7 @@ export default function CategoryPage() {
 
         {/* Full access badge */}
         {isActivePaidPlan && (user?.plan === 'weekly' || user?.plan === 'monthly') && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#ecfdf5', border: '1.5px solid #6ee7b7', borderRadius: 14, padding: '8px 14px' }}>
+          <div className="category-header-badges" style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#ecfdf5', border: '1.5px solid #6ee7b7', borderRadius: 14, padding: '8px 14px' }}>
             <Zap size={15} color="#10b981" fill="#10b981" />
             <span style={{ color: '#065f46', fontSize: 13, fontWeight: 800 }}>وصول كامل</span>
           </div>
