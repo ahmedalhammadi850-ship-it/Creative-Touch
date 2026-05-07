@@ -90,7 +90,7 @@ export default function Template28({ data }: { data: TemplateData }) {
         <path d="M280,80 Q250,50 260,20" stroke={data.colors.primary} strokeWidth="1.2" fill="none" opacity="0.4"/>
         <ellipse cx="264" cy="40" rx="13" ry="5" fill={data.colors.accent} opacity="0.18" transform="rotate(40 264 40)"/>
         <ellipse cx="258" cy="58" rx="11" ry="5" fill={data.colors.primary} opacity="0.15" transform="rotate(55 258 58)"/>
-        <path d="M85" y1="70" x2="195" y2="70" stroke={data.colors.primary} strokeWidth="0.6" opacity="0.25" d="M85,70 L195,70"/>
+        <path d="M85,70 L195,70" stroke={data.colors.primary} strokeWidth="0.6" opacity="0.25" />
       </svg>
     </div>
   );
