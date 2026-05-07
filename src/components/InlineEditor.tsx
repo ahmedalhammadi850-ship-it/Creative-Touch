@@ -200,6 +200,8 @@ export function InlineEditor({ categoryId, data, onChange, backCardMode = false,
   const isCongrats = categoryId === 'congrats';
   const isSpecialized = categoryId === 'specialized';
   const isMassWedding = categoryId === 'mass-wedding';
+  const isAds = categoryId === 'ads';
+  const showFontSize = isMassWedding || isAds || isCongrats || isSpecialized;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const multiImageInputRef = useRef<HTMLInputElement>(null);
@@ -527,6 +529,14 @@ export function InlineEditor({ categoryId, data, onChange, backCardMode = false,
               />
             </div>
           </div>
+
+          {/* ── FONT SIZE — free for selected categories ── */}
+          {showFontSize && (
+            <FontSizeControl
+              fontSize={data.fontSize ?? DEFAULT_FS}
+              onChange={fs => onChange({ fontSize: fs })}
+            />
+          )}
 
           {/* ── PAYMENT BANNER ── */}
           <div
