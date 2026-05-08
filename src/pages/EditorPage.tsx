@@ -50,6 +50,7 @@ export default function EditorPage() {
   const { setTemplate, templateData, updateData, resetData, duplicateTemplate } = useTemplateStore();
   const [verifyImg, setVerifyImg] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
+  const [readyBlobUrl, setReadyBlobUrl] = useState<string | null>(null);
   const { exportAsPdf, capturePreview, isMobileDevice, isIOSDevice } = useExport();
 
   // Dynamic scale: measures the template's natural width and shrinks it to fit
@@ -169,8 +170,16 @@ export default function EditorPage() {
       });
     } else if (isIOSDevice) {
       toast({ title: '✓ تم فتح الـ PDF', description: 'اضغط المشاركة ← "حفظ في الملفات" لحفظه.' });
-    } else if (isMobileDevice) {
-      toast({ title: '✓ تم التحميل', description: 'تحقق من مجلد التنزيلات.' });
+    } else if (isMobileDevice && result.blobUrl) {
+      // Android: show interactive top notification instead of silent download
+      setReadyBlobUrl(result.blobUrl);
+      // Auto-dismiss after 20 seconds and revoke the blob URL
+      setTimeout(() => {
+        setReadyBlobUrl(prev => {
+          if (prev) URL.revokeObjectURL(prev);
+          return null;
+        });
+      }, 20000);
     } else {
       toast({ title: '✓ تم التصدير', description: 'تم تحميل ملف الـ PDF بنجاح.' });
     }
@@ -202,6 +211,31 @@ export default function EditorPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
+
+      {/* ─── Android file-ready top notification ─── */}
+      {readyBlobUrl && (
+        <div
+          className="fixed top-0 left-0 right-0 z-[99999] flex items-center justify-between gap-3 px-4 py-3 shadow-2xl cursor-pointer select-none"
+          style={{ background: 'linear-gradient(90deg,#1e1b4b,#4f46e5)', fontFamily: "'Cairo',sans-serif", direction: 'rtl' }}
+          onClick={() => {
+            window.open(readyBlobUrl, '_blank');
+          }}
+        >
+          <span className="text-white font-bold text-sm leading-snug">
+            ✅ تم تجهيز ملفك بنجاح. اضغط هنا لفتحه
+          </span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              URL.revokeObjectURL(readyBlobUrl);
+              setReadyBlobUrl(null);
+            }}
+            className="text-white/60 hover:text-white text-lg leading-none bg-transparent border-0 cursor-pointer shrink-0"
+          >
+            ✕
+          </button>
+        </div>
+      )}
 
       {/* ─── Header ─── */}
       <header className="bg-white border-b px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between shrink-0 shadow-sm z-20">

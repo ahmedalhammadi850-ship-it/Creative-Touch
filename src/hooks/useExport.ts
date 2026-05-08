@@ -271,7 +271,7 @@ export function useExport() {
    */
   const exportAsPdf = async (
     iosWindow?: Window | null
-  ): Promise<{ ok: boolean; error?: string }> => {
+  ): Promise<{ ok: boolean; blobUrl?: string; error?: string }> => {
     const el = document.getElementById('export-target');
     if (!el) return { ok: false, error: 'export-target not found' };
 
@@ -299,13 +299,13 @@ export function useExport() {
         if (iosWindow && !iosWindow.closed) {
           showPdfInIOSWindow(iosWindow, dataUri);
         } else {
-          // Fallback if window was blocked: navigate current tab to data URI
-          // (user presses back to return to app)
           window.location.href = dataUri;
         }
       } else if (isMobile()) {
-        // Android
-        downloadBlob(pdf.output('blob'), filename);
+        // Android: return a blob URL so the caller can show an interactive notification
+        const blob = pdf.output('blob');
+        const blobUrl = URL.createObjectURL(blob);
+        return { ok: true, blobUrl };
       } else {
         // Desktop
         pdf.save(filename);
