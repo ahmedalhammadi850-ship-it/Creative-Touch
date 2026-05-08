@@ -60,8 +60,8 @@ export const auth = getAuth(app);
 auth.languageCode = 'ar';
 
 export const firebaseReady = !!(
-  import.meta.env.VITE_FIREBASE_API_KEY &&
-  import.meta.env.VITE_FIREBASE_PROJECT_ID
+  firebaseConfig.apiKey &&
+  firebaseConfig.projectId
 );
 
 export {
