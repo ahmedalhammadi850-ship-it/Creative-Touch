@@ -263,10 +263,10 @@ export default function UserDashboard() {
         ] as { icon: typeof User; label: string; view: ActiveView; badge?: number }[]).map(({ icon: Icon, label, view, badge }) => (
           <button key={label}
             onClick={() => view ? setActiveView(view) : handleLogout()}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, padding: '6px 12px', background: 'transparent', border: 'none', cursor: 'pointer', color: view && activeView === view ? '#a5b4fc' : view === null ? '#fca5a5' : 'rgba(255,255,255,0.45)', fontFamily: "'Cairo',sans-serif", position: 'relative' }}>
-            <Icon size={20} />
-            <span style={{ fontSize: 10, fontWeight: 700 }}>{label}</span>
-            {!!badge && <span style={{ position: 'absolute', top: 2, right: 8, background: '#ef4444', color: '#fff', borderRadius: 20, padding: '1px 5px', fontSize: 9, fontWeight: 800 }}>{badge}</span>}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3, padding: '6px 0', minWidth: 56, flex: 1, background: 'transparent', border: 'none', cursor: 'pointer', color: view && activeView === view ? '#a5b4fc' : view === null ? '#fca5a5' : 'rgba(255,255,255,0.45)', fontFamily: "'Cairo',sans-serif", position: 'relative', direction: 'rtl' }}>
+            <Icon size={20} style={{ flexShrink: 0 }} />
+            <span style={{ fontSize: 10, fontWeight: 700, textAlign: 'center', whiteSpace: 'nowrap', lineHeight: 1.2, display: 'block', width: '100%' }}>{label}</span>
+            {!!badge && <span style={{ position: 'absolute', top: 2, right: '50%', transform: 'translateX(14px)', background: '#ef4444', color: '#fff', borderRadius: 20, padding: '1px 5px', fontSize: 9, fontWeight: 800 }}>{badge}</span>}
           </button>
         ))}
       </div>
