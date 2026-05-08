@@ -168,13 +168,6 @@ export default function RegisterPage() {
             <p style={{ color: '#64748b', fontSize: 14, lineHeight: 1.8, margin: '0 0 4px' }}>أرسلنا رابط تفعيل إلى</p>
             <p style={{ color: '#6366f1', fontSize: 15, fontWeight: 800, margin: '0 0 20px', direction: 'ltr', wordBreak: 'break-all' }}>{verifyEmail}</p>
 
-            <div style={{ background: '#eef2ff', border: '1.5px solid #c7d2fe', borderRadius: 14, padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-              <Loader2 size={15} color="#6366f1" style={{ animation: 'spin 1s linear infinite', flexShrink: 0 }} />
-              <p style={{ color: '#4338ca', fontSize: 13, fontWeight: 700, margin: 0 }}>
-                يتم الفحص تلقائياً كل 4 ثوانٍ...
-              </p>
-            </div>
-
             <div style={{ background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 14, padding: '14px 16px', marginBottom: 24, textAlign: 'right' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                 <CheckCircle size={18} color="#16a34a" style={{ marginTop: 2, flexShrink: 0 }} />
