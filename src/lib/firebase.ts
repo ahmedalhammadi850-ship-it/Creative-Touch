@@ -47,12 +47,12 @@ import {
 } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey:            import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain:        import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId:         import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket:     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId:             import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey:            import.meta.env.VITE_FIREBASE_API_KEY            || 'AIzaSyBnjeJQ_PFW94Iu8ApFkgpQSu0qb4OhztA',
+  authDomain:        import.meta.env.VITE_FIREBASE_AUTH_DOMAIN        || 'projectcard-6a6dd.firebaseapp.com',
+  projectId:         import.meta.env.VITE_FIREBASE_PROJECT_ID         || 'projectcard-6a6dd',
+  storageBucket:     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET     || 'projectcard-6a6dd.firebasestorage.app',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '185997930117',
+  appId:             import.meta.env.VITE_FIREBASE_APP_ID             || '1:185997930117:web:5b9dc4108ab857aefa03ec',
 };
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
