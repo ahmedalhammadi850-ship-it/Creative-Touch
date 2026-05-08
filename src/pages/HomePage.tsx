@@ -228,9 +228,9 @@ export default function HomePage() {
       {showMobileMenu && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 200, display: 'flex' }} dir="rtl">
           {/* Overlay */}
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.55)', backdropFilter: 'blur(4px)' }} onClick={() => setShowMobileMenu(false)} />
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.55)', backdropFilter: 'blur(4px)', animation: 'fadeInOverlay 0.25s ease' }} onClick={() => setShowMobileMenu(false)} />
           {/* Drawer from right */}
-          <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: 270, background: 'linear-gradient(180deg,#1e1b4b,#0f172a)', display: 'flex', flexDirection: 'column', padding: '28px 20px', zIndex: 1, boxShadow: '-8px 0 40px rgba(0,0,0,0.3)' }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: 280, background: 'linear-gradient(180deg,#1e1b4b,#0f172a)', display: 'flex', flexDirection: 'column', padding: '28px 20px', zIndex: 1, boxShadow: '-8px 0 40px rgba(0,0,0,0.3)', animation: 'slideInRight 0.28s cubic-bezier(0.32,0.72,0,1)' }}>
             {/* Header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 36 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
