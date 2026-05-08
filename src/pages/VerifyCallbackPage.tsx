@@ -42,8 +42,7 @@ export default function VerifyCallbackPage() {
         }
 
         await signOut(auth);
-        setStatus('success');
-        redirectTimer = setTimeout(() => setLocation('/dashboard'), 1800);
+        setLocation('/dashboard');
       } catch {
         setStatus('failed');
         redirectTimer = setTimeout(() => setLocation('/login'), 2500);
