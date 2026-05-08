@@ -102,8 +102,7 @@ export default function RegisterPage() {
       const credential = await createUserWithEmailAndPassword(auth, email.trim(), password);
       await updateProfile(credential.user, { displayName: name.trim() });
 
-      const continueUrl = window.location.origin + '/verify-callback';
-      await sendEmailVerification(credential.user, { url: continueUrl, handleCodeInApp: false });
+      await sendEmailVerification(credential.user);
 
       addUser({
         id: credential.user.uid,
@@ -129,8 +128,7 @@ export default function RegisterPage() {
     setResent(false);
     try {
       if (auth.currentUser) {
-        const continueUrl = window.location.origin + '/verify-callback';
-        await sendEmailVerification(auth.currentUser, { url: continueUrl, handleCodeInApp: false });
+        await sendEmailVerification(auth.currentUser);
         setResent(true);
       }
     } catch {

@@ -21,6 +21,13 @@ export function getFirebaseErrorMessage(code: string): string {
       return 'انتهت صلاحية رابط التحقق. يرجى طلب رابط جديد';
     case 'auth/invalid-action-code':
       return 'رابط التحقق غير صالح';
+    case 'auth/operation-not-allowed':
+      return 'هذه الخدمة غير مفعّلة حالياً. يرجى التواصل مع الدعم';
+    case 'auth/unauthorized-continue-uri':
+    case 'auth/invalid-continue-uri':
+      return 'خطأ في إعداد رابط التحقق';
+    case 'auth/missing-email':
+      return 'يرجى إدخال البريد الإلكتروني';
     default:
       return 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى';
   }
