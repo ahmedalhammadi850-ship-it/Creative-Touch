@@ -84,9 +84,16 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (step !== 'verify') return;
+
     const onFocus = () => handleVerified(true);
     window.addEventListener('focus', onFocus);
-    return () => window.removeEventListener('focus', onFocus);
+
+    const interval = setInterval(() => handleVerified(true), 4000);
+
+    return () => {
+      window.removeEventListener('focus', onFocus);
+      clearInterval(interval);
+    };
   }, [step]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -150,13 +157,23 @@ export default function RegisterPage() {
         <div style={{ width: '100%', maxWidth: 460 }}>
           <div style={{ background: '#fff', borderRadius: 24, padding: 'clamp(28px,6vw,44px) clamp(20px,6vw,40px)', boxShadow: '0 12px 50px rgba(99,102,241,0.14)', border: '1px solid rgba(99,102,241,0.1)', textAlign: 'center' }}>
 
-            <div style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', boxShadow: '0 10px 30px rgba(99,102,241,0.4)' }}>
-              <Mail size={38} color="#fff" />
+            <div style={{ position: 'relative', width: 88, height: 88, margin: '0 auto 20px' }}>
+              <div style={{ width: 88, height: 88, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 30px rgba(99,102,241,0.4)' }}>
+                <Mail size={38} color="#fff" />
+              </div>
+              <div style={{ position: 'absolute', inset: -6, borderRadius: '50%', border: '3px solid transparent', borderTopColor: '#6366f1', animation: 'spin 2s linear infinite' }} />
             </div>
 
             <h2 style={{ color: '#1e1b4b', fontSize: 22, fontWeight: 900, margin: '0 0 10px' }}>تحقق من بريدك الإلكتروني</h2>
             <p style={{ color: '#64748b', fontSize: 14, lineHeight: 1.8, margin: '0 0 4px' }}>أرسلنا رابط تفعيل إلى</p>
             <p style={{ color: '#6366f1', fontSize: 15, fontWeight: 800, margin: '0 0 20px', direction: 'ltr', wordBreak: 'break-all' }}>{verifyEmail}</p>
+
+            <div style={{ background: '#eef2ff', border: '1.5px solid #c7d2fe', borderRadius: 14, padding: '12px 16px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <Loader2 size={15} color="#6366f1" style={{ animation: 'spin 1s linear infinite', flexShrink: 0 }} />
+              <p style={{ color: '#4338ca', fontSize: 13, fontWeight: 700, margin: 0 }}>
+                يتم الفحص تلقائياً كل 4 ثوانٍ...
+              </p>
+            </div>
 
             <div style={{ background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 14, padding: '14px 16px', marginBottom: 24, textAlign: 'right' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
@@ -166,7 +183,7 @@ export default function RegisterPage() {
                   <p style={{ color: '#166534', fontSize: 13, lineHeight: 1.9, margin: 0 }}>
                     ١. افتح بريدك الإلكتروني<br />
                     ٢. انقر على رابط "تحقق من بريدك الإلكتروني"<br />
-                    ٣. ستُحوَّل تلقائياً للحساب
+                    ٣. ستنتقل للحساب تلقائياً
                   </p>
                 </div>
               </div>
@@ -191,7 +208,7 @@ export default function RegisterPage() {
             >
               {checking
                 ? <><Loader2 size={17} style={{ animation: 'spin 1s linear infinite' }} />جاري التحقق...</>
-                : <><CheckCircle size={17} />تحققت من بريدي — دخول للحساب</>
+                : <><CheckCircle size={17} />تحققت من بريدي — دخول الآن</>
               }
             </button>
 
