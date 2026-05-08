@@ -310,7 +310,7 @@ export function useExport() {
     void _safeSheets;
 
     /* ── inline Tailwind notification helper ── */
-    function showPdfNotification(blobUrl: string) {
+    function showPdfNotification(blobUrl: string, filename: string) {
       const existing = document.getElementById('pdf-export-notification');
       if (existing) existing.remove();
 
@@ -367,9 +367,15 @@ export function useExport() {
       toast.appendChild(iconWrap);
       toast.appendChild(textWrap);
 
-      /* click → open + dismiss */
+      /* click → force-download via hidden <a> + dismiss */
       toast.addEventListener('click', () => {
-        window.open(blobUrl, '_blank');
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = filename;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
         dismiss();
       });
 
@@ -410,13 +416,13 @@ export function useExport() {
           window.location.href = dataUri;
         }
         /* show notification on iOS too */
-        showPdfNotification(pdfBlobUrl);
+        showPdfNotification(pdfBlobUrl, filename);
       } else if (isMobile()) {
         /* Android: show notification — user taps to open */
-        showPdfNotification(pdfBlobUrl);
+        showPdfNotification(pdfBlobUrl, filename);
       } else {
         /* Desktop: notification only — user clicks to open */
-        showPdfNotification(pdfBlobUrl);
+        showPdfNotification(pdfBlobUrl, filename);
       }
 
       return { ok: true, blobUrl: pdfBlobUrl };
