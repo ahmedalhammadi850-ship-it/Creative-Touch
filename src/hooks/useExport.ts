@@ -204,7 +204,7 @@ async function captureElementMobile(el: HTMLElement): Promise<string> {
       const canvas = await html2canvas(clone, {
         scale: 2,
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false,
         backgroundColor: '#ffffff',
         width: naturalW,
         height: naturalH,
@@ -280,41 +280,55 @@ export function useExport() {
     const el = document.getElementById('export-target');
     if (!el) return { ok: false, error: 'export-target not found' };
 
-    /* ── inline notification helper ── */
+    /* ── safe stylesheet pre-fetch to avoid SecurityError ── */
+    const _safeSheets = (() => {
+      try {
+        for (const sheet of Array.from(document.styleSheets)) {
+          try { void (sheet.cssRules || sheet.rules); } catch { /* cross-origin — skip */ }
+        }
+      } catch { /* styleSheets inaccessible — skip */ }
+    })();
+    void _safeSheets;
+
+    /* ── inline Tailwind notification helper ── */
     function showPdfNotification(blobUrl: string) {
       const existing = document.getElementById('pdf-export-notification');
       if (existing) existing.remove();
 
+      /* inject slide-in keyframes once */
+      if (!document.getElementById('pdf-toast-style')) {
+        const kf = document.createElement('style');
+        kf.id = 'pdf-toast-style';
+        kf.textContent =
+          '@keyframes pdfSlideIn{from{opacity:0;transform:translateX(-50%) translateY(-20px)}' +
+          'to{opacity:1;transform:translateX(-50%) translateY(0)}}';
+        document.head.appendChild(kf);
+      }
+
+      /* dismiss helper — fades out then removes */
+      function dismiss() {
+        toast.style.transition = 'opacity 0.25s ease';
+        toast.style.opacity = '0';
+        setTimeout(() => { if (document.body.contains(toast)) toast.remove(); }, 260);
+      }
+
+      /* root element — Tailwind classes (scanned by JIT via src/**\/*.ts) */
       const toast = document.createElement('div');
       toast.id = 'pdf-export-notification';
       toast.setAttribute('dir', 'rtl');
-      toast.style.cssText = [
-        'position:fixed',
-        'top:16px',
-        'left:50%',
-        'transform:translateX(-50%)',
-        'z-index:99999',
-        'display:flex',
-        'align-items:center',
-        'gap:12px',
-        'padding:14px 20px',
-        'background:#ffffff',
-        'border-radius:16px',
-        'box-shadow:0 8px 32px rgba(0,0,0,0.18)',
-        'border:1px solid #f3f4f6',
-        'cursor:pointer',
-        'user-select:none',
-        'min-width:280px',
-        'max-width:90vw',
-        'animation:pdfToastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both',
-      ].join(';');
+      toast.className =
+        'fixed top-4 left-1/2 -translate-x-1/2 z-[99999] ' +
+        'flex items-center gap-3 px-5 py-3.5 ' +
+        'bg-white rounded-lg shadow-2xl border border-gray-100 ' +
+        'cursor-pointer select-none min-w-[280px] max-w-[90vw]';
+      toast.style.animation = 'pdfSlideIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both';
 
+      /* red PDF icon */
       const iconWrap = document.createElement('div');
-      iconWrap.style.cssText =
-        'flex-shrink:0;width:44px;height:44px;background:#ef4444;border-radius:10px;' +
-        'display:flex;align-items:center;justify-content:center;';
+      iconWrap.className =
+        'flex-shrink-0 w-11 h-11 bg-red-500 rounded-lg flex items-center justify-center';
       iconWrap.innerHTML =
-        '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" ' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" ' +
         'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
         '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>' +
         '<polyline points="14 2 14 8 20 8"/>' +
@@ -322,39 +336,28 @@ export function useExport() {
         '<line x1="9" y1="17" x2="15" y2="17"/>' +
         '</svg>';
 
+      /* text block */
       const textWrap = document.createElement('div');
-      textWrap.style.cssText = 'flex:1;text-align:right;';
+      textWrap.className = 'flex-1 text-right';
       textWrap.innerHTML =
-        '<div style="font-weight:700;font-size:14px;color:#111827;font-family:Cairo,sans-serif;">ملف PDF جاهز</div>' +
-        '<div style="font-size:12px;color:#6b7280;margin-top:3px;font-family:Cairo,sans-serif;">' +
-        'تم تجهيز ملف PDF بنجاح. اضغط هنا لفتحه</div>';
+        '<p class="font-bold text-sm text-gray-900 leading-tight" ' +
+        'style="font-family:Cairo,sans-serif;">ملف PDF جاهز</p>' +
+        '<p class="text-xs text-gray-500 mt-0.5" ' +
+        'style="font-family:Cairo,sans-serif;">تم تجهيز ملف PDF بنجاح. اضغط هنا لفتحه</p>';
 
       toast.appendChild(iconWrap);
       toast.appendChild(textWrap);
 
-      /* inject keyframes once */
-      if (!document.getElementById('pdf-toast-style')) {
-        const style = document.createElement('style');
-        style.id = 'pdf-toast-style';
-        style.textContent =
-          '@keyframes pdfToastIn{from{opacity:0;transform:translateX(-50%) translateY(-16px)}' +
-          'to{opacity:1;transform:translateX(-50%) translateY(0)}}';
-        document.head.appendChild(style);
-      }
-
+      /* click → open + dismiss */
       toast.addEventListener('click', () => {
         window.open(blobUrl, '_blank');
+        dismiss();
       });
 
       document.body.appendChild(toast);
 
-      /* auto-dismiss after 15 s */
-      setTimeout(() => {
-        if (!document.body.contains(toast)) return;
-        toast.style.transition = 'opacity 0.3s ease';
-        toast.style.opacity = '0';
-        setTimeout(() => { if (document.body.contains(toast)) toast.remove(); }, 320);
-      }, 15000);
+      /* auto-dismiss after 8 s */
+      setTimeout(dismiss, 8000);
     }
 
     try {
