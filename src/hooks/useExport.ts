@@ -217,6 +217,18 @@ async function captureElementMobile(el: HTMLElement): Promise<string> {
         height: naturalH,
         imageTimeout: 15000,
         logging: false,
+        onclone: (_doc: Document, el: HTMLElement) => {
+          // Remove all external <link> and <style> elements whose sheets
+          // throw SecurityError when cssRules is accessed (cross-origin fonts)
+          el.querySelectorAll('link[rel="stylesheet"], style').forEach((node) => {
+            try {
+              const sheet = (node as HTMLLinkElement | HTMLStyleElement).sheet;
+              if (sheet) void sheet.cssRules; // throws if cross-origin
+            } catch {
+              node.remove(); // safe to remove — prevents SecurityError
+            }
+          });
+        },
       });
       return canvas.toDataURL('image/png');
     } finally {
@@ -403,8 +415,7 @@ export function useExport() {
         /* Android: show notification — user taps to open */
         showPdfNotification(pdfBlobUrl);
       } else {
-        /* Desktop: auto-download + notification */
-        downloadBlob(pdfBlob, filename);
+        /* Desktop: notification only — user clicks to open */
         showPdfNotification(pdfBlobUrl);
       }
 
