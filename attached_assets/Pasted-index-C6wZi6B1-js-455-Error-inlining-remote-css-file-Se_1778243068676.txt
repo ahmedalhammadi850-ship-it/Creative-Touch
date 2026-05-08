@@ -1,0 +1,46 @@
+index-C6wZi6B1.js:455 Error inlining remote css file SecurityError: Failed to read the 'cssRules' property from 'CSSStyleSheet': Cannot access rules
+    at index-C6wZi6B1.js:455:26710
+    at Array.forEach (<anonymous>)
+    at D7 (index-C6wZi6B1.js:455:26671)
+    at O7 (index-C6wZi6B1.js:455:27830)
+    at M7 (index-C6wZi6B1.js:455:28157)
+    at z7 (index-C6wZi6B1.js:456:94)
+    at K7 (index-C6wZi6B1.js:456:346)
+    at async V7 (index-C6wZi6B1.js:456:452)
+    at async Ff (index-C6wZi6B1.js:456:849)
+    at async fV (index-C6wZi6B1.js:645:44172)
+
+index-C6wZi6B1.js:455 Error while reading CSS rules from https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=…:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap SecurityError: Failed to read the 'cssRules' property from 'CSSStyleSheet': Cannot access rules
+    at index-C6wZi6B1.js:455:27441
+    at Array.forEach (<anonymous>)
+    at index-C6wZi6B1.js:455:27402
+    at async O7 (index-C6wZi6B1.js:455:27824)
+    at async M7 (index-C6wZi6B1.js:455:28151)
+    at async z7 (index-C6wZi6B1.js:456:88)
+    at async K7 (index-C6wZi6B1.js:456:340)
+    at async V7 (index-C6wZi6B1.js:456:452)
+    at async Ff (index-C6wZi6B1.js:456:849)
+    at async fV (index-C6wZi6B1.js:645:44172)
+index-C6wZi6B1.js:455 Error inlining remote css file SecurityError: Failed to read the 'cssRules' property from 'CSSStyleSheet': Cannot access rules
+    at index-C6wZi6B1.js:455:26710
+    at Array.forEach (<anonymous>)
+    at D7 (index-C6wZi6B1.js:455:26671)
+    at O7 (index-C6wZi6B1.js:455:27830)
+    at M7 (index-C6wZi6B1.js:455:28157)
+    at z7 (index-C6wZi6B1.js:456:94)
+    at K7 (index-C6wZi6B1.js:456:346)
+    at async V7 (index-C6wZi6B1.js:456:452)
+    at async Ff (index-C6wZi6B1.js:456:849)
+    at async fV (index-C6wZi6B1.js:645:44210)
+index-C6wZi6B1.js:455 Error while reading CSS rules from https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=…:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap SecurityError: Failed to read the 'cssRules' property from 'CSSStyleSheet': Cannot access rules
+    at index-C6wZi6B1.js:455:27441
+    at Array.forEach (<anonymous>)
+    at index-C6wZi6B1.js:455:27402
+    at async O7 (index-C6wZi6B1.js:455:27824)
+    at async M7 (index-C6wZi6B1.js:455:28151)
+    at async z7 (index-C6wZi6B1.js:456:88)
+    at async K7 (index-C6wZi6B1.js:456:340)
+    at async V7 (index-C6wZi6B1.js:456:452)
+    at async Ff (index-C6wZi6B1.js:456:849)
+    at async fV (index-C6wZi6B1.js:645:44210)
+﻿

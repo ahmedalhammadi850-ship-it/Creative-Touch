@@ -162,6 +162,10 @@ async function captureElementMobile(el: HTMLElement): Promise<string> {
   // Let the browser paint the clone
   await new Promise(r => setTimeout(r, 150));
 
+  // Pre-fetch font CSS so html-to-image never touches document.styleSheets
+  // (cross-origin sheets throw SecurityError when cssRules is accessed)
+  const fontEmbedCSS = await buildFontEmbedCSS();
+
   try {
     // Primary: html-to-image preserves RTL text direction correctly
     const opts = {
@@ -170,6 +174,9 @@ async function captureElementMobile(el: HTMLElement): Promise<string> {
       width: naturalW,
       height: naturalH,
       skipAutoScale: true,
+      // Providing fontEmbedCSS makes html-to-image skip its own
+      // stylesheet iteration, preventing the cssRules SecurityError
+      fontEmbedCSS: fontEmbedCSS || '',
       style: {
         overflow: 'hidden',
         transform: 'none',
