@@ -46,9 +46,11 @@ let cachedFontCSS: string | null = null;
 async function buildFontEmbedCSS(): Promise<string> {
   if (cachedFontCSS !== null) return cachedFontCSS;
   try {
-    const cssText = await (
-      await fetch('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=block')
-    ).text();
+    const cssRes = await fetch(
+      'https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=block',
+      { mode: 'cors' }
+    );
+    const cssText = await cssRes.text();
     const urls = [...new Set(
       [...cssText.matchAll(/url\((https:\/\/fonts\.gstatic\.com[^)]+)\)/g)].map(m => m[1])
     )];
@@ -57,6 +59,9 @@ async function buildFontEmbedCSS(): Promise<string> {
       const b = await fetchAsBase64(u);
       if (b) css = css.replaceAll(u, b);
     }));
+    // Strip any remaining external url() refs that couldn't be inlined
+    // so they don't trigger SecurityError when cloned into SVG
+    css = css.replace(/url\(https?:\/\/[^)]+\)/g, '');
     cachedFontCSS = css;
     return css;
   } catch {
@@ -275,6 +280,83 @@ export function useExport() {
     const el = document.getElementById('export-target');
     if (!el) return { ok: false, error: 'export-target not found' };
 
+    /* ── inline notification helper ── */
+    function showPdfNotification(blobUrl: string) {
+      const existing = document.getElementById('pdf-export-notification');
+      if (existing) existing.remove();
+
+      const toast = document.createElement('div');
+      toast.id = 'pdf-export-notification';
+      toast.setAttribute('dir', 'rtl');
+      toast.style.cssText = [
+        'position:fixed',
+        'top:16px',
+        'left:50%',
+        'transform:translateX(-50%)',
+        'z-index:99999',
+        'display:flex',
+        'align-items:center',
+        'gap:12px',
+        'padding:14px 20px',
+        'background:#ffffff',
+        'border-radius:16px',
+        'box-shadow:0 8px 32px rgba(0,0,0,0.18)',
+        'border:1px solid #f3f4f6',
+        'cursor:pointer',
+        'user-select:none',
+        'min-width:280px',
+        'max-width:90vw',
+        'animation:pdfToastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both',
+      ].join(';');
+
+      const iconWrap = document.createElement('div');
+      iconWrap.style.cssText =
+        'flex-shrink:0;width:44px;height:44px;background:#ef4444;border-radius:10px;' +
+        'display:flex;align-items:center;justify-content:center;';
+      iconWrap.innerHTML =
+        '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" ' +
+        'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>' +
+        '<polyline points="14 2 14 8 20 8"/>' +
+        '<line x1="9" y1="13" x2="15" y2="13"/>' +
+        '<line x1="9" y1="17" x2="15" y2="17"/>' +
+        '</svg>';
+
+      const textWrap = document.createElement('div');
+      textWrap.style.cssText = 'flex:1;text-align:right;';
+      textWrap.innerHTML =
+        '<div style="font-weight:700;font-size:14px;color:#111827;font-family:Cairo,sans-serif;">ملف PDF جاهز</div>' +
+        '<div style="font-size:12px;color:#6b7280;margin-top:3px;font-family:Cairo,sans-serif;">' +
+        'تم تجهيز ملف PDF بنجاح. اضغط هنا لفتحه</div>';
+
+      toast.appendChild(iconWrap);
+      toast.appendChild(textWrap);
+
+      /* inject keyframes once */
+      if (!document.getElementById('pdf-toast-style')) {
+        const style = document.createElement('style');
+        style.id = 'pdf-toast-style';
+        style.textContent =
+          '@keyframes pdfToastIn{from{opacity:0;transform:translateX(-50%) translateY(-16px)}' +
+          'to{opacity:1;transform:translateX(-50%) translateY(0)}}';
+        document.head.appendChild(style);
+      }
+
+      toast.addEventListener('click', () => {
+        window.open(blobUrl, '_blank');
+      });
+
+      document.body.appendChild(toast);
+
+      /* auto-dismiss after 15 s */
+      setTimeout(() => {
+        if (!document.body.contains(toast)) return;
+        toast.style.transition = 'opacity 0.3s ease';
+        toast.style.opacity = '0';
+        setTimeout(() => { if (document.body.contains(toast)) toast.remove(); }, 320);
+      }, 15000);
+    }
+
     try {
       const png = await captureElement(el);
 
@@ -294,6 +376,10 @@ export function useExport() {
 
       const filename = `creative-touch-${Date.now()}.pdf`;
 
+      /* build blob + URL for notification (works on all platforms) */
+      const pdfBlob = pdf.output('blob');
+      const pdfBlobUrl = URL.createObjectURL(pdfBlob);
+
       if (isIOS()) {
         const dataUri = pdf.output('datauristring');
         if (iosWindow && !iosWindow.closed) {
@@ -301,20 +387,20 @@ export function useExport() {
         } else {
           window.location.href = dataUri;
         }
+        /* show notification on iOS too */
+        showPdfNotification(pdfBlobUrl);
       } else if (isMobile()) {
-        // Android: return a blob URL so the caller can show an interactive notification
-        const blob = pdf.output('blob');
-        const blobUrl = URL.createObjectURL(blob);
-        return { ok: true, blobUrl };
+        /* Android: show notification — user taps to open */
+        showPdfNotification(pdfBlobUrl);
       } else {
-        // Desktop
-        pdf.save(filename);
+        /* Desktop: auto-download + notification */
+        downloadBlob(pdfBlob, filename);
+        showPdfNotification(pdfBlobUrl);
       }
 
-      return { ok: true };
+      return { ok: true, blobUrl: pdfBlobUrl };
     } catch (e) {
       console.error('PDF export failed:', e);
-      // If iOS window was opened but export failed, close it to avoid blank tab
       if (iosWindow && !iosWindow.closed) iosWindow.close();
       return { ok: false, error: String(e) };
     }
