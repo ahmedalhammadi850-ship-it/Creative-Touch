@@ -10,6 +10,7 @@ import {
   signOut,
   getFirebaseErrorMessage,
 } from '../lib/firebase';
+import { getUserFromFirestore } from '../lib/firestoreService';
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
@@ -53,11 +54,19 @@ export default function LoginPage() {
         return;
       }
 
+      // Sync latest data from Firestore (handles plan updates approved on other devices)
+      const fsUser = await getUserFromFirestore(credential.user.uid).catch(() => null);
       const localUser = getUserByEmail(email.trim());
+
       if (localUser) {
-        setCurrentUser(localUser);
+        // Merge Firestore plan/templates on top of local data
+        const merged = fsUser
+          ? { ...localUser, plan: fsUser.plan, planStatus: fsUser.planStatus, planExpiresAt: fsUser.planExpiresAt, activatedTemplates: fsUser.activatedTemplates ?? localUser.activatedTemplates }
+          : localUser;
+        addUser(merged);
+        setCurrentUser(merged);
       } else {
-        const newUser = {
+        const newUser = fsUser ?? {
           id: credential.user.uid,
           name: credential.user.displayName || email.split('@')[0],
           email: email.toLowerCase().trim(),

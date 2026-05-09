@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useAdminStore } from '../store/useAdminStore';
 import { usePricingStore } from '../store/usePricingStore';
@@ -6,6 +6,13 @@ import { useRequestStore } from '../store/useRequestStore';
 import { useAuthStore, getTimeRemaining } from '../store/useAuthStore';
 import { categories } from '../data/categories';
 import type { User } from '../store/useAuthStore';
+import {
+  subscribeToRequests,
+  subscribeToUsers,
+  updateRequestInFirestore,
+  updateUserInFirestore,
+  addActivatedTemplatesToFirestore,
+} from '../lib/firestoreService';
 import {
   ShieldCheck, LogOut, DollarSign, Users, Clock, CheckCircle, XCircle,
   Edit3, Save, X, Plus, Trash2, LayoutTemplate, Bell, RotateCcw, ChevronDown,
@@ -59,8 +66,20 @@ export default function AdminDashboard() {
   const [, setLocation] = useLocation();
   const { logout } = useAdminStore();
   const { plans, updatePlan, updateFeature, addFeature, removeFeature, resetToDefault } = usePricingStore();
-  const { requests, updateStatus } = useRequestStore();
-  const { users, updateUserPlan, addActivatedTemplate, addActivatedTemplates } = useAuthStore();
+  const { requests: localRequests, updateStatus } = useRequestStore();
+  const { users: localUsers, updateUserPlan, addActivatedTemplate, addActivatedTemplates } = useAuthStore();
+
+  const [fsRequests, setFsRequests] = useState<AppRequest[] | null>(null);
+  const [fsUsers, setFsUsers] = useState<User[] | null>(null);
+
+  useEffect(() => {
+    const unsubReq = subscribeToRequests((data) => setFsRequests(data));
+    const unsubUsers = subscribeToUsers((data) => setFsUsers(data));
+    return () => { unsubReq(); unsubUsers(); };
+  }, []);
+
+  const requests = fsRequests ?? localRequests;
+  const users = fsUsers ?? localUsers;
 
   const [tab, setTab] = useState<Tab>('requests');
   const [editingPlan, setEditingPlan] = useState<string | null>(null);
@@ -110,18 +129,27 @@ export default function AdminDashboard() {
   };
 
   const handleApprove = (req: AppRequest, overridePlan?: User['plan'], expiresAt?: string) => {
+    const respondedAt = new Date().toISOString();
     updateStatus(req.id, 'approved');
+    updateRequestInFirestore(req.id, { status: 'approved', respondedAt });
     if (req.userId) {
       if (req.type === 'activation' && req.categoryId && req.templateId) {
-        // Activate selected template + the one before + the one after
         const keys = getAdjacentTemplateKeys(req.categoryId, req.templateId);
         addActivatedTemplates(req.userId, keys);
+        addActivatedTemplatesToFirestore(req.userId, keys);
       } else {
         const plan = overridePlan ?? resolvePlanId(req);
         updateUserPlan(req.userId, plan, 'active', expiresAt);
+        updateUserInFirestore(req.userId, { plan, planStatus: 'active', planExpiresAt: expiresAt });
       }
     }
     setApprovingReq(null);
+  };
+
+  const handleReject = (req: AppRequest) => {
+    const respondedAt = new Date().toISOString();
+    updateStatus(req.id, 'rejected');
+    updateRequestInFirestore(req.id, { status: 'rejected', respondedAt });
   };
 
   const handleApproveClick = (req: AppRequest) => {
@@ -148,7 +176,9 @@ export default function AdminDashboard() {
   };
 
   const handleDirectPlanChange = (userId: string, plan: User['plan']) => {
-    updateUserPlan(userId, plan, plan === 'free' ? null : 'active');
+    const planStatus = plan === 'free' ? null : 'active';
+    updateUserPlan(userId, plan, planStatus);
+    updateUserInFirestore(userId, { plan, planStatus });
     setChangingPlan(null);
   };
 
@@ -300,7 +330,7 @@ export default function AdminDashboard() {
                           style={{ flex: 1, padding: '10px', borderRadius: 12, border: 'none', cursor: 'pointer', background: '#ecfdf5', color: '#059669', fontSize: 14, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, fontFamily: "'Cairo',sans-serif" }}>
                           <CheckCircle size={16} />{req.type === 'activation' ? 'موافقة وتفعيل' : 'موافقة — اختر الخطة'}
                         </button>
-                        <button onClick={() => updateStatus(req.id, 'rejected')}
+                        <button onClick={() => handleReject(req)}
                           style={{ flex: 1, padding: '10px', borderRadius: 12, border: 'none', cursor: 'pointer', background: '#fef2f2', color: '#dc2626', fontSize: 14, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, fontFamily: "'Cairo',sans-serif" }}>
                           <XCircle size={16} />رفض
                         </button>

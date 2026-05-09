@@ -11,6 +11,7 @@ import {
   signOut,
   getFirebaseErrorMessage,
 } from '../lib/firebase';
+import { saveUserToFirestore } from '../lib/firestoreService';
 
 type Step = 'form' | 'verify';
 
@@ -59,6 +60,7 @@ export default function RegisterPage() {
       const localUser = getUserByEmail(fbVerifiedUser.email!);
       if (localUser) {
         setCurrentUser(localUser);
+        saveUserToFirestore(localUser).catch(() => {});
       } else {
         const newUser = {
           id: fbVerifiedUser.uid,
@@ -70,6 +72,7 @@ export default function RegisterPage() {
         };
         addUser(newUser);
         setCurrentUser(newUser);
+        saveUserToFirestore(newUser).catch(() => {});
       }
 
       await signOut(auth);

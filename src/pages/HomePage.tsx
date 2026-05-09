@@ -4,6 +4,7 @@ import { categories } from '../data/categories';
 import { usePricingStore } from '../store/usePricingStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { useRequestStore } from '../store/useRequestStore';
+import { saveRequestToFirestore } from '../lib/firestoreService';
 import {
   Sparkles, Zap, Download, Palette, Star,
   LayoutTemplate, Users, Award, ChevronLeft, ArrowLeft, Check, Crown,
@@ -100,8 +101,8 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
 
       const imageBase64 = await toBase64(image);
 
-      addRequest({
-        type: 'subscription',
+      const subPayload = {
+        type: 'subscription' as const,
         userId: user.id,
         userName: name.trim(),
         userPhone: 'غير مزود',
@@ -109,8 +110,18 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
         plan,
         planId,
         imageBase64,
-        imageName: image.name
-      });
+        imageName: image.name,
+      };
+      const subId = addRequest(subPayload);
+
+      // Save to Firestore for centralized admin access
+      saveRequestToFirestore({
+        ...subPayload,
+        id: subId,
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+      }).catch(() => {});
+
       setDone(true);
     } catch {
       setError('حدث خطأ أثناء المعالجة');

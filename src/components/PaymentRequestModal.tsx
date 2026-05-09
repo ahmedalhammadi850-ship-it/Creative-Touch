@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { X, Send, CheckCircle, Clock, ImageIcon } from 'lucide-react';
 import { useRequestStore } from '../store/useRequestStore';
 import { useAuthStore } from '../store/useAuthStore';
+import { saveRequestToFirestore } from '../lib/firestoreService';
 
 const N8N_WEBHOOK = 'https://ahmedaaasss.app.n8n.cloud/webhook-test/060b55ea-bd8e-4d32-9968-d37bff3b7be5';
 const COOLDOWN_KEY = 'payment_request_last_sent';
@@ -79,8 +80,8 @@ export function PaymentRequestModal({ onClose, templateName, categoryId, templat
       const imageBase64 = await toBase64(image);
 
       // Save to local store
-      addRequest({
-        type: 'activation',
+      const reqPayload = {
+        type: 'activation' as const,
         userId: user?.id,
         userName: name.trim(),
         userPhone: 'غير مزود',
@@ -90,7 +91,16 @@ export function PaymentRequestModal({ onClose, templateName, categoryId, templat
         templateId,
         imageBase64,
         imageName: image.name,
-      });
+      };
+      const reqId = addRequest(reqPayload);
+
+      // Save to Firestore for centralized admin access
+      saveRequestToFirestore({
+        ...reqPayload,
+        id: reqId,
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+      }).catch(() => {});
 
       // Also send to n8n via FormData + no-cors to bypass CORS preflight
       try {
