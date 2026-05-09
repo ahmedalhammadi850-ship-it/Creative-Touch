@@ -323,11 +323,11 @@ export default function AdminDashboard() {
                         </div>
                       </div>
 
-                      {req.imageBase64 && (
+                      {(req.imageUrl || req.imageBase64) && (
                         <img
-                          src={`data:image/jpeg;base64,${req.imageBase64}`}
+                          src={req.imageUrl || `data:image/jpeg;base64,${req.imageBase64}`}
                           alt="إيصال"
-                          onClick={() => setPreviewImg(req.imageBase64!)}
+                          onClick={() => setPreviewImg(req.imageUrl || req.imageBase64!)}
                           style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 12, cursor: 'zoom-in', border: '2px solid #e2e8f0', flexShrink: 0 }}
                         />
                       )}
@@ -574,7 +574,7 @@ export default function AdminDashboard() {
       {/* Image preview modal */}
       {previewImg && (
         <div onClick={() => setPreviewImg(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20, cursor: 'zoom-out' }}>
-          <img src={`data:image/jpeg;base64,${previewImg}`} alt="preview" style={{ maxWidth: '90vw', maxHeight: '85vh', borderRadius: 16, objectFit: 'contain', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }} />
+          <img src={previewImg.startsWith('http') ? previewImg : `data:image/jpeg;base64,${previewImg}`} alt="preview" style={{ maxWidth: '90vw', maxHeight: '85vh', borderRadius: 16, objectFit: 'contain', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }} />
         </div>
       )}
 

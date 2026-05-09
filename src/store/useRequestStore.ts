@@ -17,6 +17,7 @@ export interface AppRequest {
   plan?: string;
   planId?: string;
   imageBase64?: string;
+  imageUrl?: string;
   imageName?: string;
   status: RequestStatus;
   createdAt: string;

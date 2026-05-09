@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { X, Send, CheckCircle, Clock, ImageIcon } from 'lucide-react';
 import { useRequestStore } from '../store/useRequestStore';
 import { useAuthStore } from '../store/useAuthStore';
-import { saveRequestToFirestore } from '../lib/firestoreService';
+import { saveRequestToFirestore, uploadPaymentProof } from '../lib/firestoreService';
 
 const N8N_WEBHOOK = 'https://ahmedaaasss.app.n8n.cloud/webhook-test/060b55ea-bd8e-4d32-9968-d37bff3b7be5';
 const COOLDOWN_KEY = 'payment_request_last_sent';
@@ -69,16 +69,6 @@ export function PaymentRequestModal({ onClose, templateName, categoryId, templat
 
     setSending(true);
     try {
-      const toBase64 = (f: File): Promise<string> =>
-        new Promise((res, rej) => {
-          const r = new FileReader();
-          r.onload = () => res((r.result as string).split(',')[1]);
-          r.onerror = rej;
-          r.readAsDataURL(f);
-        });
-
-      const imageBase64 = await toBase64(image);
-
       // Save to local store
       const reqPayload = {
         type: 'activation' as const,
@@ -89,15 +79,17 @@ export function PaymentRequestModal({ onClose, templateName, categoryId, templat
         templateName: templateName || 'غير محدد',
         categoryId,
         templateId,
-        imageBase64,
         imageName: image.name,
       };
       const reqId = addRequest(reqPayload);
+
+      const imageUrl = await uploadPaymentProof(reqId, image);
 
       // Save to Firestore for centralized admin access
       saveRequestToFirestore({
         ...reqPayload,
         id: reqId,
+        imageUrl,
         status: 'pending',
         createdAt: new Date().toISOString(),
       }).catch(() => {});

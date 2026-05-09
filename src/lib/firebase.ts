@@ -46,6 +46,7 @@ import {
   type User,
 } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey:            import.meta.env.VITE_FIREBASE_API_KEY            || 'AIzaSyBnjeJQ_PFW94Iu8ApFkgpQSu0qb4OhztA',
@@ -60,6 +61,8 @@ const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0
 export const auth = getAuth(app);
 auth.languageCode = 'ar';
 export const db = getFirestore(app);
+export const storage = getStorage(app);
+export { ref, uploadBytes, getDownloadURL };
 
 export const firebaseReady = !!(
   firebaseConfig.apiKey &&

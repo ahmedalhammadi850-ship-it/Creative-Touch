@@ -1,24 +1,29 @@
 import {
   collection, doc, setDoc, updateDoc, getDoc,
-  onSnapshot, query, orderBy, arrayUnion,
+  onSnapshot, query, orderBy, arrayUnion, serverTimestamp,
 } from 'firebase/firestore';
-import { db } from './firebase';
+import { db, storage, ref, uploadBytes, getDownloadURL } from './firebase';
 import type { AppRequest } from '../store/useRequestStore';
 import type { User } from '../store/useAuthStore';
 
 // ─── Requests ───────────────────────────────────────────────────────────────
 
+export async function uploadPaymentProof(requestId: string, file: File): Promise<string> {
+  const storageRef = ref(storage, `payment_proofs/${requestId}`);
+  await uploadBytes(storageRef, file);
+  return await getDownloadURL(storageRef);
+}
+
 export async function saveRequestToFirestore(request: AppRequest): Promise<void> {
   try {
-    await setDoc(doc(db, 'requests', request.id), request);
-  } catch (e1) {
-    // Document may be too large (image base64) — retry without image
-    try {
-      const { imageBase64, ...rest } = request;
-      await setDoc(doc(db, 'requests', request.id), { ...rest, hasImage: !!imageBase64 });
-    } catch (e2) {
-      console.warn('[Firestore] saveRequest failed:', e2);
-    }
+    const { imageBase64, createdAt, ...rest } = request;
+    await setDoc(doc(db, 'requests', request.id), {
+      ...rest,
+      status: rest.status || 'pending',
+      createdAt: serverTimestamp(),
+    });
+  } catch (e) {
+    console.warn('[Firestore] saveRequest failed:', e);
   }
 }
 

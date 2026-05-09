@@ -4,7 +4,7 @@ import { categories } from '../data/categories';
 import { usePricingStore } from '../store/usePricingStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { useRequestStore } from '../store/useRequestStore';
-import { saveRequestToFirestore } from '../lib/firestoreService';
+import { saveRequestToFirestore, uploadPaymentProof } from '../lib/firestoreService';
 import {
   Sparkles, Zap, Download, Palette, Star,
   LayoutTemplate, Users, Award, ChevronLeft, ArrowLeft, Check, Crown,
@@ -91,16 +91,6 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
 
     setSending(true);
     try {
-      const toBase64 = (f: File): Promise<string> =>
-        new Promise((res, rej) => {
-          const r = new FileReader();
-          r.onload = () => res((r.result as string).split(',')[1]);
-          r.onerror = rej;
-          r.readAsDataURL(f);
-        });
-
-      const imageBase64 = await toBase64(image);
-
       const subPayload = {
         type: 'subscription' as const,
         userId: user.id,
@@ -109,15 +99,17 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
         userEmail: user.email,
         plan,
         planId,
-        imageBase64,
         imageName: image.name,
       };
       const subId = addRequest(subPayload);
+
+      const imageUrl = await uploadPaymentProof(subId, image);
 
       // Save to Firestore for centralized admin access
       saveRequestToFirestore({
         ...subPayload,
         id: subId,
+        imageUrl,
         status: 'pending',
         createdAt: new Date().toISOString(),
       }).catch(() => {});
