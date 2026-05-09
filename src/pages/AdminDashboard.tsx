@@ -71,15 +71,24 @@ export default function AdminDashboard() {
 
   const [fsRequests, setFsRequests] = useState<AppRequest[] | null>(null);
   const [fsUsers, setFsUsers] = useState<User[] | null>(null);
+  const [fsReqErr, setFsReqErr] = useState(false);
+  const [fsUsersErr, setFsUsersErr] = useState(false);
 
   useEffect(() => {
-    const unsubReq = subscribeToRequests((data) => setFsRequests(data));
-    const unsubUsers = subscribeToUsers((data) => setFsUsers(data));
+    const unsubReq = subscribeToRequests(
+      (data) => { setFsRequests(data); setFsReqErr(false); },
+      () => setFsReqErr(true),
+    );
+    const unsubUsers = subscribeToUsers(
+      (data) => { setFsUsers(data); setFsUsersErr(false); },
+      () => setFsUsersErr(true),
+    );
     return () => { unsubReq(); unsubUsers(); };
   }, []);
 
-  const requests = fsRequests ?? localRequests;
-  const users = fsUsers ?? localUsers;
+  // Use Firestore when connected; fall back to local store otherwise
+  const requests = (!fsReqErr && fsRequests !== null) ? fsRequests : localRequests;
+  const users = (!fsUsersErr && fsUsers !== null) ? fsUsers : localUsers;
 
   const [tab, setTab] = useState<Tab>('requests');
   const [editingPlan, setEditingPlan] = useState<string | null>(null);
