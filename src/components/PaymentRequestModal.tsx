@@ -92,12 +92,20 @@ export function PaymentRequestModal({ onClose, templateName, categoryId, templat
         imageName: image.name,
       });
 
-      // Also send to n8n
+      // Also send to n8n via FormData + no-cors to bypass CORS preflight
       try {
+        const formData = new FormData();
+        formData.append('name', name.trim());
+        formData.append('template', templateName || 'غير محدد');
+        formData.append('email', user?.email || '');
+        formData.append('categoryId', categoryId || '');
+        formData.append('templateId', templateId || '');
+        formData.append('sentAt', new Date().toISOString());
+        formData.append('image', image, image.name);
         await fetch(N8N_WEBHOOK, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: name.trim(), template: templateName, imageName: image.name, imageBase64, sentAt: new Date().toISOString() }),
+          mode: 'no-cors',
+          body: formData,
         });
       } catch { /* n8n failure is non-blocking */ }
 
