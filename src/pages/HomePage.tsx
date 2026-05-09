@@ -41,7 +41,7 @@ const stats = [
 const steps = [
   { icon: Palette,  title: 'اختر القالب',  desc: 'تصفح مجموعتنا الواسعة وابحث عن التصميم المثالي لمناسبتك.', color: '#6366f1', bg: '#eef2ff' },
   { icon: Sparkles, title: 'خصّص بحرية',   desc: 'أضف الاسم والصورة والألوان وكل التفاصيل بلمسة واحدة.', color: '#ec4899', bg: '#fdf2f8' },
-  { icon: Download, title: 'صدّر واشارك', desc: 'حمّل تصميمك بجودة عالية PNG وشاركه مباشرة.', color: '#f59e0b', bg: '#fffbeb' },
+  { icon: Download, title: 'صدّر واشارك', desc: 'حمّل تصميمك بجودة عالية PDF وشاركه مباشرة.', color: '#f59e0b', bg: '#fffbeb' },
 ];
 
 // ── Subscription Modal ──────────────────────────────────────────────────────
