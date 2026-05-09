@@ -44,7 +44,7 @@ export default function AboutPage() {
         borderBottom: '1px solid rgba(99,102,241,0.1)',
         boxShadow: '0 1px 20px rgba(99,102,241,0.08)',
       }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
+        <div className="nav-container" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
 
           {/* Right side — actions */}
           <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
@@ -106,10 +106,10 @@ export default function AboutPage() {
           {/* Logo */}
           <button onClick={() => setLocation('/')}
             style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 14, background: 'linear-gradient(135deg, #6366f1, #a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 15px rgba(99,102,241,0.35)' }}>
+            <div className="nav-logo-icon" style={{ width: 44, height: 44, borderRadius: 14, background: 'linear-gradient(135deg, #6366f1, #a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 15px rgba(99,102,241,0.35)' }}>
               <LayoutTemplate size={22} color="#fff" />
             </div>
-            <span style={{ color: '#1e1b4b', fontSize: 20, fontWeight: 900 }}>ستوديو القوالب</span>
+            <span className="nav-logo-text" style={{ color: '#1e1b4b', fontSize: 20, fontWeight: 900 }}>ستوديو القوالب</span>
           </button>
         </div>
       </nav>
