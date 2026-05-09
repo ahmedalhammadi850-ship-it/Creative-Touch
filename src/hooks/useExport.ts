@@ -310,7 +310,7 @@ export function useExport() {
     void _safeSheets;
 
     /* ── inline Tailwind notification helper ── */
-    function showPdfNotification(blobUrl: string, filename: string) {
+    function showPdfNotification(blobUrl: string, filename: string, blob: Blob) {
       const existing = document.getElementById('pdf-export-notification');
       if (existing) existing.remove();
 
@@ -367,15 +367,38 @@ export function useExport() {
       toast.appendChild(iconWrap);
       toast.appendChild(textWrap);
 
-      /* click → force-download via hidden <a> + dismiss */
+      /* click → smart download: Web Share API on mobile, hidden <a> on desktop */
       toast.addEventListener('click', () => {
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = filename;
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        const pdfFile = new File([blob], filename, { type: 'application/pdf' });
+
+        if (
+          typeof navigator.share === 'function' &&
+          typeof navigator.canShare === 'function' &&
+          navigator.canShare({ files: [pdfFile] })
+        ) {
+          // Mobile (iOS 15+ / Android Chrome): native system share sheet
+          // lets the user "Save to Files" / "Download" directly
+          navigator.share({ files: [pdfFile], title: filename })
+            .catch(() => {
+              // User cancelled or share failed — fall back to anchor download
+              const a = document.createElement('a');
+              a.href = blobUrl;
+              a.download = filename;
+              a.style.display = 'none';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+            });
+        } else {
+          // Desktop / older browsers: hidden <a download> triggers save dialog
+          const a = document.createElement('a');
+          a.href = blobUrl;
+          a.download = filename;
+          a.style.display = 'none';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
         dismiss();
       });
 
@@ -416,13 +439,13 @@ export function useExport() {
           window.location.href = dataUri;
         }
         /* show notification on iOS too */
-        showPdfNotification(pdfBlobUrl, filename);
+        showPdfNotification(pdfBlobUrl, filename, pdfBlob);
       } else if (isMobile()) {
         /* Android: show notification — user taps to open */
-        showPdfNotification(pdfBlobUrl, filename);
+        showPdfNotification(pdfBlobUrl, filename, pdfBlob);
       } else {
         /* Desktop: notification only — user clicks to open */
-        showPdfNotification(pdfBlobUrl, filename);
+        showPdfNotification(pdfBlobUrl, filename, pdfBlob);
       }
 
       return { ok: true, blobUrl: pdfBlobUrl };
