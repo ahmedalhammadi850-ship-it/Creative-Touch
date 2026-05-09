@@ -443,6 +443,6 @@ export function useExport() {
     exportAsPdf,
     capturePreview,
     isMobileDevice: isMobile(),
-    isIOSDevice: isIOS(),
+    isIOSDevice: false, // blob-download handles all platforms — no pre-opened window needed
   };
 }
