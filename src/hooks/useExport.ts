@@ -413,15 +413,17 @@ export function useExport() {
       const pdfBlob = pdf.output('blob');
       const pdfBlobUrl = URL.createObjectURL(pdfBlob);
 
-      /* Close any pre-opened blank window (iOS popup-blocker workaround is
-         no longer needed — blob download works without it and avoids about:blank) */
+      /* iOS Safari: navigate the pre-opened window to the PDF data URI so the
+         user can tap Share → "Save to Files". <a download> is ignored by iOS. */
       if (iosWindow && !iosWindow.closed) {
-        try { iosWindow.close(); } catch { /* ignore */ }
+        const pdfDataUri = pdf.output('datauristring');
+        showPdfInIOSWindow(iosWindow, pdfDataUri);
+        return { ok: true, blobUrl: pdfBlobUrl };
       }
 
-      /* All platforms: show notification → user taps → force download to device */
+      /* Android / Desktop: show notification → user taps → force download */
       showPdfNotification(pdfBlobUrl, filename, pdfBlob);
-      return { ok: true };
+      return { ok: true, blobUrl: pdfBlobUrl };
     } catch (e) {
       console.error('PDF export failed:', e);
       if (iosWindow && !iosWindow.closed) iosWindow.close();
@@ -443,6 +445,6 @@ export function useExport() {
     exportAsPdf,
     capturePreview,
     isMobileDevice: isMobile(),
-    isIOSDevice: false, // blob-download handles all platforms — no pre-opened window needed
+    isIOSDevice: isIOS(),
   };
 }
