@@ -284,9 +284,13 @@ export default function AboutPage() {
                 <Mail size={30} color="#fff" />
               </div>
               <h2 style={{ color: '#fff', fontSize: 30, fontWeight: 900, marginBottom: 14 }}>هل لديك سؤال أو اقتراح؟</h2>
-              <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 16, marginBottom: 34, lineHeight: 1.8 }}>
+              <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 16, marginBottom: 16, lineHeight: 1.8 }}>
                 يسعدنا سماع آرائكم ومقترحاتكم لتطوير المنصة وإضافة قوالب جديدة
               </p>
+              <a href="mailto:devahmedabduallah@gmail.com" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: '#fff', fontSize: 15, fontWeight: 700, marginBottom: 34, textDecoration: 'none', background: 'rgba(255,255,255,0.15)', borderRadius: 12, padding: '8px 18px', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.25)' }}>
+                <Mail size={16} />
+                devahmedabduallah@gmail.com
+              </a>
               <button
                 onClick={() => setLocation('/')}
                 style={{
