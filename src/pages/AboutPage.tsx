@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { useLocation } from 'wouter';
 import {
   LayoutTemplate, Sparkles, Palette, Download, Shield,
-  Zap, Heart, Star, Users, Globe, ChevronLeft, Mail
+  Zap, Heart, Star, Users, Globe, ChevronLeft, Mail,
+  LogIn, UserPlus, LogOut, LayoutDashboard, Crown
 } from 'lucide-react';
+import { useAuthStore } from '../store/useAuthStore';
 
 const values = [
   { icon: Zap,      title: 'سرعة وسهولة',         desc: 'واجهة بسيطة تمكّنك من إنشاء تصميم احترافي خلال دقائق دون أي خبرة تقنية.', color: '#f59e0b', bg: '#fffbeb' },
@@ -21,6 +24,8 @@ const team = [
 
 export default function AboutPage() {
   const [, setLocation] = useLocation();
+  const { user, logout } = useAuthStore();
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   return (
     <div dir="rtl" style={{ fontFamily: "'Cairo', sans-serif", minHeight: '100vh', background: '#f8f7ff' }}>
@@ -40,56 +45,77 @@ export default function AboutPage() {
         boxShadow: '0 1px 20px rgba(99,102,241,0.08)',
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', height: 68, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
-          {/* Buttons — right side visually in RTL (first child) */}
-          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-            <button
-              onClick={() => setLocation('/')}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 5,
-                background: 'transparent', border: 'none', cursor: 'pointer',
-                color: '#6366f1', fontSize: 14, fontWeight: 700,
-                padding: '9px 16px', borderRadius: 10, transition: 'background 0.2s',
-              }}
+
+          {/* Right side — actions */}
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+
+            <button onClick={() => setLocation('/')}
+              style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#6366f1', fontSize: 14, fontWeight: 700, padding: '9px 16px', borderRadius: 10, display: 'inline-flex', alignItems: 'center', gap: 5 }}
               onMouseEnter={e => (e.currentTarget.style.background = '#eef2ff')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-            >
-              <ChevronLeft size={15} />
-              الرئيسية
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+              <ChevronLeft size={15} />الرئيسية
             </button>
-            <button
-              onClick={() => setLocation('/category/congrats')}
-              style={{
-                background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-                border: 'none', cursor: 'pointer',
-                color: '#fff', fontSize: 14, fontWeight: 700,
-                padding: '10px 22px', borderRadius: 12,
-                boxShadow: '0 4px 15px rgba(99,102,241,0.35)',
-                transition: 'transform 0.2s',
-              }}
-              onMouseEnter={e => (e.currentTarget.style.transform = 'translateY(-1px)')}
-              onMouseLeave={e => (e.currentTarget.style.transform = 'translateY(0)')}
-            >
-              ابدأ الآن
+
+            <button onClick={() => { setLocation('/'); setTimeout(() => document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' }), 300); }}
+              style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#6366f1', fontSize: 14, fontWeight: 700, padding: '9px 16px', borderRadius: 10, display: 'inline-flex', alignItems: 'center', gap: 5 }}
+              onMouseEnter={e => (e.currentTarget.style.background = '#eef2ff')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
+              <Crown size={14} />الأسعار
             </button>
+
+            {user ? (
+              <div style={{ position: 'relative' }}>
+                <button onClick={() => setShowUserMenu(v => !v)}
+                  style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#eef2ff', border: '2px solid #c7d2fe', cursor: 'pointer', borderRadius: 12, padding: '7px 12px', color: '#6366f1', fontSize: 13, fontWeight: 800 }}>
+                  <div style={{ width: 26, height: 26, borderRadius: '50%', background: 'linear-gradient(135deg,#6366f1,#a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12, fontWeight: 900, flexShrink: 0 }}>
+                    {user.name.charAt(0)}
+                  </div>
+                  {user.name.split(' ')[0]}
+                </button>
+                {showUserMenu && (
+                  <div style={{ position: 'absolute', top: '110%', right: 0, background: '#fff', borderRadius: 16, boxShadow: '0 12px 40px rgba(0,0,0,0.15)', border: '1px solid #f1f5f9', minWidth: 190, padding: 8, zIndex: 100 }}>
+                    <div style={{ padding: '10px 14px', borderBottom: '1px solid #f1f5f9', marginBottom: 6 }}>
+                      <p style={{ color: '#1e1b4b', fontSize: 13, fontWeight: 800, margin: 0 }}>{user.name}</p>
+                      <p style={{ color: '#94a3b8', fontSize: 11, margin: '2px 0 0' }}>{user.email}</p>
+                    </div>
+                    <button onClick={() => { setShowUserMenu(false); setLocation('/dashboard'); }}
+                      style={{ width: '100%', padding: '9px 14px', borderRadius: 10, border: 'none', cursor: 'pointer', background: 'none', color: '#6366f1', fontSize: 13, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8, fontFamily: "'Cairo',sans-serif" }}>
+                      <LayoutDashboard size={14} />لوحتي
+                    </button>
+                    <button onClick={() => { logout(); setShowUserMenu(false); }}
+                      style={{ width: '100%', padding: '9px 14px', borderRadius: 10, border: 'none', cursor: 'pointer', background: 'none', color: '#dc2626', fontSize: 13, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8, fontFamily: "'Cairo',sans-serif" }}>
+                      <LogOut size={14} />تسجيل الخروج
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div style={{ display: 'flex', gap: 6 }}>
+                <button onClick={() => setLocation('/login')}
+                  style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'transparent', border: '2px solid #c7d2fe', cursor: 'pointer', color: '#6366f1', fontSize: 13, fontWeight: 800, padding: '7px 13px', borderRadius: 12 }}>
+                  <LogIn size={15} />دخول
+                </button>
+                <button onClick={() => setLocation('/register')}
+                  style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'linear-gradient(135deg,#6366f1,#a855f7)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: 13, fontWeight: 800, padding: '7px 13px', borderRadius: 12, boxShadow: '0 4px 14px rgba(99,102,241,0.35)' }}>
+                  <UserPlus size={15} />إنشاء حساب
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* Logo — left side visually in RTL (second child) */}
-          <button
-            onClick={() => setLocation('/')}
-            style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-          >
-            <div style={{
-              width: 44, height: 44, borderRadius: 14,
-              background: 'linear-gradient(135deg, #6366f1, #a855f7)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: '0 4px 15px rgba(99,102,241,0.35)',
-            }}>
+          {/* Logo */}
+          <button onClick={() => setLocation('/')}
+            style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+            <div style={{ width: 44, height: 44, borderRadius: 14, background: 'linear-gradient(135deg, #6366f1, #a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 15px rgba(99,102,241,0.35)' }}>
               <LayoutTemplate size={22} color="#fff" />
             </div>
             <span style={{ color: '#1e1b4b', fontSize: 20, fontWeight: 900 }}>ستوديو القوالب</span>
           </button>
         </div>
       </nav>
+
+      {/* Click-away for user menu */}
+      {showUserMenu && <div style={{ position: 'fixed', inset: 0, zIndex: 49 }} onClick={() => setShowUserMenu(false)} />}
 
       <div style={{ position: 'relative', zIndex: 1 }}>
 
