@@ -218,18 +218,23 @@ async function captureElementMobile(el: HTMLElement): Promise<string> {
         imageTimeout: 15000,
         logging: false,
         onclone: (_doc: Document, el: HTMLElement) => {
-          // Remove all external <link> and <style> elements whose sheets
-          // throw SecurityError when cssRules is accessed (cross-origin fonts)
+          // Disable cross-origin sheets that throw SecurityError on mobile
+          // (Google Fonts restrictions on Android/iOS)
           try {
             el.querySelectorAll('link[rel="stylesheet"], style').forEach((node) => {
               try {
                 const sheet = (node as HTMLLinkElement | HTMLStyleElement).sheet;
-                if (sheet) void sheet.cssRules; // throws if cross-origin
+                if (sheet) void sheet.cssRules; // throws SecurityError if cross-origin
               } catch {
-                node.remove(); // safe to remove — prevents SecurityError
+                // Disable the offending sheet instead of removing the node —
+                // this stops cssRules access without breaking the DOM structure
+                try {
+                  const s = (node as HTMLLinkElement | HTMLStyleElement).sheet;
+                  if (s) s.disabled = true;
+                } catch { /* sheet object inaccessible — ignore */ }
               }
             });
-          } catch { /* ignore — sheet access may be fully blocked in some browsers */ }
+          } catch { /* querySelectorAll itself failed — ignore */ }
         },
       });
       return canvas.toDataURL('image/png');
@@ -382,9 +387,7 @@ export function useExport() {
       });
 
       document.body.appendChild(toast);
-
-      /* auto-dismiss after 30 s */
-      setTimeout(dismiss, 30000);
+      /* stays until user taps — no auto-dismiss */
     }
 
     try {
