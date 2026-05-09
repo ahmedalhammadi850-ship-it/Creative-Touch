@@ -360,14 +360,14 @@ export function useExport() {
       textWrap.className = 'flex-1 text-right';
       textWrap.innerHTML =
         '<p class="font-bold text-sm text-gray-900 leading-tight" ' +
-        'style="font-family:Cairo,sans-serif;">ملف PDF جاهز</p>' +
+        'style="font-family:Cairo,sans-serif;">✓ تم تنزيل الملف</p>' +
         '<p class="text-xs text-gray-500 mt-0.5" ' +
-        'style="font-family:Cairo,sans-serif;">تم تجهيز ملف PDF بنجاح. اضغط هنا لفتحه</p>';
+        'style="font-family:Cairo,sans-serif;">اضغط هنا لتنزيله مجدداً</p>';
 
       toast.appendChild(iconWrap);
       toast.appendChild(textWrap);
 
-      /* click → direct download (works on desktop + Android Chrome) */
+      /* click → re-download */
       toast.addEventListener('click', () => {
         const a = document.createElement('a');
         a.href = blobUrl;
@@ -381,8 +381,8 @@ export function useExport() {
 
       document.body.appendChild(toast);
 
-      /* auto-dismiss after 8 s */
-      setTimeout(dismiss, 8000);
+      /* auto-dismiss after 6 s */
+      setTimeout(dismiss, 6000);
     }
 
     try {
@@ -415,17 +415,14 @@ export function useExport() {
         } else {
           window.location.href = dataUri;
         }
-        /* show notification on iOS too */
         showPdfNotification(pdfBlobUrl, filename, pdfBlob);
-      } else if (isMobile()) {
-        /* Android: show notification — user taps to open */
-        showPdfNotification(pdfBlobUrl, filename, pdfBlob);
+        return { ok: true, blobUrl: pdfBlobUrl };
       } else {
-        /* Desktop: notification only — user clicks to open */
+        /* Android + Desktop: trigger direct download immediately */
+        downloadBlob(pdfBlob, filename);
         showPdfNotification(pdfBlobUrl, filename, pdfBlob);
+        return { ok: true };
       }
-
-      return { ok: true, blobUrl: pdfBlobUrl };
     } catch (e) {
       console.error('PDF export failed:', e);
       if (iosWindow && !iosWindow.closed) iosWindow.close();
