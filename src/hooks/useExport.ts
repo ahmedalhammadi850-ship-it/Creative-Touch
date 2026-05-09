@@ -220,14 +220,16 @@ async function captureElementMobile(el: HTMLElement): Promise<string> {
         onclone: (_doc: Document, el: HTMLElement) => {
           // Remove all external <link> and <style> elements whose sheets
           // throw SecurityError when cssRules is accessed (cross-origin fonts)
-          el.querySelectorAll('link[rel="stylesheet"], style').forEach((node) => {
-            try {
-              const sheet = (node as HTMLLinkElement | HTMLStyleElement).sheet;
-              if (sheet) void sheet.cssRules; // throws if cross-origin
-            } catch {
-              node.remove(); // safe to remove — prevents SecurityError
-            }
-          });
+          try {
+            el.querySelectorAll('link[rel="stylesheet"], style').forEach((node) => {
+              try {
+                const sheet = (node as HTMLLinkElement | HTMLStyleElement).sheet;
+                if (sheet) void sheet.cssRules; // throws if cross-origin
+              } catch {
+                node.remove(); // safe to remove — prevents SecurityError
+              }
+            });
+          } catch { /* ignore — sheet access may be fully blocked in some browsers */ }
         },
       });
       return canvas.toDataURL('image/png');
@@ -360,29 +362,29 @@ export function useExport() {
       textWrap.className = 'flex-1 text-right';
       textWrap.innerHTML =
         '<p class="font-bold text-sm text-gray-900 leading-tight" ' +
-        'style="font-family:Cairo,sans-serif;">✓ تم تنزيل الملف</p>' +
+        'style="font-family:Cairo,sans-serif;">ملف PDF جاهز للتنزيل</p>' +
         '<p class="text-xs text-gray-500 mt-0.5" ' +
-        'style="font-family:Cairo,sans-serif;">اضغط هنا لتنزيله مجدداً</p>';
+        'style="font-family:Cairo,sans-serif;">اضغط هنا لحفظ الملف في جهازك</p>';
 
       toast.appendChild(iconWrap);
       toast.appendChild(textWrap);
 
-      /* click → re-download */
+      /* click → force download directly to device storage */
       toast.addEventListener('click', () => {
-        const a = document.createElement('a');
-        a.href = blobUrl;
-        a.download = filename;
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = filename;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         dismiss();
       });
 
       document.body.appendChild(toast);
 
-      /* auto-dismiss after 6 s */
-      setTimeout(dismiss, 6000);
+      /* auto-dismiss after 30 s */
+      setTimeout(dismiss, 30000);
     }
 
     try {
@@ -408,21 +410,15 @@ export function useExport() {
       const pdfBlob = pdf.output('blob');
       const pdfBlobUrl = URL.createObjectURL(pdfBlob);
 
-      if (isIOS()) {
-        const dataUri = pdf.output('datauristring');
-        if (iosWindow && !iosWindow.closed) {
-          showPdfInIOSWindow(iosWindow, dataUri);
-        } else {
-          window.location.href = dataUri;
-        }
-        showPdfNotification(pdfBlobUrl, filename, pdfBlob);
-        return { ok: true, blobUrl: pdfBlobUrl };
-      } else {
-        /* Android + Desktop: trigger direct download immediately */
-        downloadBlob(pdfBlob, filename);
-        showPdfNotification(pdfBlobUrl, filename, pdfBlob);
-        return { ok: true };
+      /* Close any pre-opened blank window (iOS popup-blocker workaround is
+         no longer needed — blob download works without it and avoids about:blank) */
+      if (iosWindow && !iosWindow.closed) {
+        try { iosWindow.close(); } catch { /* ignore */ }
       }
+
+      /* All platforms: show notification → user taps → force download to device */
+      showPdfNotification(pdfBlobUrl, filename, pdfBlob);
+      return { ok: true };
     } catch (e) {
       console.error('PDF export failed:', e);
       if (iosWindow && !iosWindow.closed) iosWindow.close();
