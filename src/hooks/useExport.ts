@@ -367,38 +367,15 @@ export function useExport() {
       toast.appendChild(iconWrap);
       toast.appendChild(textWrap);
 
-      /* click → smart download: Web Share API on mobile, hidden <a> on desktop */
+      /* click → direct download (works on desktop + Android Chrome) */
       toast.addEventListener('click', () => {
-        const pdfFile = new File([blob], filename, { type: 'application/pdf' });
-
-        if (
-          typeof navigator.share === 'function' &&
-          typeof navigator.canShare === 'function' &&
-          navigator.canShare({ files: [pdfFile] })
-        ) {
-          // Mobile (iOS 15+ / Android Chrome): native system share sheet
-          // lets the user "Save to Files" / "Download" directly
-          navigator.share({ files: [pdfFile], title: filename })
-            .catch(() => {
-              // User cancelled or share failed — fall back to anchor download
-              const a = document.createElement('a');
-              a.href = blobUrl;
-              a.download = filename;
-              a.style.display = 'none';
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
-            });
-        } else {
-          // Desktop / older browsers: hidden <a download> triggers save dialog
-          const a = document.createElement('a');
-          a.href = blobUrl;
-          a.download = filename;
-          a.style.display = 'none';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-        }
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = filename;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
         dismiss();
       });
 
