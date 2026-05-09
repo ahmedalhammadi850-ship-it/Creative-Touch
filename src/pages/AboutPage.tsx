@@ -109,7 +109,6 @@ export default function AboutPage() {
             <div className="nav-logo-icon" style={{ width: 44, height: 44, borderRadius: 14, background: 'linear-gradient(135deg, #6366f1, #a855f7)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 15px rgba(99,102,241,0.35)' }}>
               <LayoutTemplate size={22} color="#fff" />
             </div>
-            <span className="nav-logo-text" style={{ color: '#1e1b4b', fontSize: 20, fontWeight: 900 }}>ستوديو القوالب</span>
           </button>
         </div>
       </nav>
