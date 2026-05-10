@@ -69,7 +69,6 @@ export function PaymentRequestModal({ onClose, templateName, categoryId, templat
 
     setSending(true);
     try {
-      // Save to local store
       const reqPayload = {
         type: 'activation' as const,
         userId: user?.id,
@@ -83,18 +82,29 @@ export function PaymentRequestModal({ onClose, templateName, categoryId, templat
       };
       const reqId = addRequest(reqPayload);
 
-      const imageUrl = await uploadPaymentProof(reqId, image);
-
-      // Save to Firestore for centralized admin access
+      // Save to Firestore immediately so admin sees the request even if image upload fails
       await saveRequestToFirestore({
         ...reqPayload,
         id: reqId,
-        imageUrl,
         status: 'pending',
         createdAt: new Date().toISOString(),
       });
 
-      // Also send to n8n via FormData + no-cors to bypass CORS preflight
+      // Try uploading image with a 15-second timeout — non-blocking on failure
+      try {
+        const uploadWithTimeout = Promise.race([
+          uploadPaymentProof(reqId, image),
+          new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error('timeout')), 15000)
+          ),
+        ]);
+        const imageUrl = await uploadWithTimeout;
+        // Update Firestore record with the image URL
+        const { updateRequestInFirestore } = await import('../lib/firestoreService');
+        updateRequestInFirestore(reqId, { imageUrl }).catch(() => {});
+      } catch { /* image upload failure is non-blocking */ }
+
+      // Also send to n8n — non-blocking
       try {
         const formData = new FormData();
         formData.append('name', name.trim());
@@ -104,11 +114,7 @@ export function PaymentRequestModal({ onClose, templateName, categoryId, templat
         formData.append('templateId', templateId || '');
         formData.append('sentAt', new Date().toISOString());
         formData.append('image', image, image.name);
-        await fetch(N8N_WEBHOOK, {
-          method: 'POST',
-          mode: 'no-cors',
-          body: formData,
-        });
+        fetch(N8N_WEBHOOK, { method: 'POST', mode: 'no-cors', body: formData }).catch(() => {});
       } catch { /* n8n failure is non-blocking */ }
 
       localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
