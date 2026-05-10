@@ -38,6 +38,7 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInAnonymously,
   sendEmailVerification,
   sendPasswordResetEmail,
   updateProfile,
@@ -72,6 +73,7 @@ export const firebaseReady = !!(
 export {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInAnonymously,
   sendEmailVerification,
   sendPasswordResetEmail,
   updateProfile,

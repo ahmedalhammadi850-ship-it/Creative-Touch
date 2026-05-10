@@ -2,9 +2,15 @@ import {
   collection, doc, setDoc, updateDoc, getDoc,
   onSnapshot, query, orderBy, arrayUnion, serverTimestamp,
 } from 'firebase/firestore';
-import { db, storage, ref, uploadBytes, getDownloadURL } from './firebase';
+import { db, storage, ref, uploadBytes, getDownloadURL, auth, signInAnonymously } from './firebase';
 import type { AppRequest } from '../store/useRequestStore';
 import type { User } from '../store/useAuthStore';
+
+async function ensureAuth(): Promise<void> {
+  if (!auth.currentUser) {
+    await signInAnonymously(auth).catch(() => {});
+  }
+}
 
 // ─── Requests ───────────────────────────────────────────────────────────────
 
@@ -16,6 +22,7 @@ export async function uploadPaymentProof(requestId: string, file: File): Promise
 
 export async function saveRequestToFirestore(request: AppRequest): Promise<void> {
   try {
+    await ensureAuth();
     const { createdAt, ...rest } = request;
     await setDoc(doc(db, 'requests', request.id), {
       ...rest,
@@ -32,6 +39,7 @@ export async function updateRequestInFirestore(
   updates: Partial<AppRequest>,
 ): Promise<void> {
   try {
+    await ensureAuth();
     await updateDoc(doc(db, 'requests', id), updates as Record<string, unknown>);
   } catch (e) {
     console.warn('[Firestore] updateRequest failed:', e);
@@ -63,6 +71,7 @@ export function subscribeToRequests(
 
 export async function saveUserToFirestore(user: User): Promise<void> {
   try {
+    await ensureAuth();
     await setDoc(doc(db, 'users', user.id), user, { merge: true });
   } catch (e) {
     console.warn('[Firestore] saveUser failed:', e);
@@ -74,6 +83,7 @@ export async function updateUserInFirestore(
   updates: Partial<User> & Record<string, unknown>,
 ): Promise<void> {
   try {
+    await ensureAuth();
     await setDoc(doc(db, 'users', userId), updates, { merge: true });
   } catch (e) {
     console.warn('[Firestore] updateUser failed:', e);
@@ -85,6 +95,7 @@ export async function addActivatedTemplatesToFirestore(
   templateKeys: string[],
 ): Promise<void> {
   try {
+    await ensureAuth();
     await setDoc(doc(db, 'users', userId), {
       activatedTemplates: arrayUnion(...templateKeys),
     }, { merge: true });
