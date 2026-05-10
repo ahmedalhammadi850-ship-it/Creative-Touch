@@ -74,7 +74,7 @@ export async function updateUserInFirestore(
   updates: Partial<User> & Record<string, unknown>,
 ): Promise<void> {
   try {
-    await updateDoc(doc(db, 'users', userId), updates);
+    await setDoc(doc(db, 'users', userId), updates, { merge: true });
   } catch (e) {
     console.warn('[Firestore] updateUser failed:', e);
   }
@@ -85,9 +85,9 @@ export async function addActivatedTemplatesToFirestore(
   templateKeys: string[],
 ): Promise<void> {
   try {
-    await updateDoc(doc(db, 'users', userId), {
+    await setDoc(doc(db, 'users', userId), {
       activatedTemplates: arrayUnion(...templateKeys),
-    });
+    }, { merge: true });
   } catch (e) {
     console.warn('[Firestore] addActivatedTemplates failed:', e);
   }

@@ -71,8 +71,13 @@ function App() {
       if (fsUser.activatedTemplates && fsUser.activatedTemplates.length > 0) {
         addActivatedTemplates(user.id, fsUser.activatedTemplates);
       }
-      // Sync plan/planStatus from Firestore → local store
-      if (fsUser.plan && fsUser.plan !== user.plan) {
+      // Sync plan/planStatus from Firestore → local store (any change)
+      if (
+        fsUser.plan &&
+        (fsUser.plan !== user.plan ||
+          fsUser.planStatus !== user.planStatus ||
+          fsUser.planExpiresAt !== user.planExpiresAt)
+      ) {
         updateUserPlan(user.id, fsUser.plan, fsUser.planStatus, fsUser.planExpiresAt);
       }
     });
