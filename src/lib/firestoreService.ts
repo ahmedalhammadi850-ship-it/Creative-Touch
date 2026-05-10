@@ -121,3 +121,24 @@ export function subscribeToUsers(
     },
   );
 }
+
+/**
+ * Subscribes to a single user document in real-time.
+ * Used on the client side to detect admin-approved activations.
+ */
+export function subscribeToUser(
+  userId: string,
+  onData: (user: User) => void,
+  onError?: () => void,
+): () => void {
+  return onSnapshot(
+    doc(db, 'users', userId),
+    (snap) => {
+      if (snap.exists()) onData(snap.data() as User);
+    },
+    (err) => {
+      console.warn('[Firestore] subscribeToUser error:', err.message);
+      onError?.();
+    },
+  );
+}

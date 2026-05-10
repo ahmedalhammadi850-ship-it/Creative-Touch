@@ -86,13 +86,13 @@ export function PaymentRequestModal({ onClose, templateName, categoryId, templat
       const imageUrl = await uploadPaymentProof(reqId, image);
 
       // Save to Firestore for centralized admin access
-      saveRequestToFirestore({
+      await saveRequestToFirestore({
         ...reqPayload,
         id: reqId,
         imageUrl,
         status: 'pending',
         createdAt: new Date().toISOString(),
-      }).catch(() => {});
+      });
 
       // Also send to n8n via FormData + no-cors to bypass CORS preflight
       try {

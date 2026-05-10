@@ -20,6 +20,7 @@ import NotFound from "@/pages/not-found";
 
 import { useAdminStore } from "@/store/useAdminStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { subscribeToUser } from "@/lib/firestoreService";
 
 const queryClient = new QueryClient();
 
@@ -56,9 +57,27 @@ function Router() {
 }
 
 function App() {
+  const { user, addActivatedTemplates, updateUserPlan } = useAuthStore();
+
   useEffect(() => {
     document.documentElement.dir = "rtl";
   }, []);
+
+  // Listen to current user's Firestore doc so admin approvals unlock templates in real-time
+  useEffect(() => {
+    if (!user?.id) return;
+    const unsub = subscribeToUser(user.id, (fsUser) => {
+      // Sync activatedTemplates from Firestore → local store
+      if (fsUser.activatedTemplates && fsUser.activatedTemplates.length > 0) {
+        addActivatedTemplates(user.id, fsUser.activatedTemplates);
+      }
+      // Sync plan/planStatus from Firestore → local store
+      if (fsUser.plan && fsUser.plan !== user.plan) {
+        updateUserPlan(user.id, fsUser.plan, fsUser.planStatus, fsUser.planExpiresAt);
+      }
+    });
+    return () => unsub();
+  }, [user?.id]);
 
   return (
     <QueryClientProvider client={queryClient}>
