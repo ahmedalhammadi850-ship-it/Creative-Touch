@@ -11,6 +11,7 @@ import { Download, ChevronRight, RotateCcw, Copy, CreditCard, FlipHorizontal, Se
 import { useExport } from '../hooks/useExport';
 import { useToast } from '@/hooks/use-toast';
 import type { TemplateData } from '../types/template';
+import { getUserFromFirestore } from '../lib/firestoreService';
 
 const BACK_CARD_IDS = ['41', '42', '43'];
 
@@ -46,7 +47,7 @@ export default function EditorPage() {
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const moreMenuRef = useRef<HTMLDivElement>(null);
 
-  const { refreshCurrentUser } = useAuthStore();
+  const { refreshCurrentUser, user } = useAuthStore();
   const { setTemplate, templateData, updateData, resetData, duplicateTemplate } = useTemplateStore();
   const [verifyImg, setVerifyImg] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
@@ -116,6 +117,32 @@ export default function EditorPage() {
     window.addEventListener('storage', handleStorage);
     return () => window.removeEventListener('storage', handleStorage);
   }, [refreshCurrentUser]);
+
+  // Sync activation status from Firestore on mount and when tab regains focus
+  useEffect(() => {
+    if (!user?.id) return;
+    const { addActivatedTemplates, updateUserPlan } = useAuthStore.getState();
+
+    const syncFromFirestore = async () => {
+      const fsUser = await getUserFromFirestore(user.id);
+      if (!fsUser) return;
+      if (fsUser.activatedTemplates && fsUser.activatedTemplates.length > 0) {
+        addActivatedTemplates(user.id, fsUser.activatedTemplates);
+      }
+      if (
+        fsUser.plan &&
+        (fsUser.plan !== user.plan ||
+          fsUser.planStatus !== user.planStatus ||
+          fsUser.planExpiresAt !== user.planExpiresAt)
+      ) {
+        updateUserPlan(user.id, fsUser.plan, fsUser.planStatus, fsUser.planExpiresAt);
+      }
+    };
+
+    syncFromFirestore();
+    window.addEventListener('focus', syncFromFirestore);
+    return () => window.removeEventListener('focus', syncFromFirestore);
+  }, [user?.id]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
