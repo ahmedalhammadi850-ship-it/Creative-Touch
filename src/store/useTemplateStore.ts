@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { persistStorage } from '../lib/safeStorage';
 import type { TemplateData } from '../types/template';
 
 interface TemplateState {
@@ -56,8 +57,6 @@ export const useTemplateStore = create<TemplateState>()(
           };
         }),
     }),
-    {
-      name: 'templates-storage',
-    }
+    { name: 'templates-storage', storage: persistStorage }
   )
 );

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { persistStorage } from '../lib/safeStorage';
 
 export interface PricingPlan {
   id: string;
@@ -110,6 +111,6 @@ export const usePricingStore = create<PricingState>()(
         })),
       resetToDefault: () => set({ plans: defaultPlans }),
     }),
-    { name: 'pricing-storage' }
+    { name: 'pricing-storage', storage: persistStorage }
   )
 );

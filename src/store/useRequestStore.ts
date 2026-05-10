@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { persistStorage } from '../lib/safeStorage';
 
 export type RequestStatus = 'pending' | 'approved' | 'rejected';
 export type RequestType = 'activation' | 'subscription';
@@ -54,6 +55,6 @@ export const useRequestStore = create<RequestState>()(
         })),
       getByUser: (userId) => get().requests.filter((r) => r.userId === userId),
     }),
-    { name: 'requests-storage' }
+    { name: 'requests-storage', storage: persistStorage }
   )
 );

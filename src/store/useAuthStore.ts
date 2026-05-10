@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { persistStorage } from '../lib/safeStorage';
 
 export interface User {
   id: string;
@@ -153,6 +154,6 @@ export const useAuthStore = create<AuthState>()(
         if (fresh) set({ user: { ...fresh } });
       },
     }),
-    { name: 'auth-storage' }
+    { name: 'auth-storage', storage: persistStorage }
   )
 );

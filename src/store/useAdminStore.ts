@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { persistStorage } from '../lib/safeStorage';
 
 const ADMIN_USERNAME = 'احمد';
 const ADMIN_PASSWORD = '123456789';
@@ -23,6 +24,6 @@ export const useAdminStore = create<AdminState>()(
       },
       logout: () => set({ isLoggedIn: false }),
     }),
-    { name: 'admin-auth' }
+    { name: 'admin-auth', storage: persistStorage }
   )
 );
