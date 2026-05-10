@@ -16,7 +16,7 @@ export async function uploadPaymentProof(requestId: string, file: File): Promise
 
 export async function saveRequestToFirestore(request: AppRequest): Promise<void> {
   try {
-    const { imageBase64, createdAt, ...rest } = request;
+    const { createdAt, ...rest } = request;
     await setDoc(doc(db, 'requests', request.id), {
       ...rest,
       status: rest.status || 'pending',

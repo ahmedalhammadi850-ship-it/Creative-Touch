@@ -4,6 +4,26 @@ import { useRequestStore } from '../store/useRequestStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { saveRequestToFirestore, uploadPaymentProof } from '../lib/firestoreService';
 
+async function compressImageToBase64(file: File, maxPx = 900, quality = 0.7): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+      const dataUrl = canvas.toDataURL('image/jpeg', quality);
+      resolve(dataUrl.split(',')[1]);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(''); };
+    img.src = url;
+  });
+}
+
 const N8N_WEBHOOK = 'https://ahmedaaasss.app.n8n.cloud/webhook-test/060b55ea-bd8e-4d32-9968-d37bff3b7be5';
 const COOLDOWN_KEY = 'payment_request_last_sent';
 const COOLDOWN_MS = 60_000;
@@ -82,10 +102,14 @@ export function PaymentRequestModal({ onClose, templateName, categoryId, templat
       };
       const reqId = addRequest(reqPayload);
 
-      // Save to Firestore immediately so admin sees the request even if image upload fails
+      // Compress image to base64 so admin can see the receipt immediately
+      const imageBase64 = await compressImageToBase64(image);
+
+      // Save to Firestore immediately with the compressed image
       await saveRequestToFirestore({
         ...reqPayload,
         id: reqId,
+        imageBase64,
         status: 'pending',
         createdAt: new Date().toISOString(),
       });
