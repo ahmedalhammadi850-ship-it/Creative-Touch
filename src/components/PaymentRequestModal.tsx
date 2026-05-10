@@ -18,8 +18,14 @@ async function fileToBase64(file: File): Promise<string> {
 
 async function compressImageToBase64(file: File, maxPx = 900, quality = 0.7): Promise<string> {
   return new Promise((resolve) => {
+    let url = '';
+    try {
+      url = URL.createObjectURL(file);
+    } catch {
+      fileToBase64(file).then(resolve);
+      return;
+    }
     const img = new Image();
-    const url = URL.createObjectURL(file);
     img.onload = () => {
       try {
         const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
@@ -37,16 +43,28 @@ async function compressImageToBase64(file: File, maxPx = 900, quality = 0.7): Pr
         const dataUrl = canvas.toDataURL('image/jpeg', quality);
         resolve(dataUrl.split(',')[1]);
       } catch {
-        URL.revokeObjectURL(url);
+        try { URL.revokeObjectURL(url); } catch { /* ignore */ }
         fileToBase64(file).then(resolve);
       }
     };
     img.onerror = () => {
-      URL.revokeObjectURL(url);
+      try { URL.revokeObjectURL(url); } catch { /* ignore */ }
       fileToBase64(file).then(resolve);
     };
     img.src = url;
   });
+}
+
+async function safeGetImageBase64(file: File): Promise<string> {
+  try {
+    return await compressImageToBase64(file);
+  } catch {
+    try {
+      return await fileToBase64(file);
+    } catch {
+      return '';
+    }
+  }
 }
 
 const N8N_WEBHOOK = 'https://ahmedaaasss.app.n8n.cloud/webhook-test/060b55ea-bd8e-4d32-9968-d37bff3b7be5';
@@ -128,7 +146,7 @@ export function PaymentRequestModal({ onClose, templateName, categoryId, templat
       const reqId = addRequest(reqPayload);
 
       // Compress image to base64 so admin can see the receipt immediately
-      const imageBase64 = await compressImageToBase64(image);
+      const imageBase64 = await safeGetImageBase64(image);
 
       // Save to Firestore immediately with the compressed image
       await saveRequestToFirestore({
