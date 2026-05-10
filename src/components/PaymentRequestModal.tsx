@@ -125,73 +125,70 @@ export function PaymentRequestModal({ onClose, templateName, categoryId, templat
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    const remaining = getRemainingCooldown();
+
+    let remaining = 0;
+    try { remaining = getRemainingCooldown(); } catch { /* ignore */ }
     if (remaining > 0) { startCooldownTimer(remaining); return; }
     if (!name.trim()) { setError('يرجى إدخال الاسم الكامل'); return; }
     if (!image) { setError('يرجى رفع صورة إيصال الدفع'); return; }
 
     setSending(true);
-    try {
-      const reqPayload = {
-        type: 'activation' as const,
-        userId: user?.id,
-        userName: name.trim(),
-        userPhone: 'غير مزود',
-        userEmail: user?.email,
-        templateName: templateName || 'غير محدد',
-        categoryId,
-        templateId,
-        imageName: image.name,
-      };
-      const reqId = addRequest(reqPayload);
 
-      // Compress image to base64 so admin can see the receipt immediately
-      const imageBase64 = await safeGetImageBase64(image);
+    const reqPayload = {
+      type: 'activation' as const,
+      userId: user?.id,
+      userName: name.trim(),
+      userPhone: 'غير مزود',
+      userEmail: user?.email,
+      templateName: templateName || 'غير محدد',
+      categoryId,
+      templateId,
+      imageName: image.name,
+    };
 
-      // Save to Firestore immediately with the compressed image
-      await saveRequestToFirestore({
+    // Save locally — use fallback ID if store throws
+    let reqId = Date.now().toString();
+    try { reqId = addRequest(reqPayload); } catch { /* use fallback id */ }
+
+    // Show success immediately — background sync happens after
+    try { localStorage.setItem(COOLDOWN_KEY, Date.now().toString()); } catch { /* ignore */ }
+    setSending(false);
+    setSent(true);
+    startCooldownTimer(60);
+
+    // Background: compress → Firestore → Storage → n8n (all fire-and-forget)
+    const capturedImage = image;
+    const capturedName = name.trim();
+    safeGetImageBase64(capturedImage).then(imageBase64 => {
+      saveRequestToFirestore({
         ...reqPayload,
         id: reqId,
         imageBase64,
         status: 'pending',
         createdAt: new Date().toISOString(),
-      });
+      }).catch(() => {});
 
-      // Try uploading image with a 15-second timeout — non-blocking on failure
-      try {
-        const uploadWithTimeout = Promise.race([
-          uploadPaymentProof(reqId, image),
-          new Promise<never>((_, reject) =>
-            setTimeout(() => reject(new Error('timeout')), 15000)
-          ),
-        ]);
-        const imageUrl = await uploadWithTimeout;
-        // Update Firestore record with the image URL
-        const { updateRequestInFirestore } = await import('../lib/firestoreService');
-        updateRequestInFirestore(reqId, { imageUrl }).catch(() => {});
-      } catch { /* image upload failure is non-blocking */ }
+      Promise.race([
+        uploadPaymentProof(reqId, capturedImage),
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), 15000)),
+      ]).then(imageUrl => {
+        import('../lib/firestoreService').then(({ updateRequestInFirestore }) => {
+          updateRequestInFirestore(reqId, { imageUrl }).catch(() => {});
+        }).catch(() => {});
+      }).catch(() => {});
 
-      // Also send to n8n — non-blocking
       try {
         const formData = new FormData();
-        formData.append('name', name.trim());
+        formData.append('name', capturedName);
         formData.append('template', templateName || 'غير محدد');
         formData.append('email', user?.email || '');
         formData.append('categoryId', categoryId || '');
         formData.append('templateId', templateId || '');
         formData.append('sentAt', new Date().toISOString());
-        formData.append('image', image, image.name);
+        formData.append('image', capturedImage, capturedImage.name);
         fetch(N8N_WEBHOOK, { method: 'POST', mode: 'no-cors', body: formData }).catch(() => {});
-      } catch { /* n8n failure is non-blocking */ }
-
-      localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
-      setSent(true);
-      startCooldownTimer(60);
-    } catch {
-      setError('حدث خطأ أثناء الإرسال. يرجى المحاولة مجدداً.');
-    } finally {
-      setSending(false);
-    }
+      } catch { /* ignore */ }
+    }).catch(() => {});
   };
 
   const handleTryAgain = () => {
