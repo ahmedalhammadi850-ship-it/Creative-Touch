@@ -114,14 +114,16 @@ export default function RegisterPage() {
 
       await sendEmailVerification(credential.user);
 
-      addUser({
+      const newUser = {
         id: credential.user.uid,
         name: name.trim(),
         email: email.toLowerCase().trim(),
-        plan: 'free',
-        planStatus: null,
+        plan: 'free' as const,
+        planStatus: null as null,
         createdAt: new Date().toISOString(),
-      });
+      };
+      addUser(newUser);
+      saveUserToFirestore(newUser).catch(() => {});
 
       setVerifyEmail(email.trim());
       setStep('verify');
