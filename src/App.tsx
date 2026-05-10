@@ -66,19 +66,21 @@ function App() {
   // Listen to current user's Firestore doc so admin approvals unlock templates in real-time
   useEffect(() => {
     if (!user?.id) return;
-    const unsub = subscribeToUser(user.id, (fsUser) => {
+    const userId = user.id;
+    const unsub = subscribeToUser(userId, (fsUser) => {
+      const { addActivatedTemplates, updateUserPlan, user: currentUser } = useAuthStore.getState();
       // Sync activatedTemplates from Firestore → local store
       if (fsUser.activatedTemplates && fsUser.activatedTemplates.length > 0) {
-        addActivatedTemplates(user.id, fsUser.activatedTemplates);
+        addActivatedTemplates(userId, fsUser.activatedTemplates);
       }
       // Sync plan/planStatus from Firestore → local store (any change)
       if (
         fsUser.plan &&
-        (fsUser.plan !== user.plan ||
-          fsUser.planStatus !== user.planStatus ||
-          fsUser.planExpiresAt !== user.planExpiresAt)
+        (fsUser.plan !== currentUser?.plan ||
+          fsUser.planStatus !== currentUser?.planStatus ||
+          fsUser.planExpiresAt !== currentUser?.planExpiresAt)
       ) {
-        updateUserPlan(user.id, fsUser.plan, fsUser.planStatus, fsUser.planExpiresAt);
+        updateUserPlan(userId, fsUser.plan, fsUser.planStatus, fsUser.planExpiresAt);
       }
     });
     return () => unsub();

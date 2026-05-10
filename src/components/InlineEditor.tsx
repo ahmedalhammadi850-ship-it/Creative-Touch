@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Upload, X, ImagePlus, Lock, Send, RotateCcw, Clock, RefreshCw, CheckCircle } from 'lucide-react';
 import type { TemplateData } from '../types/template';
 import { useAuthStore, isPlanActive } from '../store/useAuthStore';
+import { getUserFromFirestore } from '../lib/firestoreService';
 
 const DEFAULT_FS = 21;
 const MIN_FS = 8;
@@ -222,11 +223,27 @@ export function InlineEditor({ categoryId, templateId, data, onChange, backCardM
 
   const handleRefresh = useCallback(async () => {
     setRefreshing(true);
-    useAuthStore.persist.rehydrate();
-    refreshCurrentUser();
-    await new Promise(r => setTimeout(r, 600));
+    try {
+      if (user?.id) {
+        const fsUser = await getUserFromFirestore(user.id);
+        if (fsUser) {
+          const { addActivatedTemplates, updateUserPlan } = useAuthStore.getState();
+          if (fsUser.activatedTemplates && fsUser.activatedTemplates.length > 0) {
+            addActivatedTemplates(user.id, fsUser.activatedTemplates);
+          }
+          if (fsUser.plan && fsUser.plan !== 'free') {
+            updateUserPlan(user.id, fsUser.plan, fsUser.planStatus, fsUser.planExpiresAt);
+          }
+        }
+      }
+    } catch {
+      // fallback to local refresh
+      useAuthStore.persist.rehydrate();
+      refreshCurrentUser();
+    }
+    await new Promise(r => setTimeout(r, 400));
     setRefreshing(false);
-  }, [refreshCurrentUser]);
+  }, [user?.id, refreshCurrentUser]);
 
   useEffect(() => {
     if (!prevUnlocked.current && isUnlocked) {

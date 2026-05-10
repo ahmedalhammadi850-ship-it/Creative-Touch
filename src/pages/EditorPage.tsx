@@ -118,30 +118,35 @@ export default function EditorPage() {
     return () => window.removeEventListener('storage', handleStorage);
   }, [refreshCurrentUser]);
 
-  // Sync activation status from Firestore on mount and when tab regains focus
+  // Sync activation status from Firestore on mount, focus, and every 15s
   useEffect(() => {
     if (!user?.id) return;
-    const { addActivatedTemplates, updateUserPlan } = useAuthStore.getState();
+    const userId = user.id;
 
     const syncFromFirestore = async () => {
-      const fsUser = await getUserFromFirestore(user.id);
+      const fsUser = await getUserFromFirestore(userId);
       if (!fsUser) return;
+      const { addActivatedTemplates, updateUserPlan, user: currentUser } = useAuthStore.getState();
       if (fsUser.activatedTemplates && fsUser.activatedTemplates.length > 0) {
-        addActivatedTemplates(user.id, fsUser.activatedTemplates);
+        addActivatedTemplates(userId, fsUser.activatedTemplates);
       }
       if (
         fsUser.plan &&
-        (fsUser.plan !== user.plan ||
-          fsUser.planStatus !== user.planStatus ||
-          fsUser.planExpiresAt !== user.planExpiresAt)
+        (fsUser.plan !== currentUser?.plan ||
+          fsUser.planStatus !== currentUser?.planStatus ||
+          fsUser.planExpiresAt !== currentUser?.planExpiresAt)
       ) {
-        updateUserPlan(user.id, fsUser.plan, fsUser.planStatus, fsUser.planExpiresAt);
+        updateUserPlan(userId, fsUser.plan, fsUser.planStatus, fsUser.planExpiresAt);
       }
     };
 
     syncFromFirestore();
     window.addEventListener('focus', syncFromFirestore);
-    return () => window.removeEventListener('focus', syncFromFirestore);
+    const interval = setInterval(syncFromFirestore, 5000);
+    return () => {
+      window.removeEventListener('focus', syncFromFirestore);
+      clearInterval(interval);
+    };
   }, [user?.id]);
 
   useEffect(() => {
