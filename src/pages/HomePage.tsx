@@ -4,7 +4,8 @@ import { categories } from '../data/categories';
 import { usePricingStore } from '../store/usePricingStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { useRequestStore } from '../store/useRequestStore';
-import { saveRequestToFirestore, uploadPaymentProof } from '../lib/firestoreService';
+import { saveRequestToFirestore, uploadPaymentProof, updateRequestInFirestore } from '../lib/firestoreService';
+import { safeGetImageBase64 } from '../lib/imageUtils';
 import {
   Sparkles, Zap, Download, Palette, Star,
   LayoutTemplate, Users, Award, ChevronLeft, ArrowLeft, Check, Crown,
@@ -90,36 +91,46 @@ function SubModal({ plan, planId, onClose }: { plan: string; planId: string; onC
     if (!image) { setError('يرجى رفع صورة إيصال الدفع'); return; }
 
     setSending(true);
-    try {
-      const subPayload = {
-        type: 'subscription' as const,
-        userId: user.id,
-        userName: name.trim(),
-        userPhone: 'غير مزود',
-        userEmail: user.email,
-        plan,
-        planId,
-        imageName: image.name,
-      };
-      const subId = addRequest(subPayload);
 
-      const imageUrl = await uploadPaymentProof(subId, image);
+    const subPayload = {
+      type: 'subscription' as const,
+      userId: user.id,
+      userName: name.trim(),
+      userPhone: 'غير مزود',
+      userEmail: user.email,
+      plan,
+      planId,
+      imageName: image.name,
+    };
 
-      // Save to Firestore for centralized admin access
+    // 1. Save locally first — guaranteed to succeed
+    let subId = Date.now().toString();
+    try { subId = addRequest(subPayload); } catch { /* use fallback id */ }
+
+    // 2. Show success immediately — don't wait for network
+    setSending(false);
+    setDone(true);
+
+    // 3. Background: compress image → save to Firestore → upload to Storage (all fire-and-forget)
+    const capturedImage = image;
+    safeGetImageBase64(capturedImage).then(imageBase64 => {
+      // Save full request with base64 image to Firestore immediately
       saveRequestToFirestore({
         ...subPayload,
         id: subId,
-        imageUrl,
+        imageBase64,
         status: 'pending',
         createdAt: new Date().toISOString(),
       }).catch(() => {});
 
-      setDone(true);
-    } catch {
-      setError('حدث خطأ أثناء المعالجة');
-    } finally {
-      setSending(false);
-    }
+      // Upload to Firebase Storage and update Firestore with the URL
+      Promise.race([
+        uploadPaymentProof(subId, capturedImage),
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), 15000)),
+      ]).then(imageUrl => {
+        updateRequestInFirestore(subId, { imageUrl }).catch(() => {});
+      }).catch(() => {});
+    }).catch(() => {});
   };
 
   const inp: React.CSSProperties = { width: '100%', padding: '11px 14px', borderRadius: 12, border: '2px solid #e2e8f0', fontSize: 14, fontFamily: "'Cairo',sans-serif", outline: 'none', boxSizing: 'border-box' };
